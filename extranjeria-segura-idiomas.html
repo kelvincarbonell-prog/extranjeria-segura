@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B1D35">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Extranjería Segura">
+<title>Extranjería Segura — Tu trámite de residencia, paso a paso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:    #0B1D35; --navy-md: #152D50; --navy-lt: #1E3F6B;
+  --indigo:  #3D52A0; --ind-lt: #5A72C0; --ind-bg: #EEF1FA; --ind-bdr: rgba(61,82,160,.2);
+  --terra:    #BC5535; --terra-lt: #CF6A46; --terra-bg: #FDF0EB; --terra-bdr: rgba(188,85,53,.22);
+  --cream:   #F8F7F4; --white: #FFFFFF;
+  --g50: #F8FAFC; --g100: #F1F4F8; --g200: #E2E8F0; --g300: #CBD5E1;
+  --g400: #94A3B8; --g500: #64748B; --g600: #475569; --g700: #334155; --g900: #0F172A;
+  --green:   #0A7A55; --grn-bg: #ECFAF4; --grn-bdr: rgba(10,122,85,.2);
+  --red:     #B91C1C; --red-bg: #FEF2F2; --red-bdr: rgba(185,28,28,.18);
+  --amber:   #B45309; --amb-bg: #FFFBEB; --amb-bdr: rgba(180,83,9,.18);
+  --r-sm: 8px; --r: 12px; --r-lg: 20px; --r-xl: 28px;
+  --sh:    0 4px 16px rgba(11,29,53,.08), 0 2px 4px rgba(11,29,53,.04);
+  --sh-md: 0 8px 32px rgba(11,29,53,.10), 0 4px 8px rgba(11,29,53,.05);
+  --sh-lg: 0 24px 64px rgba(11,29,53,.14), 0 8px 16px rgba(11,29,53,.07);
+  --fd: 'Bricolage Grotesque', sans-serif;
+  --fb: 'Instrument Sans', sans-serif;
+  --mw: 1100px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--fb); font-size: 16px; line-height: 1.65; color: var(--g900); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+svg { display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; }
+input, select { font-family: inherit; }
+
+.wrap { max-width: var(--mw); margin: 0 auto; padding: 0 28px; }
+
+/* ── TYPE ── */
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--terra); margin-bottom: 14px; }
+.eyebrow::before { content: ''; display: block; width: 18px; height: 2px; background: var(--terra); border-radius: 2px; }
+h1, h2, h3 { font-family: var(--fd); font-weight: 700; line-height: 1.12; letter-spacing: -.025em; color: var(--navy); }
+h1 { font-size: clamp(34px, 5vw, 62px); font-weight: 800; letter-spacing: -.03em; }
+h2 { font-size: clamp(26px, 4vw, 44px); }
+h3 { font-size: clamp(17px, 2vw, 21px); }
+.lead { font-size: clamp(16px, 1.8vw, 18px); color: var(--g600); line-height: 1.78; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 26px; border-radius: var(--r); font-family: var(--fb); font-weight: 600; font-size: 15px; cursor: pointer; transition: transform .16s, box-shadow .16s, background .16s; white-space: nowrap; }
+.btn:active { transform: translateY(1px) !important; }
+.btn-navy { background: var(--navy); color: #fff; box-shadow: 0 2px 0 #050e1c; }
+.btn-navy:hover { background: var(--navy-md); transform: translateY(-2px); box-shadow: 0 4px 0 #050e1c, var(--sh-md); }
+.btn-ghost { background: transparent; color: var(--navy); border: 1.5px solid var(--g300); }
+.btn-ghost:hover { border-color: var(--navy); background: var(--g50); }
+.btn-gold { background: var(--terra); color: #fff; box-shadow: 0 2px 0 #9B3A22; }
+.btn-gold:hover { background: var(--terra-lt); transform: translateY(-2px); box-shadow: 0 4px 0 #9B3A22; }
+.btn-lg { padding: 16px 34px; font-size: 17px; border-radius: var(--r-lg); }
+.btn-sm { padding: 9px 18px; font-size: 13px; }
+.btn-full { width: 100%; }
+.btn-white { background: #fff; color: var(--navy); }
+.btn-white:hover { background: var(--g50); transform: translateY(-2px); box-shadow: var(--sh-md); }
+
+/* ── NAV ── */
+#nav { position: fixed; top: 0; left: 0; right: 0; z-index: 300; height: 64px; background: rgba(255,255,255,.94); backdrop-filter: blur(18px); border-bottom: 1px solid var(--g200); transition: box-shadow .2s; }
+#nav.sc { box-shadow: 0 1px 3px rgba(11,29,53,.07); }
+.nav-in { max-width: var(--mw); margin: 0 auto; padding: 0 28px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 11px; font-family: var(--fd); font-weight: 800; font-size: 17px; letter-spacing: -.03em; color: var(--navy); }
+.brand-mark { width: 34px; height: 34px; background: var(--navy); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.brand em { font-style: normal; color: var(--terra); }
+.nav-links { display: flex; gap: 2px; }
+.nav-links a { padding: 7px 13px; border-radius: var(--r-sm); font-size: 14px; font-weight: 500; color: var(--g700); transition: background .15s, color .15s; }
+.nav-links a:hover { background: var(--g100); color: var(--navy); }
+.nav-ham { display: none; flex-direction: column; gap: 5px; background: none; padding: 8px; }
+.nav-ham span { display: block; width: 22px; height: 2px; background: var(--navy); border-radius: 2px; transition: all .2s; }
+.mob-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 299; background: var(--white); border-bottom: 1px solid var(--g200); padding: 16px 28px 24px; box-shadow: var(--sh-md); }
+.mob-menu.open { display: block; }
+.mob-menu a { display: block; padding: 12px 4px; font-size: 16px; font-weight: 500; color: var(--g700); border-bottom: 1px solid var(--g100); }
+.mob-menu .btn { width: 100%; margin-top: 16px; }
+
+/* ═══════════════════════════════════════
+   LANDING SECTIONS (scroll)
+═══════════════════════════════════════ */
+
+/* ── HERO ── */
+#hero {
+  padding: 118px 0 80px;
+  background: var(--cream);
+  position: relative; overflow: hidden;
+}
+#hero::before { content: ''; position: absolute; top: -80px; right: -180px; width: 560px; height: 560px; background: radial-gradient(circle, rgba(61,82,160,.07) 0%, transparent 65%); pointer-events: none; }
+#hero::after { content: ''; position: absolute; bottom: -60px; left: -80px; width: 360px; height: 360px; background: radial-gradient(circle, rgba(188,85,53,.05) 0%, transparent 65%); pointer-events: none; }
+
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.hero-label { margin-bottom: 22px; }
+.hero-title { margin-bottom: 22px; }
+.hero-title mark { background: none; color: var(--indigo); position: relative; display: inline; }
+.hero-title mark::after { content: ''; position: absolute; left: 0; right: 0; bottom: 5px; height: 5px; background: rgba(61,82,160,.13); border-radius: 3px; z-index: -1; }
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 36px; }
+.hero-trust { display: flex; gap: 22px; flex-wrap: wrap; padding-top: 28px; border-top: 1px solid var(--g200); }
+.trust-item { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--g600); }
+.trust-item svg { color: var(--green); flex-shrink: 0; }
+
+/* RIGHT SIDE: animated card */
+.hero-card { background: var(--white); border-radius: var(--r-xl); box-shadow: var(--sh-lg); border: 1px solid var(--g200); overflow: hidden; }
+.hc-bar { background: var(--navy); padding: 15px 20px; display: flex; align-items: center; gap: 10px; }
+.hc-dots { display: flex; gap: 6px; }
+.hc-dots span { width: 11px; height: 11px; border-radius: 50%; }
+.hc-dots span:nth-child(1) { background: #FF5F57; }
+.hc-dots span:nth-child(2) { background: #FFBD2E; }
+.hc-dots span:nth-child(3) { background: #28C840; }
+.hc-bar-lbl { font-size: 12px; color: rgba(255,255,255,.45); margin-left: 4px; }
+.hc-body { padding: 24px; }
+
+/* progress steps in card */
+.card-steps { display: flex; flex-direction: column; gap: 0; }
+.cstep { display: flex; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--g100); align-items: flex-start; }
+.cstep:last-child { border-bottom: none; padding-bottom: 0; }
+.cstep-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--fd); font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+.cn-done { background: var(--grn-bg); border: 1.5px solid var(--grn-bdr); color: var(--green); }
+.cn-active { background: var(--ind-bg); border: 1.5px solid var(--ind-bdr); color: var(--indigo); }
+.cn-pend { background: var(--g100); border: 1.5px solid var(--g200); color: var(--g400); }
+.cstep-info h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.cstep-info p { font-size: 12px; color: var(--g500); line-height: 1.5; }
+.cstep-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px; margin-top: 6px; }
+.ct-done { background: var(--grn-bg); color: var(--green); border: 1px solid var(--grn-bdr); }
+.ct-active { background: var(--ind-bg); color: var(--indigo); border: 1px solid var(--ind-bdr); }
+.ct-pend { background: var(--g100); color: var(--g500); border: 1px solid var(--g200); }
+
+.float-pill { position: absolute; background: var(--white); border: 1px solid var(--g200); border-radius: var(--r); box-shadow: var(--sh-md); padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--navy); white-space: nowrap; animation: fp 4s ease-in-out infinite; }
+.float-pill:nth-child(2) { animation-delay: 1.8s; }
+.fp1 { top: -14px; right: -8px; }
+.fp2 { bottom: 28px; left: -18px; }
+@keyframes fp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+/* ── PROOF BAR ── */
+#proof { background: var(--navy); padding: 24px 0; }
+.proof-row { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.pstat { text-align: center; }
+.pn { font-family: var(--fd); font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -.03em; line-height: 1; }
+.pn em { font-style: normal; color: var(--terra-lt); }
+.pl { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 2px; }
+.psep { width: 1px; height: 44px; background: rgba(255,255,255,.1); }
+
+/* ── MARQUEE ── */
+.mq { border-top: 1px solid var(--g200); border-bottom: 1px solid var(--g200); background: var(--g50); overflow: hidden; padding: 12px 0; }
+.mq-track { display: flex; animation: mq 34s linear infinite; width: max-content; }
+.mq-track:hover { animation-play-state: paused; }
+@keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.mq-chip { display: inline-flex; align-items: center; gap: 9px; padding: 6px 18px; border-right: 1px solid var(--g200); font-size: 13px; font-weight: 500; color: var(--g600); white-space: nowrap; }
+.mq-chip svg { width: 13px; height: 13px; color: var(--indigo); }
+
+/* ── SECTIONS ── */
+.section { padding: 88px 0; }
+.section-alt { background: var(--cream); }
+.section-hd { margin-bottom: 52px; }
+.section-hd.center { text-align: center; }
+.section-hd.center .lead { margin: 0 auto; }
+.section-hd h2 { margin-bottom: 12px; }
+
+/* ═══════════════════════════════════════
+   FLOW OVERLAY — the full automated app
+═══════════════════════════════════════ */
+#flow-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: var(--white);
+  display: none;
+  overflow-y: auto;
+}
+#flow-overlay.open { display: block; }
+
+.flow-nav {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--g200);
+  padding: 0 28px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.flow-brand { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 800; font-size: 16px; letter-spacing: -.02em; color: var(--navy); }
+.flow-brand-mark { width: 30px; height: 30px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.flow-brand em { font-style: normal; color: var(--terra); }
+.flow-progress-bar { flex: 1; max-width: 280px; margin: 0 24px; }
+.fpb-track { height: 4px; background: var(--g200); border-radius: 2px; overflow: hidden; }
+.fpb-fill { height: 100%; background: linear-gradient(90deg, var(--indigo), var(--terra)); border-radius: 2px; transition: width .4s ease; }
+.fpb-label { font-size: 11px; color: var(--g500); margin-top: 4px; text-align: right; }
+.flow-close { width: 34px; height: 34px; border-radius: var(--r-sm); background: var(--g100); color: var(--g600); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .15s; }
+.flow-close:hover { background: var(--g200); }
+
+/* SCREENS */
+.flow-screen { display: none; min-height: calc(100vh - 60px); }
+.flow-screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; }
+
+/* ── SCREEN: ENTRY ── */
+.entry-wrap { text-align: center; max-width: 760px; }
+.entry-wrap h2 { margin-bottom: 16px; }
+.entry-wrap p { margin-bottom: 48px; }
+
+.entry-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 680px; margin: 0 auto; }
+.entry-card {
+  background: var(--white);
+  border: 2px solid var(--g200);
+  border-radius: var(--r-xl);
+  padding: 36px 28px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .22s;
+  position: relative; overflow: hidden;
+}
+.entry-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--indigo), var(--terra)); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+.entry-card:hover { border-color: var(--ind-lt); box-shadow: var(--sh-md); transform: translateY(-3px); }
+.entry-card:hover::after { transform: scaleX(1); }
+.entry-card.ec-primary { border-color: var(--indigo); background: linear-gradient(135deg, var(--white), var(--ind-bg)); }
+.entry-card.ec-primary::after { transform: scaleX(1); }
+.ec-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.ec-icon-ind { background: var(--ind-bg); }
+.ec-icon-gld { background: var(--terra-bg); }
+.ec-icon svg { width: 26px; height: 26px; }
+.ec-title { font-family: var(--fd); font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 8px; letter-spacing: -.02em; }
+.ec-desc { font-size: 14px; color: var(--g600); line-height: 1.65; margin-bottom: 20px; }
+.ec-arrow { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--indigo); }
+.ec-arrow svg { width: 16px; height: 16px; transition: transform .2s; }
+.entry-card:hover .ec-arrow svg { transform: translateX(4px); }
+
+/* ── SCREEN: QUIZ ── */
+.quiz-wrap { width: 100%; max-width: 680px; }
+.quiz-step { display: none; }
+.quiz-step.active { display: block; }
+.quiz-q-num { font-family: var(--fd); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--terra); margin-bottom: 12px; }
+.quiz-q-text { font-family: var(--fd); font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; color: var(--navy); letter-spacing: -.02em; line-height: 1.2; margin-bottom: 8px; }
+.quiz-q-hint { font-size: 14px; color: var(--g500); margin-bottom: 36px; line-height: 1.6; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.qopt {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1.5px solid var(--g200);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all .18s;
+  text-align: left;
+  position: relative;
+}
+.qopt:hover { border-color: var(--ind-lt); background: var(--ind-bg); transform: translateX(4px); }
+.qopt.selected { border-color: var(--indigo); background: var(--ind-bg); }
+.qopt.selected .qopt-radio { background: var(--indigo); border-color: var(--indigo); }
+.qopt.selected .qopt-radio::after { opacity: 1; }
+.qopt-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--g300);
+  background: var(--white);
+  flex-shrink: 0;
+  position: relative; transition: all .18s;
+}
+.qopt-radio::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity .15s; }
+.qopt-label { font-size: 15px; font-weight: 500; color: var(--navy); line-height: 1.4; }
+.qopt.selected .qopt-label { font-weight: 600; }
+.qopt-icon { margin-left: auto; width: 32px; height: 32px; border-radius: 8px; background: var(--g100); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.qopt-icon svg { width: 16px; height: 16px; color: var(--g500); }
+.qopt.selected .qopt-icon { background: rgba(61,82,160,.15); }
+.qopt.selected .qopt-icon svg { color: var(--indigo); }
+
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; }
+.quiz-back { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--g500); background: none; padding: 8px 0; transition: color .15s; }
+.quiz-back:hover { color: var(--navy); }
+.quiz-back svg { width: 16px; height: 16px; }
+
+/* ── SCREEN: SELECTOR (knows their visa) ── */
+.selector-wrap { width: 100%; max-width: 1000px; }
+.sel-header { text-align: center; margin-bottom: 36px; }
+.sel-filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+.sf { padding: 7px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; border: 1.5px solid var(--g200); background: var(--white); color: var(--g700); cursor: pointer; transition: all .18s; font-family: var(--fb); }
+.sf:hover { border-color: var(--navy); color: var(--navy); }
+.sf.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.sel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.sel-card {
+  background: var(--white); border: 1.5px solid var(--g200);
+  border-radius: var(--r-lg); padding: 22px;
+  cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+.sel-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--indigo), var(--terra)); transform: scaleX(0); transform-origin: left; transition: transform .28s; }
+.sel-card:hover { border-color: var(--ind-lt); box-shadow: var(--sh-md); transform: translateY(-2px); }
+.sel-card:hover::after { transform: scaleX(1); }
+.sc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.sc-ico { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.sc-ico svg { width: 20px; height: 20px; }
+.sc-cmp { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; }
+.sc-name { font-family: var(--fd); font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; letter-spacing: -.01em; line-height: 1.3; }
+.sc-desc { font-size: 12px; color: var(--g600); line-height: 1.6; flex: 1; margin-bottom: 14px; }
+.sc-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--g100); }
+.sc-time { font-size: 11px; color: var(--g500); display: flex; align-items: center; gap: 4px; }
+.sc-time svg { width: 11px; height: 11px; }
+.sc-cta { font-size: 12px; font-weight: 700; color: var(--indigo); display: flex; align-items: center; gap: 3px; transition: gap .2s; }
+.sel-card:hover .sc-cta { gap: 7px; }
+.sc-cta svg { width: 13px; height: 13px; }
+
+/* ── SCREEN: RESULT ── */
+.result-wrap { text-align: center; max-width: 580px; }
+.result-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: var(--grn-bg); color: var(--green); font-weight: 700; font-size: 13px; border: 1px solid var(--grn-bdr); margin-bottom: 28px; }
+.result-badge svg { width: 15px; height: 15px; }
+.result-wrap h2 { margin-bottom: 10px; }
+.result-wrap .lead { margin-bottom: 32px; }
+
+.result-card {
+  background: var(--white);
+  border: 1.5px solid var(--g200);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  text-align: left;
+  margin-bottom: 28px;
+  box-shadow: var(--sh-md);
+  position: relative; overflow: hidden;
+}
+.result-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--indigo), var(--terra)); border-radius: 4px 0 0 4px; }
+.rc-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.rc-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rc-icon svg { width: 26px; height: 26px; }
+.rc-name { font-family: var(--fd); font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -.02em; }
+.rc-sub { font-size: 13px; color: var(--g500); margin-top: 2px; }
+.rc-desc { font-size: 15px; color: var(--g700); line-height: 1.75; margin-bottom: 20px; }
+.rc-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rc-kv { background: var(--g50); border: 1px solid var(--g100); border-radius: var(--r); padding: 12px; }
+.rc-kv-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--g500); margin-bottom: 3px; }
+.rc-kv-val { font-size: 14px; font-weight: 600; color: var(--navy); }
+
+.result-note { background: var(--ind-bg); border: 1px solid var(--ind-bdr); border-radius: var(--r); padding: 14px 16px; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--navy); line-height: 1.65; margin-bottom: 28px; }
+.result-note svg { width: 16px; height: 16px; color: var(--indigo); flex-shrink: 0; margin-top: 1px; }
+
+/* ── SCREEN: DOCS UPLOAD ── */
+.docs-wrap { width: 100%; max-width: 720px; }
+.docs-header { text-align: center; margin-bottom: 40px; }
+.docs-visa-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; background: var(--ind-bg); border: 1px solid var(--ind-bdr); border-radius: 100px; font-size: 13px; font-weight: 700; color: var(--indigo); margin-bottom: 20px; }
+.docs-visa-tag svg { width: 14px; height: 14px; }
+.docs-progress { background: var(--g50); border: 1px solid var(--g200); border-radius: var(--r-lg); padding: 16px 20px; margin-bottom: 32px; }
+.dp-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.dp-label { font-size: 13px; font-weight: 600; color: var(--navy); }
+.dp-count { font-size: 13px; font-weight: 700; color: var(--indigo); }
+.dp-bar-bg { height: 6px; background: var(--g200); border-radius: 3px; overflow: hidden; }
+.dp-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--terra)); border-radius: 3px; transition: width .5s ease; }
+
+.doc-upload-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.doc-upload-item {
+  background: var(--white); border: 1.5px solid var(--g200);
+  border-radius: var(--r-lg); padding: 18px 20px;
+  display: flex; align-items: center; gap: 14px;
+  transition: all .2s;
+}
+.doc-upload-item.uploaded { border-color: var(--grn-bdr); background: var(--grn-bg); }
+.doc-upload-item.required-highlight { border-color: var(--amb-bdr); background: var(--amb-bg); }
+.dui-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--ind-bg); transition: background .2s; }
+.doc-upload-item.uploaded .dui-icon { background: var(--grn-bg); }
+.dui-icon svg { width: 21px; height: 21px; color: var(--indigo); }
+.doc-upload-item.uploaded .dui-icon svg { color: var(--green); }
+.dui-info { flex: 1; }
+.dui-name { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+.doc-upload-item.uploaded .dui-name { color: var(--green); }
+.dui-desc { font-size: 12px; color: var(--g500); }
+.dui-req { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 4px; margin-left: 6px; }
+.req-obl { background: var(--red-bg); color: var(--red); }
+.req-opt { background: var(--g100); color: var(--g500); }
+.dui-action { flex-shrink: 0; }
+.upload-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--r); font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--ind-bdr); color: var(--indigo); background: var(--ind-bg);
+  cursor: pointer; transition: all .18s;
+}
+.upload-btn:hover { background: var(--ind-bg); border-color: var(--indigo); }
+.upload-btn svg { width: 14px; height: 14px; }
+.uploaded-status { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--green); }
+.uploaded-status svg { width: 16px; height: 16px; }
+
+.docs-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.docs-footer-note { font-size: 13px; color: var(--g500); display: flex; align-items: center; gap: 6px; }
+.docs-footer-note svg { width: 14px; height: 14px; color: var(--green); }
+
+/* ── SCREEN: CONFIRMATION ── */
+.confirm-wrap { text-align: center; max-width: 560px; }
+.confirm-icon-wrap { width: 80px; height: 80px; border-radius: 50%; background: var(--grn-bg); border: 3px solid var(--grn-bdr); display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; animation: pop .5s cubic-bezier(.175,.885,.32,1.275) forwards; }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.confirm-icon-wrap svg { width: 38px; height: 38px; color: var(--green); }
+.confirm-wrap h2 { margin-bottom: 14px; }
+.confirm-wrap .lead { margin-bottom: 32px; }
+.confirm-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; text-align: left; }
+.conf-step { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--g50); border: 1px solid var(--g100); border-radius: var(--r); font-size: 14px; font-weight: 500; color: var(--navy); }
+.conf-step svg { width: 18px; height: 18px; color: var(--indigo); flex-shrink: 0; }
+
+/* ─────────────────────────────────────
+   FEATURES / TESTIMONIALS / PRICING (landing scroll)
+───────────────────────────────────── */
+.why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.wc { background: var(--white); border: 1.5px solid var(--g200); border-radius: var(--r-lg); padding: 30px; transition: all .22s; }
+.wc:hover { box-shadow: var(--sh-md); transform: translateY(-2px); }
+.wc.dark { background: var(--navy); border-color: var(--navy); }
+.wc.dark h3, .wc.dark p { color: #fff; }
+.wc.dark p { color: rgba(255,255,255,.6); }
+.wc.wide { grid-column: span 2; }
+.wc-ico { width: 50px; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.wc-ico svg { width: 24px; height: 24px; }
+.wi-ind { background: var(--ind-bg); } .wi-ind svg { color: var(--indigo); }
+.wi-gld { background: var(--terra-bg); } .wi-gld svg { color: var(--terra); }
+.wi-grn { background: var(--grn-bg); } .wi-grn svg { color: var(--green); }
+.wi-dk { background: rgba(255,255,255,.09); } .wi-dk svg { color: rgba(255,255,255,.7); }
+.wc h3 { margin-bottom: 8px; }
+.wc p { font-size: 14px; color: var(--g600); line-height: 1.78; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+.tag { padding: 4px 11px; border-radius: 100px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,.1); color: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.12); }
+
+.tst-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.tst { background: var(--white); border: 1.5px solid var(--g200); border-radius: var(--r-lg); padding: 26px; transition: box-shadow .2s; }
+.tst:hover { box-shadow: var(--sh-md); }
+.t-stars { display: flex; gap: 3px; margin-bottom: 12px; }
+.t-star { width: 15px; height: 15px; color: var(--terra); }
+.t-text { font-size: 14px; color: var(--g700); line-height: 1.78; font-style: italic; margin-bottom: 20px; }
+.t-text::before { content: '\201C'; color: var(--indigo); font-size: 26px; font-style: normal; line-height: 0; vertical-align: -9px; margin-right: 2px; }
+.t-auth { display: flex; align-items: center; gap: 11px; }
+.t-av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--g200); flex-shrink: 0; background: var(--ind-bg); }
+.t-av svg { width: 20px; height: 20px; color: var(--indigo); }
+.t-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+.t-role { font-size: 12px; color: var(--g500); }
+
+/* FAQ */
+.faq-list { display: flex; flex-direction: column; gap: 9px; max-width: 780px; margin: 0 auto; }
+.faq-item { background: var(--white); border: 1.5px solid var(--g200); border-radius: var(--r); overflow: hidden; cursor: pointer; transition: border-color .2s; }
+.faq-item:hover { border-color: var(--g400); }
+.faq-item.open { border-color: var(--navy); }
+.faq-q { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; }
+.faq-qt { font-size: 15px; font-weight: 600; color: var(--navy); line-height: 1.4; }
+.faq-ic { width: 28px; height: 28px; border-radius: 7px; background: var(--g100); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform .2s, background .2s; }
+.faq-ic svg { width: 15px; height: 15px; color: var(--g600); transition: color .2s; }
+.faq-item.open .faq-ic { transform: rotate(45deg); background: var(--navy); }
+.faq-item.open .faq-ic svg { color: #fff; }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.faq-item.open .faq-a { max-height: 300px; }
+.faq-ai { padding: 0 20px 18px; font-size: 14px; color: var(--g600); line-height: 1.82; }
+
+/* CTA FINAL */
+#cta-final { background: var(--navy); padding: 88px 0; position: relative; overflow: hidden; }
+#cta-final::before { content: ''; position: absolute; top: -150px; right: -150px; width: 480px; height: 480px; background: radial-gradient(circle, rgba(61,82,160,.25) 0%, transparent 60%); pointer-events: none; }
+#cta-final::after { content: ''; position: absolute; bottom: -120px; left: -100px; width: 380px; height: 380px; background: radial-gradient(circle, rgba(188,85,53,.14) 0%, transparent 60%); pointer-events: none; }
+.cta-inner { text-align: center; position: relative; z-index: 1; }
+.cta-inner h2 { color: #fff; margin-bottom: 16px; }
+.cta-inner p { color: rgba(255,255,255,.55); margin-bottom: 36px; font-size: 17px; max-width: 460px; margin-left: auto; margin-right: auto; }
+.cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-outline-white { background: transparent; color: rgba(255,255,255,.8); border: 1.5px solid rgba(255,255,255,.22); }
+.btn-outline-white:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.4); transform: translateY(-2px); }
+
+/* FOOTER */
+footer { background: var(--g900); padding: 56px 0 28px; }
+.ft-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 44px; margin-bottom: 44px; }
+.ft-brand p { font-size: 14px; color: rgba(255,255,255,.32); line-height: 1.75; max-width: 240px; margin-top: 14px; }
+.ft-col h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: rgba(255,255,255,.27); margin-bottom: 16px; }
+.ft-col a { display: block; font-size: 14px; color: rgba(255,255,255,.45); padding: 3px 0; transition: color .15s; }
+.ft-col a:hover { color: #fff; }
+.ft-bot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.06); font-size: 12px; color: rgba(255,255,255,.2); }
+.ft-leg { display: flex; gap: 18px; }
+.ft-leg a { color: rgba(255,255,255,.3); transition: color .15s; }
+.ft-leg a:hover { color: #fff; }
+
+/* STICKY MOBILE */
+.sticky-mob {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--g200);
+  padding: 12px 20px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: none; z-index: 190;
+  box-shadow: 0 -4px 20px rgba(11,29,53,.08);
+}
+@media(max-width: 768px) { .sticky-mob { display: block; } }
+.sticky-mob .btn { width: 100%; justify-content: center; }
+
+/* ANIMATIONS */
+.fade-up { opacity: 0; transform: translateY(22px); transition: opacity .5s ease, transform .5s ease; }
+.fade-up.vis { opacity: 1; transform: none; }
+.d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; }
+
+/* ══════════════════════════════════════════
+   GLOBAL iOS / ANDROID FIXES
+══════════════════════════════════════════ */
+
+/* Prevent tap highlight on all interactive elements */
+a, button, [onclick], .entry-card, .qopt, .sel-card, .vc, .faq-item, .doc-upload-item {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent double-tap zoom on buttons and links */
+a, button { touch-action: manipulation; }
+
+/* iOS input zoom prevention — font-size must be ≥ 16px on all inputs */
+input, select, textarea {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--r-sm);
+}
+
+/* Smooth momentum scrolling on iOS for all scrollable containers */
+.flow-overlay, .mob-menu {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent rubber-band scroll on the body when overlay is open */
+body.flow-open { overflow: hidden; position: fixed; width: 100%; }
+
+/* ══════════════════════════════════════════
+   FLOW OVERLAY — mobile viewport fix
+══════════════════════════════════════════ */
+
+/* Use dynamic viewport height (dvh) for iOS Safari address bar */
+#flow-overlay {
+  height: 100%;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.flow-nav {
+  /* Account for iOS notch at the top */
+  padding-top: env(safe-area-inset-top, 0);
+  height: calc(60px + env(safe-area-inset-top, 0));
+}
+
+/* Flow screens: use dvh for full-height centering */
+.flow-screen {
+  min-height: calc(100dvh - 60px);
+}
+
+/* ══════════════════════════════════════════
+   TABLET (≤ 1024px)
+══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+  .hero-widget { max-width: 480px; margin: 0 auto; }
+  .float-pill { display: none; }
+  .why-grid { grid-template-columns: 1fr; }
+  .wc.wide { grid-column: 1; }
+  .tst-grid { grid-template-columns: 1fr 1fr; }
+  .sel-grid { grid-template-columns: repeat(2, 1fr); }
+  .ft-grid { grid-template-columns: 1fr 1fr; }
+  .entry-cards { grid-template-columns: 1fr; max-width: 420px; }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE (≤ 768px)
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* NAV */
+  .nav-links, .nd { display: none; }
+  .nav-ham { display: flex; }
+  #nav { height: 60px; }
+  .nav-in { padding: 0 16px; }
+
+  /* NAV HAM: bigger touch target */
+  .nav-ham { padding: 12px 8px; }
+
+  /* SECTIONS */
+  #hero { padding: 84px 0 48px; }
+  .section { padding: 56px 0; }
+
+  /* HERO */
+  .hero-title { font-size: clamp(30px, 8vw, 44px); }
+  .hero-ctas { flex-direction: column; gap: 10px; }
+  .hero-ctas .btn { width: 100%; justify-content: center; }
+  .hero-trust { gap: 14px; }
+
+  /* Hero card: keep compact */
+  .hc-body { padding: 18px; }
+  .card-steps { gap: 0; }
+
+  /* PROOF BAR: 2×2 grid on phones */
+  .proof-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 10px;
+  }
+  .psep { display: none; }
+  .pstat { text-align: center; }
+  .pn { font-size: 24px; }
+
+  /* STEPS (inline-style grid override) */
+  #como .wrap > div[style*="grid"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+  /* Hide the horizontal connector line */
+  #como .wrap > div[style*="grid"] > div[style*="absolute"] {
+    display: none !important;
+  }
+  /* Remove horizontal padding from each step */
+  #como .wrap > div[style*="grid"] > div[style*="padding"] {
+    padding: 0 !important;
+    text-align: left !important;
+  }
+  #como .wrap > div[style*="grid"] > div[style*="padding"] > div:first-child {
+    margin-left: 0 !important;
+  }
+
+  /* WHY GRID */
+  .tst-grid { grid-template-columns: 1fr; }
+  .sel-grid { grid-template-columns: 1fr; }
+
+  /* FOOTER */
+  .ft-grid { grid-template-columns: 1fr; gap: 28px; }
+  .ft-bot { flex-direction: column; text-align: center; }
+  .ft-leg { flex-wrap: wrap; justify-content: center; }
+
+  /* FLOW OVERLAY NAV */
+  .flow-nav { padding: 0 16px; }
+  .flow-progress-bar { max-width: 160px; margin: 0 12px; }
+  .fpb-label { font-size: 10px; }
+
+  /* ENTRY CARDS: full width, stacked */
+  .entry-cards {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 14px;
+  }
+  .entry-card { padding: 24px 20px; }
+  .ec-title { font-size: 17px; }
+
+  /* QUIZ */
+  .quiz-wrap { padding: 0; }
+  .quiz-q-text { font-size: clamp(20px, 5.5vw, 26px); }
+  .qopt { padding: 14px 16px; }
+  /* Bigger touch targets for quiz options */
+  .qopt { min-height: 56px; }
+  .qopt-icon { width: 36px; height: 36px; }
+
+  /* SELECTOR GRID */
+  .sel-grid { grid-template-columns: 1fr; gap: 12px; }
+  .sel-card { padding: 18px; }
+
+  /* RESULT */
+  .result-wrap { padding: 0; }
+  .result-card { padding: 22px 18px; }
+  .rc-meta { grid-template-columns: 1fr; gap: 8px; }
+
+  /* DOCS */
+  .docs-wrap { padding: 0; }
+  .doc-upload-item {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .dui-info { width: 100%; order: 2; }
+  .dui-icon { order: 1; }
+  .dui-action { order: 3; width: 100%; }
+  .dui-action .upload-btn,
+  .dui-action .uploaded-status { width: 100%; justify-content: center; }
+  .upload-btn { padding: 10px 16px; font-size: 14px; }
+  .docs-footer { flex-direction: column; align-items: stretch; gap: 14px; }
+  .docs-footer .btn { width: 100%; justify-content: center; }
+  .dp-bar-bg { height: 7px; }
+
+  /* CONFIRM */
+  .confirm-wrap { padding: 0; }
+  .confirm-steps { gap: 8px; }
+  .conf-step { padding: 12px 14px; font-size: 14px; }
+
+  /* FLOW SCREENS */
+  .flow-screen.active {
+    padding: 28px 16px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0));
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  /* FLOW: result and docs screens start from top on mobile */
+  #screen-result.active,
+  #screen-docs.active,
+  #screen-confirm.active {
+    justify-content: flex-start;
+  }
+
+  /* STICKY MOBILE: add safe area bottom */
+  .sticky-mob {
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0));
+  }
+  /* Add bottom space to page so content isn't hidden behind sticky bar */
+  footer { padding-bottom: calc(28px + env(safe-area-inset-bottom, 0)); }
+
+  /* CTA FINAL */
+  .cta-btns { flex-direction: column; align-items: center; gap: 10px; }
+  .cta-btns .btn { width: 100%; max-width: 340px; justify-content: center; }
+
+  /* FAQ touch target */
+  .faq-q { padding: 16px 18px; }
+  .faq-qt { font-size: 14px; }
+  .faq-ic { width: 32px; height: 32px; flex-shrink: 0; }
+}
+
+/* ══════════════════════════════════════════
+   SMALL PHONES (≤ 480px)
+══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .wrap { padding: 0 16px; }
+
+  /* Hero */
+  #hero { padding: 80px 0 44px; }
+  h1 { font-size: clamp(28px, 9vw, 40px); }
+  .lead { font-size: 15px; }
+
+  /* Hero card: simplify on tiny screens */
+  .hero-card .hc-bar-lbl { display: none; }
+  .cstep-info p { display: none; }
+
+  /* Proof: tighter numbers */
+  .pn { font-size: 22px; }
+  .pl { font-size: 11px; }
+
+  /* Buttons */
+  .btn-lg { padding: 14px 22px; font-size: 16px; }
+
+  /* Quiz */
+  .quiz-q-text { font-size: 20px; }
+  .qopt-label { font-size: 14px; }
+  .qopt { padding: 12px 14px; min-height: 52px; }
+  /* Hide icon on very small screens to save space */
+  .qopt-icon { display: none; }
+
+  /* Entry cards */
+  .ec-icon { width: 44px; height: 44px; border-radius: 12px; }
+  .ec-title { font-size: 16px; }
+
+  /* Result */
+  .rc-name { font-size: 19px; }
+  .result-badge { font-size: 12px; }
+
+  /* Flow nav */
+  .flow-brand { font-size: 14px; }
+  .flow-brand-mark { width: 26px; height: 26px; }
+  .flow-progress-bar { max-width: 120px; margin: 0 8px; }
+  .fpb-label { display: none; }
+  .flow-close { width: 30px; height: 30px; }
+
+  /* Section headers */
+  .section-hd { margin-bottom: 36px; }
+  h2 { font-size: clamp(24px, 7vw, 36px); }
+  h3 { font-size: 17px; }
+  .eyebrow { font-size: 11px; }
+
+  /* Cards */
+  .wc { padding: 22px 18px; }
+  .tst { padding: 20px 18px; }
+  .faq-ai { font-size: 13px; }
+
+  /* Tags */
+  .tag { font-size: 11px; padding: 3px 9px; }
+
+  /* Selector */
+  .sc-desc { display: none; }
+
+  /* Footer */
+  .ft-grid { gap: 22px; }
+  .ft-brand p { display: none; }
+}
+
+/* ══════════════════════════════════════════
+   VERY SMALL PHONES (≤ 360px — Samsung Galaxy S, etc.)
+══════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .wrap { padding: 0 12px; }
+  h1 { font-size: 26px; }
+  .btn-lg { padding: 13px 18px; font-size: 15px; }
+  .hc-body { padding: 14px; }
+  .proof-row { grid-template-columns: 1fr 1fr; gap: 14px 8px; }
+}
+
+/* ══════════════════════════════════════════
+   iOS SAFARI SPECIFIC
+══════════════════════════════════════════ */
+
+/* Fix momentum scroll bounce on flow overlay */
+#flow-overlay { overscroll-behavior-y: contain; }
+
+/* Fix position:fixed elements on iOS during scroll */
+#nav, .sticky-mob, .mob-menu {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Prevent text size adjustment on orientation change */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* iOS: Remove default button styles */
+button { -webkit-appearance: none; }
+
+/* Ensure buttons are never rendered as native on iOS */
+.btn, .qopt, .price-btn, .upload-btn, .quiz-back {
+  -webkit-appearance: none;
+  border-radius: var(--r);
+}
+
+/* Safe area for landscape mode on notched phones */
+@media (orientation: landscape) and (max-width: 768px) {
+  .flow-screen.active {
+    padding-left: calc(16px + env(safe-area-inset-left, 0));
+    padding-right: calc(16px + env(safe-area-inset-right, 0));
+  }
+  .sticky-mob {
+    padding-left: calc(20px + env(safe-area-inset-left, 0));
+    padding-right: calc(20px + env(safe-area-inset-right, 0));
+  }
+  #hero { padding-top: 70px; }
+}
+
+/* ══════════════════════════════════════════
+   TOUCH DEVICE ENHANCEMENTS
+══════════════════════════════════════════ */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects that don't make sense on touch */
+  .btn:hover { transform: none !important; }
+  .entry-card:hover { transform: none; }
+  .sel-card:hover { transform: none; }
+
+  /* But keep visual feedback on active/press */
+  .btn:active { opacity: .85; transform: scale(.98) !important; }
+  .entry-card:active { transform: scale(.99); opacity: .92; }
+  .qopt:active { background: var(--ind-bg); border-color: var(--indigo); }
+  .sel-card:active { background: var(--g50); }
+
+  /* Larger hit areas for small interactive elements */
+  .faq-ic { width: 36px; height: 36px; }
+  .modal-cls { width: 40px; height: 40px; }
+  .flow-close { width: 40px; height: 40px; }
+  .quiz-back { padding: 12px 0; }
+
+  /* Doc upload buttons: full-width always on touch */
+  .upload-btn { width: 100%; justify-content: center; padding: 12px 16px; }
+
+  /* Increase nav hamburger target */
+  .nav-ham { padding: 14px 10px; }
+}
+/* ── REGISTER SCREEN ── */
+.register-wrap { width: 100%; max-width: 480px; }
+.register-wrap > h2 { margin-bottom: 8px; }
+.register-wrap > .reg-lead { font-size: 16px; color: var(--g600); line-height: 1.7; margin-bottom: 32px; }
+
+.reg-form { display: flex; flex-direction: column; gap: 18px; }
+.reg-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.reg-field { display: flex; flex-direction: column; gap: 6px; }
+
+.reg-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--g600);
+}
+.reg-label span { color: var(--red); margin-left: 2px; font-weight: 700; }
+
+.reg-input {
+  width: 100%; padding: 13px 16px;
+  border: 1.5px solid var(--g200); border-radius: var(--r);
+  font-size: 16px !important; font-weight: 400; color: var(--navy);
+  background: var(--white); outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none; appearance: none;
+}
+.reg-input:focus {
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px rgba(61,82,160,.1);
+}
+.reg-input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(185,28,28,.08); }
+.reg-input::placeholder { color: var(--g400); }
+
+.reg-error {
+  font-size: 12px; color: var(--red); font-weight: 500;
+  display: none; align-items: center; gap: 5px;
+}
+.reg-error.show { display: flex; }
+.reg-error svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.reg-privacy {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 16px;
+  background: var(--g50); border: 1px solid var(--g200); border-radius: var(--r);
+  font-size: 13px; color: var(--g600); line-height: 1.6;
+}
+.reg-privacy svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+.reg-privacy a { color: var(--indigo); text-decoration: underline; }
+
+/* ── DELETE BUTTON on uploaded docs ── */
+.doc-delete-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+  background: var(--red-bg); border: 1.5px solid var(--red-bdr);
+  color: var(--red); cursor: pointer;
+  transition: background .18s, transform .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+}
+.doc-delete-btn:hover  { background: #FEE2E2; border-color: var(--red); }
+.doc-delete-btn:active { transform: scale(.92); }
+.doc-delete-btn svg    { width: 15px; height: 15px; pointer-events: none; }
+
+.uploaded-row {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+}
+.uploaded-filename {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 150px;
+}
+.uploaded-check { color: var(--green); flex-shrink: 0; }
+.uploaded-check svg { width: 16px; height: 16px; }
+
+.reg-lang-note {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--indigo);
+  padding: 10px 0 2px;
+}
+
+.reg-select-wrap {
+  position: relative;
+}
+.reg-select {
+  padding-right: 38px !important;
+  cursor: pointer;
+  background-color: var(--white) !important;
+}
+.reg-select:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(61,82,160,.1); }
+.reg-select-arrow {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--g400);
+}
+
+@media (max-width: 480px) {
+  .reg-row { grid-template-columns: 1fr; gap: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SVG ICON SYSTEM ── -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield"    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-doc"       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+  <symbol id="i-check"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-check-c"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></symbol>
+  <symbol id="i-clock"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-user"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-users"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></symbol>
+  <symbol id="i-star"      viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-arrow-r"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-arrow-l"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-lock"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></symbol>
+  <symbol id="i-globe"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></symbol>
+  <symbol id="i-bell"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></symbol>
+  <symbol id="i-upload"    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  <symbol id="i-id"        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></symbol>
+  <symbol id="i-brief"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></symbol>
+  <symbol id="i-home"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-award"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+  <symbol id="i-refresh"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></symbol>
+  <symbol id="i-passport"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M8 18h8"/><path d="M9 14h6"/></symbol>
+  <symbol id="i-phone"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 .93h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.41-1.41a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></symbol>
+  <symbol id="i-plus"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-x"         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-info"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-map"       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></symbol>
+  <symbol id="i-mail"      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-paper"     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></symbol>
+</svg>
+
+<!-- STICKY MOBILE -->
+<div class="sticky-mob" id="stickyCta">
+  <a href="#" class="btn btn-navy btn-lg" onclick="openFlow();return false">Iniciar mi trámite ahora</a>
+</div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="nav-in">
+    <a href="#" class="brand">
+      <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <span>Extranjería <em>Segura</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#como">Cómo funciona</a>
+      <a href="#tramites">Trámites</a>
+      <a href="#garantias">Garantías</a>
+      <a href="#preguntas">Preguntas</a>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="#" class="btn btn-ghost btn-sm nd" onclick="openFlow();return false">Iniciar trámite →</a>
+    </div>
+    <button class="nav-ham" id="ham"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#como" onclick="cMenu()">Cómo funciona</a>
+  <a href="#tramites" onclick="cMenu()">Trámites</a>
+  <a href="#garantias" onclick="cMenu()">Garantías</a>
+  <a href="#preguntas" onclick="cMenu()">Preguntas</a>
+  <a href="#" class="btn btn-navy" onclick="openFlow();cMenu();return false">Iniciar mi trámite →</a>
+</div>
+
+<!-- ════════════════════════════════════
+     LANDING PAGE (scroll)
+════════════════════════════════════ -->
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label"><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:100px;background:var(--grn-bg);color:var(--green);font-size:12px;font-weight:700;border:1px solid var(--grn-bdr)"><svg width="13" height="13"><use href="#i-shield"/></svg>Asesoría especializada · España</span></div>
+        <h1 class="hero-title">Tu residencia en España, sin <mark>complicaciones</mark>.</h1>
+        <p class="lead" style="margin-bottom:34px">Cuéntanos tu situación. En tres minutos sabrás exactamente qué trámite necesitas, qué documentos tienes que reunir y cómo lo gestionamos por ti de principio a fin.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-navy btn-lg" onclick="openFlow();return false">
+            <svg width="18" height="18"><use href="#i-arrow-r"/></svg>
+            Empezar mi trámite
+          </a>
+          <a href="#como" class="btn btn-ghost btn-lg">Ver cómo funciona</a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-item"><svg width="15" height="15"><use href="#i-check-c"/></svg> Consulta inicial gratuita</div>
+          <div class="trust-item"><svg width="15" height="15"><use href="#i-shield"/></svg> Expediente confidencial</div>
+          <div class="trust-item"><svg width="15" height="15"><use href="#i-award"/></svg> 96% de éxito</div>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div class="float-pill fp1"><svg width="15" height="15"><use href="#i-check-c"/></svg> Expediente aprobado</div>
+        <div class="float-pill fp2"><svg width="15" height="15"><use href="#i-doc"/></svg> Documentación preparada</div>
+        <div class="hero-card">
+          <div class="hc-bar"><div class="hc-dots"><span></span><span></span><span></span></div><span class="hc-bar-lbl">Extranjería Segura — Expediente en curso</span></div>
+          <div class="hc-body">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+              <span>Tu progreso</span>
+              <span style="color:var(--indigo)">66%</span>
+            </div>
+            <div style="height:5px;background:var(--g100);border-radius:3px;overflow:hidden;margin-bottom:20px"><div style="width:66%;height:100%;background:linear-gradient(90deg,var(--indigo),var(--terra));border-radius:3px"></div></div>
+            <div class="card-steps">
+              <div class="cstep">
+                <div class="cstep-num cn-done"><svg width="13" height="13"><use href="#i-check"/></svg></div>
+                <div class="cstep-info"><h4>Análisis de tu situación</h4><p>Trámite identificado: Arraigo Social</p><span class="cstep-tag ct-done"><svg width="10" height="10"><use href="#i-check"/></svg> Completado</span></div>
+              </div>
+              <div class="cstep">
+                <div class="cstep-num cn-done"><svg width="13" height="13"><use href="#i-check"/></svg></div>
+                <div class="cstep-info"><h4>Documentación preparada</h4><p>7 de 7 documentos revisados</p><span class="cstep-tag ct-done"><svg width="10" height="10"><use href="#i-check"/></svg> Completado</span></div>
+              </div>
+              <div class="cstep">
+                <div class="cstep-num cn-active">3</div>
+                <div class="cstep-info"><h4>Presentación y seguimiento</h4><p>Solicitud presentada · Pendiente de resolución</p><span class="cstep-tag ct-active" style="gap:5px"><div style="width:8px;height:8px;border:1.5px solid var(--ind-bdr);border-top-color:var(--indigo);border-radius:50%;animation:sp .7s linear infinite"></div> En proceso</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<div id="proof">
+  <div class="wrap">
+    <div class="proof-row">
+      <div class="pstat"><div class="pn"><em>12.400+</em></div><div class="pl">expedientes resueltos</div></div>
+      <div class="psep"></div>
+      <div class="pstat"><div class="pn"><em>96%</em></div><div class="pl">tasa de éxito</div></div>
+      <div class="psep"></div>
+      <div class="pstat"><div class="pn"><em>47</em></div><div class="pl">tipos de trámite</div></div>
+      <div class="psep"></div>
+      <div class="pstat"><div class="pn"><em>4.9 ★</em></div><div class="pl">valoración media</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="mq">
+  <div class="mq-track">
+    <span class="mq-chip"><svg><use href="#i-home"/></svg>Arraigo Social</span>
+    <span class="mq-chip"><svg><use href="#i-globe"/></svg>Nómada Digital</span>
+    <span class="mq-chip"><svg><use href="#i-award"/></svg>Golden Visa</span>
+    <span class="mq-chip"><svg><use href="#i-users"/></svg>Reagrupación Familiar</span>
+    <span class="mq-chip"><svg><use href="#i-brief"/></svg>Cuenta Ajena</span>
+    <span class="mq-chip"><svg><use href="#i-doc"/></svg>Residencia No Lucrativa</span>
+    <span class="mq-chip"><svg><use href="#i-refresh"/></svg>Renovaciones</span>
+    <span class="mq-chip"><svg><use href="#i-globe"/></svg>Larga Duración UE</span>
+    <span class="mq-chip"><svg><use href="#i-shield"/></svg>Protección Internacional</span>
+    <span class="mq-chip"><svg><use href="#i-home"/></svg>Arraigo Social</span>
+    <span class="mq-chip"><svg><use href="#i-globe"/></svg>Nómada Digital</span>
+    <span class="mq-chip"><svg><use href="#i-award"/></svg>Golden Visa</span>
+    <span class="mq-chip"><svg><use href="#i-users"/></svg>Reagrupación Familiar</span>
+    <span class="mq-chip"><svg><use href="#i-brief"/></svg>Cuenta Ajena</span>
+    <span class="mq-chip"><svg><use href="#i-doc"/></svg>Residencia No Lucrativa</span>
+    <span class="mq-chip"><svg><use href="#i-refresh"/></svg>Renovaciones</span>
+    <span class="mq-chip"><svg><use href="#i-globe"/></svg>Larga Duración UE</span>
+    <span class="mq-chip"><svg><use href="#i-shield"/></svg>Protección Internacional</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="como" class="section section-alt">
+  <div class="wrap">
+    <div class="section-hd center fade-up">
+      <div class="eyebrow">Proceso</div>
+      <h2>Tres pasos para conseguir<br>tu residencia en España</h2>
+      <p class="lead">Hacemos todo el trabajo burocrático. Tú solo tienes que contarnos tu caso.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative">
+      <div style="position:absolute;top:44px;left:calc(16.67% + 44px);right:calc(16.67% + 44px);height:2px;background:linear-gradient(90deg,var(--g200) 0%,var(--indigo) 50%,var(--g200) 100%);z-index:0"></div>
+      <div style="padding:0 28px;text-align:center;position:relative;z-index:1" class="fade-up d1">
+        <div style="width:56px;height:56px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;border:2.5px solid var(--g200);background:var(--white);transition:all .3s" onmouseenter="this.style.borderColor='var(--indigo)';this.style.background='var(--ind-bg)'" onmouseleave="this.style.borderColor='var(--g200)';this.style.background='var(--white)'">
+          <svg width="24" height="24" style="color:var(--g400)"><use href="#i-user"/></svg>
+        </div>
+        <h3 style="margin-bottom:10px">Cuéntanos tu situación</h3>
+        <p style="font-size:14px;color:var(--g600);line-height:1.75">Responde cinco preguntas sencillas o dinos directamente qué trámite necesitas. El sistema te asigna el camino correcto al instante.</p>
+      </div>
+      <div style="padding:0 28px;text-align:center;position:relative;z-index:1" class="fade-up d2">
+        <div style="width:56px;height:56px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;border:2.5px solid var(--g200);background:var(--white);transition:all .3s" onmouseenter="this.style.borderColor='var(--indigo)';this.style.background='var(--ind-bg)'" onmouseleave="this.style.borderColor='var(--g200)';this.style.background='var(--white)'">
+          <svg width="24" height="24" style="color:var(--g400)"><use href="#i-doc"/></svg>
+        </div>
+        <h3 style="margin-bottom:10px">Sube tu documentación</h3>
+        <p style="font-size:14px;color:var(--g600);line-height:1.75">Te mostramos exactamente qué documentos necesitas. Súbelos de forma segura y nuestros asesores los revisan y preparan el expediente.</p>
+      </div>
+      <div style="padding:0 28px;text-align:center;position:relative;z-index:1" class="fade-up d3">
+        <div style="width:56px;height:56px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;border:2.5px solid var(--g200);background:var(--white);transition:all .3s" onmouseenter="this.style.borderColor='var(--indigo)';this.style.background='var(--ind-bg)'" onmouseleave="this.style.borderColor='var(--g200)';this.style.background='var(--white)'">
+          <svg width="24" height="24" style="color:var(--g400)"><use href="#i-award"/></svg>
+        </div>
+        <h3 style="margin-bottom:10px">Nosotros gestionamos el resto</h3>
+        <p style="font-size:14px;color:var(--g600);line-height:1.75">Presentamos tu solicitud, respondemos requerimientos y te informamos en cada avance hasta la resolución favorable de tu expediente.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:48px" class="fade-up">
+      <a href="#" class="btn btn-navy btn-lg" onclick="openFlow();return false">
+        <svg width="18" height="18"><use href="#i-arrow-r"/></svg>
+        Empezar ahora — es gratis
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GARANTÍAS -->
+<section id="garantias" class="section">
+  <div class="wrap">
+    <div class="section-hd fade-up">
+      <div class="eyebrow">Por qué elegirnos</div>
+      <h2>Lo que marca la diferencia</h2>
+      <p class="lead">Extranjería es una de las áreas más complejas de la administración española. Aquí no hay margen para el error.</p>
+    </div>
+    <div class="why-grid">
+      <div class="wc dark wide fade-up">
+        <div class="wc-ico wi-dk"><svg><use href="#i-shield"/></svg></div>
+        <h3>Tu caso, en manos de especialistas</h3>
+        <p>Cada expediente lo gestiona un asesor especializado en extranjería — no un gestor generalista. Conocemos los criterios de resolución, los errores que cuestan una denegación y los plazos reales de cada provincia.</p>
+        <div class="tag-row">
+          <span class="tag">Asesores especializados</span>
+          <span class="tag">Sin intermediarios</span>
+          <span class="tag">Seguimiento personalizado</span>
+          <span class="tag">Más de 10 años de experiencia</span>
+        </div>
+      </div>
+      <div class="wc fade-up">
+        <div class="wc-ico wi-ind"><svg><use href="#i-award"/></svg></div>
+        <h3>96% de resoluciones favorables</h3>
+        <p>Revisamos cada expediente antes de presentarlo para que llegue sin fisuras. Si detectamos un problema, te lo decimos antes que la administración.</p>
+      </div>
+      <div class="wc fade-up d2">
+        <div class="wc-ico wi-gld"><svg><use href="#i-bell"/></svg></div>
+        <h3>Siempre informado, sin preguntar</h3>
+        <p>Te avisamos en cada avance. Sabrás exactamente en qué punto está tu trámite en todo momento — transparencia total de principio a fin.</p>
+      </div>
+      <div class="wc fade-up">
+        <div class="wc-ico wi-grn"><svg><use href="#i-lock"/></svg></div>
+        <h3>Confidencialidad absoluta</h3>
+        <p>Tu documentación personal se trata con los más altos estándares de privacidad. Cumplimos con el RGPD y nunca cedemos tus datos a terceros.</p>
+      </div>
+      <div class="wc fade-up d2">
+        <div class="wc-ico wi-ind"><svg><use href="#i-globe"/></svg></div>
+        <h3>Gestión completamente online</h3>
+        <p>Vives en otro país o en otra ciudad. No importa. Gestionamos tu expediente de forma 100% digital — sin desplazamientos innecesarios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="tramites" class="section section-alt">
+  <div class="wrap">
+    <div class="section-hd center fade-up">
+      <div class="eyebrow">Nuestros clientes</div>
+      <h2>Más de 12.000 familias<br>ya confían en nosotros</h2>
+    </div>
+    <div class="tst-grid">
+      <div class="tst fade-up">
+        <div class="t-stars"><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg></div>
+        <p class="t-text">Llevaba meses intentando tramitar el arraigo solo. Con Extranjería Segura, en dos semanas tenía todo preparado. Mi asesor me explicó cada paso con claridad y paciencia. Lo recomiendo a cualquiera.</p>
+        <div class="t-auth"><div class="t-av"><svg><use href="#i-user"/></svg></div><div><div class="t-name">Rafael M.</div><div class="t-role">Arraigo Social · Madrid</div></div></div>
+      </div>
+      <div class="tst fade-up d2">
+        <div class="t-stars"><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg></div>
+        <p class="t-text">Quería traer a mi madre desde Venezuela. El equipo de Extranjería Segura gestionó absolutamente todo — la reagrupación se aprobó en el plazo que me prometieron. Un alivio enorme.</p>
+        <div class="t-auth"><div class="t-av"><svg><use href="#i-user"/></svg></div><div><div class="t-name">Carmen L.</div><div class="t-role">Reagrupación Familiar · Valencia</div></div></div>
+      </div>
+      <div class="tst fade-up d3">
+        <div class="t-stars"><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg><svg class="t-star"><use href="#i-star"/></svg></div>
+        <p class="t-text">Solicité el visado de nómada digital estando fuera de España. Todo el proceso fue online, mi asesor respondía en menos de una hora. El visado llegó antes de lo esperado.</p>
+        <div class="t-auth"><div class="t-av"><svg><use href="#i-user"/></svg></div><div><div class="t-name">Kenji T.</div><div class="t-role">Nómada Digital · Barcelona</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="preguntas" class="section">
+  <div class="wrap">
+    <div class="section-hd center fade-up">
+      <div class="eyebrow">Preguntas frecuentes</div>
+      <h2>Resolvemos tus dudas</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="tFaq(this)"><div class="faq-q"><span class="faq-qt">¿Qué ocurre si me deniegan la solicitud?</span><span class="faq-ic"><svg><use href="#i-plus"/></svg></span></div><div class="faq-a"><div class="faq-ai">Revisamos cada expediente a fondo antes de presentarlo para que eso no ocurra. En el improbable caso de una denegación, analizamos los motivos sin coste adicional y valoramos contigo la mejor vía para recurrir o replantear la solicitud.</div></div></div>
+      <div class="faq-item" onclick="tFaq(this)"><div class="faq-q"><span class="faq-qt">¿Puedo contratar el servicio si vivo fuera de España?</span><span class="faq-ic"><svg><use href="#i-plus"/></svg></span></div><div class="faq-a"><div class="faq-ai">Sí, trabajamos con clientes de todo el mundo de forma completamente online. Muchos de nuestros expedientes los gestionamos para personas que aún están en su país de origen y quieren llegar a España con todo en regla.</div></div></div>
+      <div class="faq-item" onclick="tFaq(this)"><div class="faq-q"><span class="faq-qt">¿Cuánto tiempo tarda en resolverse mi trámite?</span><span class="faq-ic"><svg><use href="#i-plus"/></svg></span></div><div class="faq-a"><div class="faq-ai">Depende del tipo de trámite y la delegación de gobierno. En tu consulta inicial te damos una estimación realista basada en la situación actual de tu provincia. Algunos permisos se resuelven en semanas; otros requieren varios meses.</div></div></div>
+      <div class="faq-item" onclick="tFaq(this)"><div class="faq-q"><span class="faq-qt">¿Necesito acudir en persona a alguna gestión?</span><span class="faq-ic"><svg><use href="#i-plus"/></svg></span></div><div class="faq-a"><div class="faq-ai">En la mayoría de los trámites actuamos en tu nombre mediante representación. En algunos casos es necesaria la presencia del interesado — te avisamos con tiempo y te preparamos para que sea un trámite rápido y sin sorpresas.</div></div></div>
+      <div class="faq-item" onclick="tFaq(this)"><div class="faq-q"><span class="faq-qt">¿Están seguros mis documentos personales?</span><span class="faq-ic"><svg><use href="#i-plus"/></svg></span></div><div class="faq-a"><div class="faq-ai">Absolutamente. Toda la documentación se trata con la máxima confidencialidad, conforme al RGPD. Nunca cedemos tus datos a terceros ajenos a tu trámite. Tus archivos se almacenan cifrados y solo accede a ellos tu asesor asignado.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta-final">
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="eyebrow" style="color:var(--terra-lt);display:inline-flex;margin-bottom:20px"><svg width="13" height="13" style="color:var(--terra-lt)"><use href="#i-award"/></svg>Sin compromiso</div>
+      <h2 style="color:#fff;margin-bottom:16px">Da el primer paso.<br>Tu tranquilidad empieza aquí.</h2>
+      <p>Responde cinco preguntas y sabrás exactamente qué trámite necesitas y qué pasos dar. Sin formularios interminables, sin esperas.</p>
+      <div class="cta-btns">
+        <a href="#" class="btn btn-white btn-lg" onclick="openFlow();return false"><svg width="18" height="18"><use href="#i-arrow-r"/></svg>Iniciar mi trámite ahora</a>
+        <a href="tel:+34900000000" class="btn btn-lg btn-outline-white"><svg width="17" height="17"><use href="#i-phone"/></svg>Llamar directamente</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <div class="brand" style="color:#fff"><div class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span>Extranjería <em>Segura</em></span></div>
+        <p>Asesoría especializada en extranjería. Llevamos más de una década ayudando a personas y familias a construir su vida en España.</p>
+      </div>
+      <div class="ft-col"><h5>Servicios</h5><a href="#">Arraigo Social</a><a href="#">Nómada Digital</a><a href="#">Golden Visa</a><a href="#">Reagrupación</a><a href="#">Renovaciones</a></div>
+      <div class="ft-col"><h5>Empresa</h5><a href="#">Quiénes somos</a><a href="#">Nuestro equipo</a><a href="#">Opiniones</a><a href="#">Blog</a><a href="#">Contacto</a></div>
+      <div class="ft-col"><h5>Legal</h5><a href="#">Aviso legal</a><a href="#">Privacidad</a><a href="#">RGPD</a><a href="#">Cookies</a></div>
+    </div>
+    <div class="ft-bot">
+      <span>© 2025 Extranjería Segura · Asesoría de Extranjería</span>
+      <div class="ft-leg"><a href="#">Aviso legal</a><a href="#">Privacidad</a><a href="#">Cookies</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════
+     FLOW OVERLAY (automated app)
+════════════════════════════════════ -->
+<div id="flow-overlay">
+
+  <!-- FLOW NAV -->
+  <div class="flow-nav">
+    <div class="flow-brand">
+      <div class="flow-brand-mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      Extranjería <em>Segura</em>
+    </div>
+    <div class="flow-progress-bar" id="flowProgressBar">
+      <div class="fpb-track"><div class="fpb-fill" id="fpbFill" style="width:10%"></div></div>
+      <div class="fpb-label" id="fpbLabel">Paso 1 de 5</div>
+    </div>
+    <button class="flow-close" onclick="closeFlow()"><svg width="16" height="16"><use href="#i-x"/></svg></button>
+  </div>
+
+  <!-- ── SCREEN 0: ENTRY ── -->
+  <div class="flow-screen active" id="screen-entry">
+    <div class="entry-wrap">
+      <div class="eyebrow" style="justify-content:center">Empecemos</div>
+      <h2>¿Sabes qué trámite<br>necesitas?</h2>
+      <p class="lead" style="margin:0 auto 48px">No te preocupes si no lo sabes — te hacemos cinco preguntas sencillas y te decimos exactamente qué permiso te corresponde.</p>
+      <div class="entry-cards">
+        <div class="entry-card ec-primary" onclick="goTo('screen-selector')">
+          <div class="ec-icon ec-icon-ind"><svg style="color:var(--indigo)"><use href="#i-doc"/></svg></div>
+          <div class="ec-title">Sí, sé qué trámite necesito</div>
+          <div class="ec-desc">Conozco el tipo de visado o permiso que quiero solicitar y quiero empezar directamente con la documentación.</div>
+          <div class="ec-arrow">Elegir mi trámite <svg><use href="#i-arrow-r"/></svg></div>
+        </div>
+        <div class="entry-card" onclick="startQuiz()">
+          <div class="ec-icon ec-icon-gld"><svg style="color:var(--terra)"><use href="#i-user"/></svg></div>
+          <div class="ec-title">No sé qué trámite me corresponde</div>
+          <div class="ec-desc">Cuéntame tu situación respondiendo cinco preguntas y te digo exactamente qué necesitas.</div>
+          <div class="ec-arrow">Hacer el cuestionario <svg><use href="#i-arrow-r"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 1: QUIZ ── -->
+  <div class="flow-screen" id="screen-quiz">
+    <div class="quiz-wrap" id="quizWrap"></div>
+  </div>
+
+  <!-- ── SCREEN 2: SELECTOR ── -->
+  <div class="flow-screen" id="screen-selector">
+    <div class="selector-wrap">
+      <div class="sel-header">
+        <div class="eyebrow" style="justify-content:center">Elige tu trámite</div>
+        <h2>¿Qué permiso necesitas?</h2>
+        <p class="lead" style="margin:0 auto 4px;text-align:center">Haz clic en el que mejor describe tu situación para ver los documentos necesarios y empezar.</p>
+      </div>
+      <div class="sel-filters" id="selFilters">
+        <button class="sf on" data-cat="all">Todos</button>
+        <button class="sf" data-cat="residencia">Residencia</button>
+        <button class="sf" data-cat="trabajo">Trabajo</button>
+        <button class="sf" data-cat="estudios">Estudios</button>
+        <button class="sf" data-cat="familia">Familia</button>
+        <button class="sf" data-cat="inversion">Inversión</button>
+        <button class="sf" data-cat="especial">Protección</button>
+      </div>
+      <div class="sel-grid" id="selGrid"></div>
+      <div style="text-align:center;margin-top:24px">
+        <button class="btn btn-ghost btn-sm" onclick="goTo('screen-entry')"><svg width="14" height="14"><use href="#i-arrow-l"/></svg> Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: RESULT (after quiz) ── -->
+  <div class="flow-screen" id="screen-result">
+    <div class="result-wrap">
+      <div class="result-badge"><svg><use href="#i-check-c"/></svg> Hemos analizado tu situación</div>
+      <h2 id="resultTitle">Tu trámite es</h2>
+      <p class="lead" id="resultSubtitle" style="margin-bottom:28px"></p>
+      <div class="result-card" id="resultCard"></div>
+      <div class="result-note" id="resultNote"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-navy btn-lg" onclick="startRegister(currentVisa)" id="resultCta">
+          <svg width="18" height="18"><use href="#i-arrow-r"/></svg>
+          Continuar con este trámite
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="goTo('screen-quiz');restartQuiz()"><svg width="14" height="14"><use href="#i-arrow-l"/></svg> Revisar respuestas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3b: REGISTER ── -->
+  <div class="flow-screen" id="screen-register">
+    <div class="register-wrap">
+      <div class="eyebrow" style="justify-content:center;margin-bottom:10px">Tus datos</div>
+      <h2>¿Con quién hablamos?</h2>
+      <p class="reg-lead">Necesitamos tus datos de contacto para asignarte un asesor personal y mantenerte informado en cada paso de tu trámite.</p>
+
+      <form class="reg-form" onsubmit="submitRegister(event)" novalidate>
+
+        <div class="reg-row">
+          <div class="reg-field">
+            <label class="reg-label" for="reg-nombre">Nombre<span>*</span></label>
+            <input class="reg-input" type="text" id="reg-nombre" name="nombre"
+              placeholder="Tu nombre" autocomplete="given-name" inputmode="text" required>
+            <div class="reg-error" id="err-nombre">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Introduce tu nombre
+            </div>
+          </div>
+          <div class="reg-field">
+            <label class="reg-label" for="reg-apellidos">Apellidos<span>*</span></label>
+            <input class="reg-input" type="text" id="reg-apellidos" name="apellidos"
+              placeholder="Tus apellidos" autocomplete="family-name" inputmode="text" required>
+            <div class="reg-error" id="err-apellidos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Introduce tus apellidos
+            </div>
+          </div>
+        </div>
+
+        <div class="reg-field">
+          <label class="reg-label" for="reg-email">Correo electrónico<span>*</span></label>
+          <input class="reg-input" type="email" id="reg-email" name="email"
+            placeholder="tucorreo@ejemplo.com" autocomplete="email" inputmode="email" required>
+          <div class="reg-error" id="err-email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Introduce un correo electrónico válido
+          </div>
+        </div>
+
+        <div class="reg-field">
+          <label class="reg-label" for="reg-telefono">Teléfono<span>*</span></label>
+          <input class="reg-input" type="tel" id="reg-telefono" name="telefono"
+            placeholder="+34 600 000 000" autocomplete="tel" inputmode="tel" required>
+          <div class="reg-error" id="err-telefono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Introduce un número de teléfono válido
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--g100);margin:4px 0"></div>
+
+        <div class="reg-lang-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Preferencias de idioma — así te asignamos el asesor adecuado
+        </div>
+
+        <div class="reg-row">
+          <div class="reg-field">
+            <label class="reg-label" for="reg-idioma1">Idioma preferido<span>*</span></label>
+            <div class="reg-select-wrap">
+              <select class="reg-input reg-select" id="reg-idioma1" name="idioma1" required>
+                <option value="" disabled selected>Selecciona idioma…</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="ar">🇲🇦 Árabe</option>
+                <option value="ro">🇷🇴 Română</option>
+                <option value="zh">🇨🇳 中文 (Chino)</option>
+                <option value="uk">🇺🇦 Українська</option>
+                <option value="pt">🇧🇷 Português</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="pl">🇵🇱 Polski</option>
+                <option value="bg">🇧🇬 Български</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="nl">🇳🇱 Nederlands</option>
+                <option value="hi">🇮🇳 हिन्दी</option>
+                <option value="tl">🇵🇭 Filipino</option>
+                <option value="wo">🇸🇳 Wolof</option>
+                <option value="ber">ⴰⵎⴰⵣⵉⵖ Tamazight</option>
+                <option value="other">Otro idioma</option>
+              </select>
+              <svg class="reg-select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="reg-error" id="err-idioma1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Selecciona tu idioma preferido
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label class="reg-label" for="reg-idioma2">Idioma secundario</label>
+            <div class="reg-select-wrap">
+              <select class="reg-input reg-select" id="reg-idioma2" name="idioma2">
+                <option value="" selected>Ninguno / No aplica</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="ar">🇲🇦 Árabe</option>
+                <option value="ro">🇷🇴 Română</option>
+                <option value="zh">🇨🇳 中文 (Chino)</option>
+                <option value="uk">🇺🇦 Українська</option>
+                <option value="pt">🇧🇷 Português</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="pl">🇵🇱 Polski</option>
+                <option value="bg">🇧🇬 Български</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="nl">🇳🇱 Nederlands</option>
+                <option value="hi">🇮🇳 हिन्दी</option>
+                <option value="tl">🇵🇭 Filipino</option>
+                <option value="wo">🇸🇳 Wolof</option>
+                <option value="ber">ⴰⵎⴰⵣⵉⵖ Tamazight</option>
+                <option value="other">Otro idioma</option>
+              </select>
+              <svg class="reg-select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="reg-privacy">
+          <svg><use href="#i-lock"/></svg>
+          Tus datos se usan exclusivamente para gestionar tu expediente y asignarte un asesor. No los cedemos a terceros ni los usamos para publicidad. Consulta nuestra <a href="#">política de privacidad</a>.
+        </div>
+
+        <button type="submit" class="btn btn-navy reg-submit">
+          Continuar — subir mis documentos
+          <svg width="17" height="17"><use href="#i-arrow-r"/></svg>
+        </button>
+
+      </form>
+
+      <div style="text-align:center;margin-top:18px">
+        <button class="btn btn-ghost btn-sm" onclick="goBack()">
+          <svg width="14" height="14"><use href="#i-arrow-l"/></svg> Volver
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: DOCS UPLOAD ── -->
+  <div class="flow-screen" id="screen-docs">
+    <div class="docs-wrap">
+      <div class="docs-header">
+        <div class="docs-visa-tag" id="docsVisaTag"><svg><use href="#i-doc"/></svg> <span id="docsVisaName">Trámite</span></div>
+        <h2>Sube tu documentación</h2>
+        <p class="lead" style="margin:0 auto;text-align:center">Te mostramos exactamente qué necesitas. Cuando hayas subido todo, nuestros asesores revisarán el expediente y se pondrán en contacto contigo.</p>
+      </div>
+      <div class="docs-progress">
+        <div class="dp-row"><span class="dp-label">Documentos subidos</span><span class="dp-count" id="docsCount">0 de 0</span></div>
+        <div class="dp-bar-bg"><div class="dp-bar-fill" id="docsBar"></div></div>
+      </div>
+      <div class="doc-upload-list" id="docUploadList"></div>
+      <div class="docs-footer">
+        <div class="docs-footer-note"><svg><use href="#i-lock"/></svg> Tus archivos se envían de forma cifrada y confidencial</div>
+        <button class="btn btn-navy" id="docsSubmitBtn" onclick="goTo('screen-confirm')">
+          Enviar documentación <svg width="16" height="16"><use href="#i-arrow-r"/></svg>
+        </button>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <button class="btn btn-ghost btn-sm" onclick="goBack()"><svg width="14" height="14"><use href="#i-arrow-l"/></svg> Volver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 5: CONFIRMATION ── -->
+  <div class="flow-screen" id="screen-confirm">
+    <div class="confirm-wrap">
+      <div class="confirm-icon-wrap"><svg><use href="#i-check"/></svg></div>
+      <div class="eyebrow" style="justify-content:center">Todo recibido</div>
+      <h2 id="confirmTitle">Hemos recibido<br>tu documentación</h2>
+      <p class="lead" id="confirmLead" style="margin-bottom:32px">Un asesor especializado revisará tu expediente y se pondrá en contacto contigo en menos de 24 horas para confirmar que todo está correcto y explicarte los siguientes pasos.</p>
+      <div class="confirm-steps">
+        <div class="conf-step"><svg><use href="#i-check-c"/></svg> Documentación recibida correctamente</div>
+        <div class="conf-step"><svg><use href="#i-user"/></svg> Se te asignará un asesor personal en las próximas horas</div>
+        <div class="conf-step"><svg><use href="#i-phone"/></svg> Recibirás una llamada o correo en menos de 24 horas</div>
+        <div class="conf-step"><svg><use href="#i-doc"/></svg> Tu expediente estará listo para presentación en el menor tiempo posible</div>
+      </div>
+      <button class="btn btn-ghost btn-full" onclick="closeFlow()">Volver al inicio</button>
+    </div>
+  </div>
+
+</div><!-- /flow-overlay -->
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script>
+'use strict';
+
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+const VISAS = [
+  { id:'arraigo_social',    cat:'residencia', ico:'i-home',    icoCls:'wi-ind', cmp:'media', name:'Arraigo Social',
+    desc:'Llevas más de 3 años en España y quieres regularizar tu situación. La vía más utilizada para obtener el primer permiso de residencia.',
+    why:'Según tus respuestas, llevas tiempo residiendo en España sin regularizar tu situación. El arraigo social es la vía más adecuada para ti.',
+    time:'3–6 meses', renov:'Sí — hacia residencia regular',
+    docs:[
+      {id:'passport', name:'Pasaporte en vigor', desc:'Todas las páginas, incluida la foto', req:true, ico:'i-passport'},
+      {id:'empadr',   name:'Certificado de empadronamiento', desc:'Acreditando más de 3 años continuados en España', req:true, ico:'i-doc'},
+      {id:'antec',    name:'Certificado de antecedentes penales', desc:'Del país de origen, apostillado y traducido', req:true, ico:'i-paper'},
+      {id:'ex02',     name:'Formulario EX-02 cumplimentado', desc:'Modelo oficial de solicitud de residencia', req:true, ico:'i-doc'},
+      {id:'tasa',     name:'Justificante de pago de tasa 790-052', desc:'Abonado antes de presentar la solicitud', req:true, ico:'i-doc'},
+      {id:'medios',   name:'Acreditación de medios económicos', desc:'Contrato de trabajo, nóminas u otros medios', req:true, ico:'i-brief'},
+      {id:'foto',     name:'Fotografía reciente', desc:'Fondo blanco, tamaño carné', req:true, ico:'i-user'},
+      {id:'seguro',   name:'Seguro médico (si aplica)', desc:'Solo si no tienes acceso a sanidad pública', req:false, ico:'i-shield'},
+    ]
+  },
+  { id:'arraigo_laboral',   cat:'residencia', ico:'i-brief',   icoCls:'wi-gld', cmp:'media', name:'Arraigo Laboral',
+    desc:'Has trabajado en España durante al menos 6 meses y puedes acreditarlo, aunque fuera sin contrato formal.',
+    why:'Detectamos que tienes o has tenido una relación laboral en España. El arraigo laboral te permite regularizarte acreditando ese vínculo.',
+    time:'3–4 meses', renov:'Sí — a residencia y trabajo',
+    docs:[
+      {id:'passport', name:'Pasaporte en vigor', desc:'Todas las páginas, incluida la foto', req:true, ico:'i-passport'},
+      {id:'empadr',   name:'Certificado de empadronamiento', desc:'Acreditando residencia en España', req:true, ico:'i-doc'},
+      {id:'rellab',   name:'Acreditación de relación laboral', desc:'Sentencia firme, acta de inspección o acuerdo con empleador', req:true, ico:'i-brief'},
+      {id:'antec',    name:'Certificado de antecedentes penales', desc:'Del país de origen, apostillado y traducido', req:true, ico:'i-paper'},
+      {id:'ex02',     name:'Formulario EX-02 cumplimentado', desc:'Modelo oficial de solicitud', req:true, ico:'i-doc'},
+      {id:'tasa',     name:'Justificante de pago de tasa 790-052', desc:'Abonado antes de presentar', req:true, ico:'i-doc'},
+      {id:'foto',     name:'Fotografía reciente', desc:'Fondo blanco, tamaño carné', req:true, ico:'i-user'},
+    ]
+  },
+  { id:'arraigo_formacion', cat:'residencia', ico:'i-doc',     icoCls:'wi-ind', cmp:'baja',  name:'Arraigo para la Formación',
+    desc:'Llevas más de 2 años en España y te comprometes a cursar formación oficial — FP, idiomas o certificados de profesionalidad.',
+    why:'Llevas tiempo en España y la formación es tu camino hacia la regularización. Esta vía es la más accesible con 2 o más años de residencia.',
+    time:'2–3 meses', renov:'Sí — condicionado a formación',
+    docs:[
+      {id:'passport', name:'Pasaporte en vigor', desc:'Todas las páginas, incluida la foto', req:true, ico:'i-passport'},
+      {id:'empadr',   name:'Certificado de empadronamiento (+2 años)', desc:'Acreditando más de 2 años en España', req:true, ico:'i-doc'},
+      {id:'centro',   name:'Carta de admisión del centro formativo', desc:'Centro reconocido oficialmente', req:true, ico:'i-paper'},
+      {id:'antec',    name:'Certificado de antecedentes penales', desc:'Del país de origen, apostillado', req:true, ico:'i-paper'},
+      {id:'ex02',     name:'Formulario EX-02 cumplimentado', desc:'Modelo oficial de solicitud', req:true, ico:'i-doc'},
+      {id:'tasa',     name:'Justificante de pago de tasa 790-052', desc:'Abonado antes de presentar', req:true, ico:'i-doc'},
+    ]
+  },
+  { id:'reagrupacion',      cat:'familia',    ico:'i-users',   icoCls:'wi-ind', cmp:'media', name:'Reagrupación Familiar',
+    desc:'Eres residente legal en España y quieres traer a tu cónyuge, hijos u otros familiares para vivir juntos.',
+    why:'Tu situación indica que tienes familia directa que deseas traer a España. La reagrupación familiar es el camino para reuniros legalmente.',
+    time:'3–6 meses', renov:'Sí — vinculado al reagrupante',
+    docs:[
+      {id:'passport_r', name:'Pasaporte del solicitante', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'tie',        name:'TIE del reagrupante (mínimo 1 año)', desc:'Tarjeta de identidad de extranjero en vigor', req:true, ico:'i-id'},
+      {id:'empadr',     name:'Certificado de empadronamiento', desc:'Del reagrupante en España', req:true, ico:'i-doc'},
+      {id:'medios',     name:'Justificante de medios económicos', desc:'Nóminas o declaración de renta suficiente', req:true, ico:'i-brief'},
+      {id:'vivienda',   name:'Acreditación de vivienda adecuada', desc:'Contrato de alquiler o escritura de propiedad', req:true, ico:'i-home'},
+      {id:'vinculo',    name:'Libro de familia o certificado de matrimonio', desc:'Apostillado y traducido si es necesario', req:true, ico:'i-users'},
+      {id:'antec_f',    name:'Antecedentes penales del familiar', desc:'De su país de origen, apostillado', req:true, ico:'i-paper'},
+      {id:'ex02',       name:'Formulario EX-02 y Tasa 790-052', desc:'Documentación oficial de la solicitud', req:true, ico:'i-doc'},
+      {id:'seguro',     name:'Seguro médico del familiar', desc:'Si aplica según la situación', req:false, ico:'i-shield'},
+    ]
+  },
+  { id:'cuenta_ajena',      cat:'trabajo',    ico:'i-brief',   icoCls:'wi-gld', cmp:'alta',  name:'Trabajo por Cuenta Ajena',
+    desc:'Una empresa española te ha ofrecido un contrato de trabajo. Necesitas el permiso para trabajar legalmente en España.',
+    why:'Tienes una oferta de empleo de empresa española. La autorización por cuenta ajena es el trámite para que puedas trabajar legalmente.',
+    time:'2–4 meses', renov:'Sí — a los 2 años',
+    docs:[
+      {id:'contrato',   name:'Contrato de trabajo firmado', desc:'Por empresa española, indefinido o temporal', req:true, ico:'i-brief'},
+      {id:'ex03',       name:'Formulario EX-03 (firmado por la empresa)', desc:'La empresa solicita en nombre del trabajador', req:true, ico:'i-doc'},
+      {id:'tasa',       name:'Justificante de pago de tasa 790-052', desc:'Abonado por la empresa', req:true, ico:'i-doc'},
+      {id:'passport',   name:'Pasaporte del trabajador', desc:'En vigor, todas las páginas', req:true, ico:'i-passport'},
+      {id:'antec',      name:'Certificado de antecedentes penales', desc:'Del país de origen, apostillado', req:true, ico:'i-paper'},
+      {id:'titulo',     name:'Titulación homologada (si aplica)', desc:'Solo para profesiones reguladas', req:false, ico:'i-award'},
+      {id:'empresa',    name:'Documentación de la empresa', desc:'Alta en SS, IAE e inscripción en RETA', req:true, ico:'i-brief'},
+    ]
+  },
+  { id:'nomada_digital',    cat:'trabajo',    ico:'i-globe',   icoCls:'wi-ind', cmp:'media', name:'Nómada Digital',
+    desc:'Trabajas de forma remota para empresas extranjeras o como autónomo internacional y quieres vivir en España.',
+    why:'Trabajas de forma remota o como autónomo para clientes fuera de España. El visado de nómada digital es exactamente lo que necesitas.',
+    time:'20–45 días', renov:'Hasta 5 años',
+    docs:[
+      {id:'passport',  name:'Pasaporte con al menos 6 meses de vigencia', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'contrato',  name:'Contrato con empresa extranjera o acreditación autónomo', desc:'Mínimo 3 meses de relación laboral', req:true, ico:'i-brief'},
+      {id:'seguro',    name:'Seguro médico privado con cobertura total', desc:'Válido en todo el territorio español', req:true, ico:'i-shield'},
+      {id:'medios',    name:'Justificante de medios económicos suficientes', desc:'Extractos bancarios de los últimos 3 meses', req:true, ico:'i-doc'},
+      {id:'antec',     name:'Certificado de antecedentes penales', desc:'Del país de origen, apostillado', req:true, ico:'i-paper'},
+    ]
+  },
+  { id:'golden_visa',       cat:'inversion',  ico:'i-award',   icoCls:'wi-gld', cmp:'alta',  name:'Golden Visa — Inversor',
+    desc:'Has realizado una inversión significativa en España (>500.000€ en inmuebles u >1M€ en activos financieros).',
+    why:'Tu perfil de inversión en España te da acceso a la residencia de inversor, uno de los trámites más rápidos del sistema español.',
+    time:'10–20 días hábiles', renov:'Indefinida, cada 5 años',
+    docs:[
+      {id:'passport',  name:'Pasaporte en vigor', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'inversion', name:'Escritura de inversión o certificado CNMV', desc:'Acreditando la inversión realizada', req:true, ico:'i-doc'},
+      {id:'libre_c',   name:'Certificación de inversión libre de cargas', desc:'Registrada a nombre del solicitante', req:true, ico:'i-paper'},
+      {id:'seguro',    name:'Seguro médico privado', desc:'Con cobertura completa en España', req:true, ico:'i-shield'},
+      {id:'antec',     name:'Antecedentes penales apostillados', desc:'Del país de origen', req:true, ico:'i-paper'},
+      {id:'fondos',    name:'Declaración de origen de fondos', desc:'Para acreditación SEPBLAC', req:true, ico:'i-doc'},
+      {id:'ex07',      name:'Formulario EX-07 y Tasa 790-052', desc:'Documentación oficial de la solicitud', req:true, ico:'i-doc'},
+    ]
+  },
+  { id:'no_lucrativa',      cat:'residencia', ico:'i-home',    icoCls:'wi-grn', cmp:'media', name:'Residencia No Lucrativa',
+    desc:'Dispones de medios económicos suficientes y quieres vivir en España sin necesidad de trabajar.',
+    why:'Tienes medios propios para vivir en España sin necesidad de trabajar. La residencia no lucrativa es la vía diseñada para tu situación.',
+    time:'1–3 meses', renov:'Sí — cada 2 años',
+    docs:[
+      {id:'passport',  name:'Pasaporte en vigor', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'medios',    name:'Justificante de medios económicos', desc:'Aprox. 30.000€/año o equivalente en patrimonio', req:true, ico:'i-doc'},
+      {id:'seguro',    name:'Seguro médico privado completo', desc:'Válido en España, sin copagos', req:true, ico:'i-shield'},
+      {id:'antec',     name:'Antecedentes penales apostillados', desc:'Del país de origen, traducidos', req:true, ico:'i-paper'},
+      {id:'aloj',      name:'Acreditación de alojamiento en España', desc:'Contrato de arrendamiento o escritura', req:true, ico:'i-home'},
+      {id:'ex01',      name:'Formulario EX-01 y Tasa 790-052', desc:'Documentación oficial de la solicitud', req:true, ico:'i-doc'},
+    ]
+  },
+  { id:'visado_estudios',   cat:'estudios',   ico:'i-doc',     icoCls:'wi-ind', cmp:'baja',  name:'Visado de Estudios',
+    desc:'Quieres estudiar en España — universidad, escuela de idiomas, máster o cualquier centro de formación reconocido.',
+    why:'Tu objetivo es formarte en España. El visado de estudios es el camino correcto para que puedas estudiar con plena legalidad.',
+    time:'1–2 meses', renov:'Anual — ligado a matrícula',
+    docs:[
+      {id:'passport',  name:'Pasaporte en vigor', desc:'Con vigencia suficiente para el período de estudios', req:true, ico:'i-passport'},
+      {id:'admision',  name:'Carta de admisión del centro educativo', desc:'Centro reconocido en España', req:true, ico:'i-paper'},
+      {id:'seguro',    name:'Seguro médico privado o Escolar', desc:'Válido durante toda la estancia', req:true, ico:'i-shield'},
+      {id:'medios',    name:'Justificante de medios económicos', desc:'Para cubrir gastos de vida y estudios', req:true, ico:'i-doc'},
+      {id:'aloj',      name:'Justificante de alojamiento', desc:'Residencia universitaria, piso o familia de acogida', req:true, ico:'i-home'},
+      {id:'antec',     name:'Antecedentes penales (si eres mayor de edad)', desc:'Del país de origen', req:true, ico:'i-paper'},
+    ]
+  },
+  { id:'emprendedor',       cat:'trabajo',    ico:'i-award',   icoCls:'wi-ind', cmp:'alta',  name:'Visado de Emprendedor',
+    desc:'Tienes un proyecto empresarial innovador que quieres desarrollar en España.',
+    why:'Tu perfil emprendedor e innovador te abre la puerta al visado de emprendedor, diseñado para proyectos con alto potencial.',
+    time:'20–45 días', renov:'Renovable hasta indefinida',
+    docs:[
+      {id:'passport',  name:'Pasaporte en vigor', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'plan',      name:'Plan de negocio detallado', desc:'Con análisis de viabilidad y proyecciones financieras', req:true, ico:'i-doc'},
+      {id:'informe',   name:'Informe favorable de ENISA o DG de Industria', desc:'Acreditando el carácter innovador del proyecto', req:true, ico:'i-paper'},
+      {id:'medios',    name:'Medios económicos personales', desc:'Para sostenerse durante el desarrollo del proyecto', req:true, ico:'i-doc'},
+      {id:'seguro',    name:'Seguro médico privado', desc:'Cobertura completa en España', req:true, ico:'i-shield'},
+      {id:'antec',     name:'Antecedentes penales apostillados', desc:'Del país de origen', req:true, ico:'i-paper'},
+      {id:'ex07',      name:'Formulario EX-07 y Tasa 790-052', desc:'Documentación oficial de la solicitud', req:true, ico:'i-doc'},
+    ]
+  },
+  { id:'proteccion',        cat:'especial',   ico:'i-shield',  icoCls:'wi-grn', cmp:'alta',  name:'Protección Internacional',
+    desc:'Tu vida o libertad están en riesgo en tu país de origen. En España tienes derecho a solicitar protección internacional.',
+    why:'Tu situación indica que puedes necesitar protección. En España tienes derecho a solicitar asilo — te acompañamos en cada paso de este proceso.',
+    time:'6 meses – 2 años', renov:'Estatuto de refugiado: indefinido',
+    docs:[
+      {id:'identidad', name:'Documentación de identidad (si disponible)', desc:'Pasaporte, DNI o cualquier documento de identificación', req:false, ico:'i-passport'},
+      {id:'solicitud', name:'Formulario de solicitud de protección', desc:'Lo cumplimentamos contigo en la entrevista inicial', req:true, ico:'i-doc'},
+      {id:'declarac',  name:'Declaración de los motivos de la solicitud', desc:'Relato de los hechos que motivan la solicitud', req:true, ico:'i-paper'},
+      {id:'pruebas',   name:'Documentación que acredite la situación de riesgo', desc:'Cualquier prueba de los hechos declarados', req:false, ico:'i-shield'},
+    ]
+  },
+  { id:'larga_duracion',    cat:'residencia', ico:'i-globe',   icoCls:'wi-ind', cmp:'media', name:'Residencia Larga Duración UE',
+    desc:'Llevas 5 años o más residiendo legalmente en España o en la Unión Europea. Tienes derecho a la residencia permanente.',
+    why:'Con más de 5 años de residencia legal tienes derecho a la residencia de larga duración, que te da los derechos más amplios del sistema.',
+    time:'2–3 meses', renov:'Permanente — solo renovación administrativa',
+    docs:[
+      {id:'passport',  name:'Pasaporte en vigor', desc:'Todas las páginas', req:true, ico:'i-passport'},
+      {id:'tie',       name:'TIE en vigor o caducada hace menos de 1 año', desc:'Tarjeta de identidad de extranjero anterior', req:true, ico:'i-id'},
+      {id:'cotiz',     name:'Historial de cotizaciones a la Seguridad Social', desc:'O acreditación de medios económicos suficientes', req:true, ico:'i-brief'},
+      {id:'empadr',    name:'Certificado de empadronamiento (5 años)', desc:'Acreditando residencia continuada en España', req:true, ico:'i-doc'},
+      {id:'antec',     name:'Certificado de antecedentes penales', desc:'Del país de origen y de España', req:true, ico:'i-paper'},
+      {id:'ex11',      name:'Formulario EX-11 y Tasa 790-052', desc:'Documentación oficial de la solicitud', req:true, ico:'i-doc'},
+    ]
+  },
+];
+
+const cmpCls = { alta:'cc-h', media:'cc-m', baja:'cc-l' };
+const cmpLbl = { alta:'Complejo', media:'Moderado', baja:'Sencillo' };
+const cmpBg  = { alta:'var(--red-bg)', media:'var(--amb-bg)', baja:'var(--grn-bg)' };
+const icoCls = { 'wi-ind':'var(--indigo)', 'wi-gld':'var(--terra)', 'wi-grn':'var(--green)' };
+const icoBg  = { 'wi-ind':'var(--ind-bg)', 'wi-gld':'var(--terra-bg)', 'wi-grn':'var(--grn-bg)' };
+
+/* ═══════════════════════════════════
+   QUIZ QUESTIONS
+═══════════════════════════════════ */
+const QUESTIONS = [
+  {
+    id: 'q1', text: '¿Cuánto tiempo llevas viviendo en España de forma continuada?',
+    hint: 'Si eres ciudadano UE o tienes ya residencia, escríbenos directamente por teléfono.',
+    opts: [
+      { val:'outside',  label:'Todavía estoy fuera de España',              ico:'i-globe'  },
+      { val:'less2',    label:'Menos de 2 años viviendo en España',         ico:'i-clock'  },
+      { val:'2to3',     label:'Entre 2 y 3 años viviendo en España',        ico:'i-clock'  },
+      { val:'over3',    label:'Más de 3 años viviendo en España',           ico:'i-home'   },
+      { val:'over5',    label:'Más de 5 años con residencia legal en España', ico:'i-award' },
+    ]
+  },
+  {
+    id: 'q2', text: '¿Cuál es tu principal objetivo al regularizar tu situación?',
+    hint: 'Elige la opción que mejor describa tu situación, aunque haya varias que te encajen.',
+    opts: [
+      { val:'work_emp',    label:'Trabajar para una empresa española (tengo contrato u oferta)', ico:'i-brief'  },
+      { val:'work_remote', label:'Trabajar de forma remota para empresas o clientes del extranjero', ico:'i-globe' },
+      { val:'study',       label:'Estudiar o formarme en España',                           ico:'i-doc'    },
+      { val:'family',      label:'Vivir junto a mi familia que ya está en España',           ico:'i-users'  },
+      { val:'own_means',   label:'Vivir en España con mis propios medios, sin trabajar aquí', ico:'i-home'  },
+      { val:'invest',      label:'Invertir o desarrollar un proyecto empresarial',           ico:'i-award'  },
+      { val:'protection',  label:'Necesito protección o estoy en situación de riesgo',       ico:'i-shield' },
+    ]
+  },
+  {
+    id: 'q3', text: '¿Cuál es tu situación laboral en España?',
+    hint: 'Incluso si trabajaste sin contrato, cuéntanoslo — puede ser importante para tu trámite.',
+    opts: [
+      { val:'has_contract',    label:'Tengo o he tenido un contrato de trabajo en España',   ico:'i-brief'  },
+      { val:'worked_informal', label:'He trabajado en España pero sin contrato formal',       ico:'i-brief'  },
+      { val:'has_offer',       label:'Tengo una oferta de empleo de empresa española',        ico:'i-check-c'},
+      { val:'no_work',         label:'No tengo ni he tenido ningún vínculo laboral en España', ico:'i-x'    },
+    ]
+  },
+  {
+    id: 'q4', text: '¿Tienes algún familiar con residencia legal o ciudadanía española?',
+    hint: 'Esto puede abrir vías adicionales para tu trámite o simplificarlo.',
+    opts: [
+      { val:'spouse',   label:'Sí — mi cónyuge o pareja de hecho',                ico:'i-users'  },
+      { val:'family',   label:'Sí — mis hijos, padres u otros familiares directos', ico:'i-users' },
+      { val:'none',     label:'No tengo familiares con residencia en España',       ico:'i-x'      },
+    ]
+  },
+  {
+    id: 'q5', text: '¿Cuál es tu situación económica actual?',
+    hint: 'Esta información es confidencial y nos ayuda a identificar las opciones disponibles para ti.',
+    opts: [
+      { val:'investment', label:'Tengo un patrimonio o inversión considerable (más de 500.000€)',     ico:'i-award'  },
+      { val:'stable',     label:'Tengo ingresos regulares y estables (más de 2.000€/mes)',            ico:'i-doc'    },
+      { val:'employed',   label:'Tengo empleo o una fuente de ingresos suficiente',                   ico:'i-brief'  },
+      { val:'limited',    label:'Mis recursos económicos son limitados en este momento',              ico:'i-user'   },
+    ]
+  }
+];
+
+/* ═══════════════════════════════════
+   DECISION LOGIC
+═══════════════════════════════════ */
+function determineVisa(ans) {
+  const {q1,q2,q3,q4,q5} = ans;
+
+  if (q1 === 'over5') return 'larga_duracion';
+
+  if (q1 === 'outside') {
+    if (q2 === 'protection')  return 'proteccion';
+    if (q2 === 'family')      return 'reagrupacion';
+    if (q2 === 'study')       return 'visado_estudios';
+    if (q2 === 'work_remote') return 'nomada_digital';
+    if (q2 === 'invest')      return q5 === 'investment' ? 'golden_visa' : 'emprendedor';
+    if (q2 === 'own_means')   return q5 === 'investment' ? 'golden_visa' : 'no_lucrativa';
+    if (q2 === 'work_emp')    return 'cuenta_ajena';
+    return 'cuenta_ajena';
+  }
+
+  if (q1 === 'less2') {
+    if (q2 === 'protection')   return 'proteccion';
+    if (q2 === 'family')       return 'reagrupacion';
+    if (q2 === 'work_remote')  return 'nomada_digital';
+    if (q2 === 'invest')       return 'emprendedor';
+    if (q3 === 'worked_informal') return 'arraigo_laboral';
+    if (q3 === 'has_offer')    return 'cuenta_ajena';
+    return 'no_lucrativa';
+  }
+
+  if (q1 === '2to3') {
+    if (q2 === 'protection')   return 'proteccion';
+    if (q2 === 'family' && q4 !== 'none') return 'reagrupacion';
+    if (q2 === 'work_remote')  return 'nomada_digital';
+    if (q3 === 'worked_informal') return 'arraigo_laboral';
+    if (q2 === 'study')        return 'arraigo_formacion';
+    return 'arraigo_formacion';
+  }
+
+  if (q1 === 'over3') {
+    if (q2 === 'protection')   return 'proteccion';
+    if (q3 === 'worked_informal') return 'arraigo_laboral';
+    if (q2 === 'family' && q4 !== 'none') return 'reagrupacion';
+    if (q2 === 'work_remote')  return 'nomada_digital';
+    if (q2 === 'invest' && q5 === 'investment') return 'golden_visa';
+    if (q2 === 'study')        return 'arraigo_formacion';
+    return 'arraigo_social';
+  }
+
+  return 'arraigo_social';
+}
+
+/* ═══════════════════════════════════
+   FLOW STATE
+═══════════════════════════════════ */
+let currentScreen = 'screen-entry';
+let currentVisa   = null;
+let quizAnswers   = {};
+let quizStep      = 0;
+let docsUploaded  = {};
+let prevScreen    = 'screen-entry';
+
+function goTo(screenId) {
+  prevScreen = currentScreen;
+  document.querySelectorAll('.flow-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  currentScreen = screenId;
+  const ov = document.getElementById('flow-overlay');
+  ov.scrollTop = 0;
+  updateProgress();
+
+  // Personalise confirmation screen with user's name
+  if (screenId === 'screen-confirm' && window.registeredUser) {
+    const u = window.registeredUser;
+    document.getElementById('confirmTitle').innerHTML =
+      `${u.nombre}, hemos recibido<br>tu documentación`;
+    document.getElementById('confirmLead').textContent =
+      `Nos pondremos en contacto contigo en ${u.email} o en el ${u.telefono} en menos de 24 horas para asignarte un asesor y confirmar que todo está en orden.`;
+  }
+}
+
+function goBack() {
+  goTo(prevScreen);
+}
+
+const progressMap = {
+  'screen-entry':    { pct: 5,  label: 'Inicio' },
+  'screen-quiz':     { pct: 30, label: 'Cuestionario' },
+  'screen-selector': { pct: 30, label: 'Elige tu trámite' },
+  'screen-result':   { pct: 52, label: 'Tu trámite asignado' },
+  'screen-register': { pct: 68, label: 'Tus datos' },
+  'screen-docs':     { pct: 84, label: 'Documentación' },
+  'screen-confirm':  { pct: 100,label: 'Completado' },
+};
+
+function updateProgress() {
+  const p = progressMap[currentScreen] || { pct: 0, label: '' };
+  document.getElementById('fpbFill').style.width = p.pct + '%';
+  document.getElementById('fpbLabel').textContent = p.label;
+}
+
+/* ── FLOW OPEN/CLOSE ── */
+function openFlow() {
+  document.getElementById('flow-overlay').classList.add('open');
+  document.body.classList.add('flow-open');
+  goTo('screen-entry');
+}
+function closeFlow() {
+  document.getElementById('flow-overlay').classList.remove('open');
+  document.body.classList.remove('flow-open');
+  quizAnswers = {};
+  quizStep = 0;
+  docsUploaded = {};
+}
+
+/* ═══════════════════════════════════
+   QUIZ
+═══════════════════════════════════ */
+function startQuiz() {
+  quizAnswers = {};
+  quizStep = 0;
+  renderQuizStep();
+  goTo('screen-quiz');
+}
+
+function restartQuiz() {
+  quizAnswers = {};
+  quizStep = 0;
+  renderQuizStep();
+}
+
+function renderQuizStep() {
+  const q = QUESTIONS[quizStep];
+  const wrap = document.getElementById('quizWrap');
+  wrap.innerHTML = `
+    <div class="quiz-step active">
+      <div class="quiz-q-num">Pregunta ${quizStep+1} de ${QUESTIONS.length}</div>
+      <div class="quiz-q-text">${q.text}</div>
+      <div class="quiz-q-hint">${q.hint}</div>
+      <div class="quiz-options">
+        ${q.opts.map(o => `
+          <button class="qopt" data-val="${o.val}" onclick="selectOpt(this,'${q.id}','${o.val}')">
+            <div class="qopt-radio"></div>
+            <span class="qopt-label">${o.label}</span>
+            <div class="qopt-icon"><svg width="16" height="16"><use href="#${o.ico}"/></svg></div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-nav">
+        ${quizStep > 0 ? `<button class="quiz-back" onclick="quizBack()"><svg width="16" height="16"><use href="#i-arrow-l"/></svg> Pregunta anterior</button>` : '<div></div>'}
+        <button class="btn btn-navy" id="quizNextBtn" onclick="quizNext()" style="opacity:.4;pointer-events:none">
+          ${quizStep < QUESTIONS.length-1 ? 'Siguiente pregunta' : 'Ver mi trámite'}
+          <svg width="16" height="16"><use href="#i-arrow-r"/></svg>
+        </button>
+      </div>
+    </div>
+  `;
+  // restore answer if revisiting
+  if (quizAnswers[q.id]) {
+    const prev = wrap.querySelector(`[data-val="${quizAnswers[q.id]}"]`);
+    if (prev) {
+      prev.classList.add('selected');
+      enableNext();
+    }
+  }
+  updateProgress();
+}
+
+function selectOpt(el, qid, val) {
+  document.querySelectorAll('.qopt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  quizAnswers[qid] = val;
+  enableNext();
+}
+
+function enableNext() {
+  const btn = document.getElementById('quizNextBtn');
+  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+}
+
+function quizNext() {
+  const q = QUESTIONS[quizStep];
+  if (!quizAnswers[q.id]) return;
+  if (quizStep < QUESTIONS.length - 1) {
+    quizStep++;
+    renderQuizStep();
+  } else {
+    showResult();
+  }
+}
+
+function quizBack() {
+  if (quizStep > 0) { quizStep--; renderQuizStep(); }
+  else goTo('screen-entry');
+}
+
+/* ═══════════════════════════════════
+   RESULT
+═══════════════════════════════════ */
+function showResult() {
+  const id = determineVisa(quizAnswers);
+  currentVisa = VISAS.find(v => v.id === id) || VISAS[0];
+  renderResult(currentVisa);
+  goTo('screen-result');
+}
+
+function renderResult(v) {
+  document.getElementById('resultTitle').textContent = 'Tu trámite es: ' + v.name;
+  document.getElementById('resultSubtitle').textContent = v.why;
+
+  const col = icoCls[v.icoCls] || 'var(--indigo)';
+  const bg  = icoBg[v.icoCls]  || 'var(--ind-bg)';
+
+  document.getElementById('resultCard').innerHTML = `
+    <div class="rc-top">
+      <div class="rc-icon" style="background:${bg}"><svg style="color:${col}"><use href="#${v.ico}"/></svg></div>
+      <div>
+        <div class="rc-name">${v.name}</div>
+        <div class="rc-sub">${v.docs.length} documentos necesarios · ${v.time}</div>
+      </div>
+    </div>
+    <p class="rc-desc">${v.desc}</p>
+    <div class="rc-meta">
+      <div class="rc-kv"><div class="rc-kv-lbl">Tiempo estimado</div><div class="rc-kv-val">${v.time}</div></div>
+      <div class="rc-kv"><div class="rc-kv-lbl">Renovable</div><div class="rc-kv-val">${v.renov}</div></div>
+    </div>
+  `;
+
+  document.getElementById('resultNote').innerHTML = `
+    <svg><use href="#i-info"/></svg>
+    <span>Esta asignación es orientativa. Tu asesor personal confirmará el trámite definitivo tras revisar tu documentación y hablar contigo.</span>
+  `;
+}
+
+/* ═══════════════════════════════════
+   SELECTOR (knows their visa)
+═══════════════════════════════════ */
+function renderSelector(cat) {
+  const list = cat === 'all' ? VISAS : VISAS.filter(v => v.cat === cat);
+  document.getElementById('selGrid').innerHTML = list.map(v => {
+    const col = icoCls[v.icoCls] || 'var(--indigo)';
+    const bg  = icoBg[v.icoCls]  || 'var(--ind-bg)';
+    return `
+      <div class="sel-card" onclick="selectVisa('${v.id}')">
+        <div class="sc-top">
+          <div class="sc-ico" style="background:${bg}"><svg style="color:${col}"><use href="#${v.ico}"/></svg></div>
+          <span class="sc-cmp ${cmpCls[v.cmp]}">${cmpLbl[v.cmp]}</span>
+        </div>
+        <div class="sc-name">${v.name}</div>
+        <div class="sc-desc">${v.desc}</div>
+        <div class="sc-foot">
+          <span class="sc-time"><svg><use href="#i-clock"/></svg>${v.time}</span>
+          <span class="sc-cta">Elegir este <svg><use href="#i-arrow-r"/></svg></span>
+        </div>
+      </div>`;
+  }).join('');
+}
+renderSelector('all');
+
+document.getElementById('selFilters').addEventListener('click', e => {
+  const b = e.target.closest('.sf');
+  if (!b) return;
+  document.querySelectorAll('.sf').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  renderSelector(b.dataset.cat);
+});
+
+function selectVisa(id) {
+  currentVisa = VISAS.find(v => v.id === id);
+  if (!currentVisa) return;
+  prevScreen = 'screen-selector';
+  startRegister(currentVisa);
+}
+
+/* ═══════════════════════════════════
+   REGISTER
+═══════════════════════════════════ */
+function startRegister(visa) {
+  currentVisa = visa;
+  // Clear previous errors and values
+  ['nombre','apellidos','email','telefono','idioma1'].forEach(f => {
+    const inp = document.getElementById('reg-' + f);
+    const err = document.getElementById('err-' + f);
+    if (inp) inp.classList.remove('error');
+    if (err) err.classList.remove('show');
+  });
+  goTo('screen-register');
+}
+
+function submitRegister(e) {
+  e.preventDefault();
+  const nombre    = document.getElementById('reg-nombre');
+  const apellidos = document.getElementById('reg-apellidos');
+  const email     = document.getElementById('reg-email');
+  const telefono  = document.getElementById('reg-telefono');
+  const idioma1   = document.getElementById('reg-idioma1');
+
+  let valid = true;
+
+  function validate(input, errId, check) {
+    const err = document.getElementById(errId);
+    if (!check(input.value.trim())) {
+      input.classList.add('error');
+      err.classList.add('show');
+      valid = false;
+    } else {
+      input.classList.remove('error');
+      err.classList.remove('show');
+    }
+  }
+
+  validate(nombre,    'err-nombre',    v => v.length >= 2);
+  validate(apellidos, 'err-apellidos', v => v.length >= 2);
+  validate(email,     'err-email',     v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  validate(telefono,  'err-telefono',  v => /^[\d\s\+\-\(\)]{7,}$/.test(v));
+  validate(idioma1,   'err-idioma1',   v => v.length > 0);
+
+  if (!valid) {
+    const firstErr = document.querySelector('.reg-input.error');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const idioma2 = document.getElementById('reg-idioma2');
+
+  const LANG_NAMES = {
+    es:'Español', en:'English', ar:'Árabe', ro:'Română', zh:'中文 (Chino)',
+    uk:'Українська', pt:'Português', fr:'Français', it:'Italiano', ru:'Русский',
+    pl:'Polski', bg:'Български', de:'Deutsch', nl:'Nederlands', hi:'हिन्दी',
+    tl:'Filipino', wo:'Wolof', ber:'Tamazight', other:'Otro idioma', '':''
+  };
+
+  window.registeredUser = {
+    nombre:    nombre.value.trim(),
+    apellidos: apellidos.value.trim(),
+    email:     email.value.trim(),
+    telefono:  telefono.value.trim(),
+    idioma1:   idioma1.value,
+    idioma1Label: LANG_NAMES[idioma1.value] || idioma1.value,
+    idioma2:   idioma2 ? idioma2.value : '',
+    idioma2Label: LANG_NAMES[idioma2 ? idioma2.value : ''] || '',
+  };
+
+  startDocs(currentVisa);
+}
+
+/* ═══════════════════════════════════
+   DOCS UPLOAD
+═══════════════════════════════════ */
+function startDocs(visa) {
+  currentVisa = visa;
+  docsUploaded = {};
+  document.getElementById('docsVisaName').textContent = visa.name;
+
+  const list = document.getElementById('docUploadList');
+  list.innerHTML = visa.docs.map(d => `
+    <div class="doc-upload-item" id="dui-${d.id}" data-id="${d.id}">
+      <div class="dui-icon" id="duiico-${d.id}">
+        <svg><use href="#${d.ico}"/></svg>
+      </div>
+      <div class="dui-info">
+        <div class="dui-name">
+          ${d.name}
+          <span class="dui-req ${d.req ? 'req-obl' : 'req-opt'}">${d.req ? 'Obligatorio' : 'Opcional'}</span>
+        </div>
+        <div class="dui-desc">${d.desc}</div>
+      </div>
+      <div class="dui-action" id="dact-${d.id}">
+        <input type="file" id="dinput-${d.id}" style="display:none" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleDocUpload('${d.id}', this)">
+        <button class="upload-btn" type="button" onclick="document.getElementById('dinput-${d.id}').click()">
+          <svg><use href="#i-upload"/></svg>
+          Subir
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  updateDocsProgress();
+  goTo('screen-docs');
+}
+
+function handleDocUpload(docId, input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  docsUploaded[docId] = file.name;
+
+  const item = document.getElementById('dui-' + docId);
+  const act  = document.getElementById('dact-' + docId);
+  const ico  = document.getElementById('duiico-' + docId);
+
+  item.classList.add('uploaded');
+  if (ico) {
+    ico.innerHTML = `<svg style="color:var(--green)"><use href="#i-check-c"/></svg>`;
+    ico.style.background = 'var(--grn-bg)';
+  }
+
+  const shortName = file.name.length > 22 ? file.name.substring(0, 20) + '…' : file.name;
+  act.innerHTML = `
+    <div class="uploaded-row">
+      <div class="uploaded-check"><svg><use href="#i-check-c"/></svg></div>
+      <span class="uploaded-filename" title="${file.name}">${shortName}</span>
+      <button class="doc-delete-btn" type="button" onclick="deleteDoc('${docId}')" title="Eliminar documento" aria-label="Eliminar ${file.name}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+      </button>
+    </div>
+  `;
+
+  updateDocsProgress();
+}
+
+function deleteDoc(docId) {
+  delete docsUploaded[docId];
+
+  const visa = currentVisa;
+  const d    = visa.docs.find(x => x.id === docId);
+  if (!d) return;
+
+  const item = document.getElementById('dui-' + docId);
+  const act  = document.getElementById('dact-' + docId);
+  const ico  = document.getElementById('duiico-' + docId);
+
+  item.classList.remove('uploaded');
+  if (ico) {
+    ico.innerHTML = `<svg><use href="#${d.ico}"/></svg>`;
+    ico.style.background = '';
+  }
+
+  act.innerHTML = `
+    <input type="file" id="dinput-${d.id}" style="display:none" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleDocUpload('${d.id}', this)">
+    <button class="upload-btn" type="button" onclick="document.getElementById('dinput-${d.id}').click()">
+      <svg><use href="#i-upload"/></svg>
+      Subir
+    </button>
+  `;
+
+  updateDocsProgress();
+}
+
+function updateDocsProgress() {
+  const visa = currentVisa;
+  if (!visa) return;
+  const total = visa.docs.length;
+  const done  = Object.keys(docsUploaded).length;
+  const pct   = total > 0 ? Math.round(done/total*100) : 0;
+  document.getElementById('docsCount').textContent = `${done} de ${total} documentos`;
+  document.getElementById('docsBar').style.width = pct + '%';
+  const btn = document.getElementById('docsSubmitBtn');
+  if (btn) {
+    const obligDone = visa.docs.filter(d => d.req).every(d => docsUploaded[d.id]);
+    btn.style.opacity = obligDone ? '1' : '.5';
+    btn.textContent = obligDone ? '' : 'Sube los documentos obligatorios primero';
+    if (obligDone) {
+      btn.innerHTML = `Enviar documentación <svg width="16" height="16"><use href="#i-arrow-r"/></svg>`;
+    }
+  }
+}
+
+/* ═══════════════════════════════════
+   GENERAL UI
+═══════════════════════════════════ */
+function tFaq(el) {
+  const o = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!o) el.classList.add('open');
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('sc', scrollY > 10);
+});
+
+document.getElementById('ham').addEventListener('click', () => {
+  document.getElementById('mobMenu').classList.toggle('open');
+});
+function cMenu() { document.getElementById('mobMenu').classList.remove('open'); }
+
+// sticky cta
+new IntersectionObserver(e => {
+  document.getElementById('stickyCta').style.display = e[0].isIntersecting ? 'none' : 'block';
+}, { threshold: .1 }).observe(document.getElementById('hero'));
+
+// scroll reveal
+const ro = new IntersectionObserver(e => {
+  e.forEach(x => { if (x.isIntersecting) x.target.classList.add('vis'); });
+}, { threshold: .12 });
+document.querySelectorAll('.fade-up').forEach(el => ro.observe(el));
+
+// spin keyframe
+const style = document.createElement('style');
+style.textContent = '@keyframes sp { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+/* ── MOBILE: close mobile menu on outside click ── */
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobMenu');
+  const ham  = document.getElementById('ham');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !ham.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+/* ── MOBILE: auto-advance quiz on option select (after brief delay) ── */
+// Wrapped in touch detection so desktop still uses explicit Next button
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+  document.addEventListener('click', e => {
+    const opt = e.target.closest('.qopt');
+    if (!opt) return;
+    // Small delay so user sees the selected state before advancing
+    setTimeout(() => {
+      const nextBtn = document.getElementById('quizNextBtn');
+      if (nextBtn && nextBtn.style.pointerEvents !== 'none') {
+        quizNext();
+      }
+    }, 380);
+  });
+}
+
+/* ── PREVENT iOS overscroll on flow overlay ── */
+document.getElementById('flow-overlay').addEventListener('touchmove', e => {
+  // Allow scroll inside overlay, block on the overlay background
+  if (e.target === document.getElementById('flow-overlay')) e.preventDefault();
+}, { passive: false });
+
+/* ── KEYBOARD: close flow on back button (Android) ── */
+window.addEventListener('popstate', () => {
+  if (document.getElementById('flow-overlay').classList.contains('open')) {
+    closeFlow();
+  }
+});
+// Push a state so back button triggers popstate
+document.addEventListener('DOMContentLoaded', () => {
+  history.pushState({ page: 'landing' }, '');
+});
+</script>
+</body>
+</html>
