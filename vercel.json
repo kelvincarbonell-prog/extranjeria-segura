@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/extranjeria-segura-idiomas.html"
+    }
+  ]
+}
