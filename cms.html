@@ -803,6 +803,29 @@ button { cursor: pointer; border: 0; }
   gap: 10px;
 }
 
+.detail-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.detail-tab {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.88);
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.detail-tab.is-on {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
 .detail-btn {
   padding: 10px 14px;
   border-radius: 14px;
@@ -864,6 +887,90 @@ button { cursor: pointer; border: 0; }
   line-height: 1.6;
 }
 
+.detail-pane {
+  display: none;
+  gap: 18px;
+}
+
+.detail-pane.is-on {
+  display: grid;
+}
+
+.workflow-grid,
+.business-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.workflow-card,
+.business-card,
+.composer-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--line);
+}
+
+.workflow-card strong,
+.business-card strong,
+.composer-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--navy);
+}
+
+.workflow-card span,
+.business-card span,
+.composer-card span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.composer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) auto;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.composer-input,
+.composer-select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 12px 14px;
+  color: var(--navy);
+}
+
+.composer-btn {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+}
+
+.composer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.secondary-action {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 13px;
+}
+
 .perm-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -923,7 +1030,10 @@ button { cursor: pointer; border: 0; }
   }
   .grid-kpis,
   .case-kvs,
-  .perm-grid { grid-template-columns: 1fr; }
+  .perm-grid,
+  .workflow-grid,
+  .business-grid,
+  .composer-grid { grid-template-columns: 1fr; }
 }
 
 .toast {
@@ -1088,19 +1198,58 @@ button { cursor: pointer; border: 0; }
             <div class="badge-row" id="caseBadges"></div>
             <div class="case-subtitle" id="caseNarrative"></div>
             <div class="detail-actions" id="caseActions"></div>
+            <div class="detail-tabs" id="detailTabs"></div>
           </div>
-          <div class="case-block case-kvs" id="caseKvs" style="margin-top:18px"></div>
-          <div class="case-block" style="margin-top:18px">
-            <div class="panel-title" style="font-size:20px">Timeline accionable</div>
-            <div class="timeline" id="timeline"></div>
+          <div class="detail-pane is-on" id="detailPane-overview">
+            <div class="case-block case-kvs" id="caseKvs" style="margin-top:18px"></div>
+            <div class="case-block">
+              <div class="panel-title" style="font-size:20px">Timeline accionable</div>
+              <div class="timeline" id="timeline"></div>
+            </div>
+            <div class="case-block">
+              <div class="panel-title" style="font-size:20px">Controles de workflow</div>
+              <div class="workflow-grid" id="workflowGrid"></div>
+            </div>
           </div>
-          <div class="case-block" style="margin-top:18px">
-            <div class="panel-title" style="font-size:20px">Checklist y calidad documental</div>
-            <div class="checklist-list" id="checklistList"></div>
+          <div class="detail-pane" id="detailPane-docs">
+            <div class="case-block" style="margin-top:18px">
+              <div class="panel-title" style="font-size:20px">Checklist y calidad documental</div>
+              <div class="checklist-list" id="checklistList"></div>
+            </div>
           </div>
-          <div class="case-block" style="margin-top:18px">
-            <div class="panel-title" style="font-size:20px">Conversaciones y notas internas</div>
-            <div class="message-list" id="messageList"></div>
+          <div class="detail-pane" id="detailPane-messages">
+            <div class="case-block" style="margin-top:18px">
+              <div class="panel-title" style="font-size:20px">Conversaciones y notas internas</div>
+              <div class="message-list" id="messageList"></div>
+            </div>
+            <div class="composer-card">
+              <strong>Registrar actividad</strong>
+              <span>Sirve para guardar una nota interna o una actualización de cliente y que todo el equipo conserve el contexto.</span>
+              <div class="composer-grid">
+                <select class="composer-select" id="composerType">
+                  <option value="internal">Nota interna</option>
+                  <option value="client">Update cliente</option>
+                </select>
+                <input class="composer-input" id="composerText" type="text" placeholder="Escribe un resumen corto y accionable">
+                <button class="composer-btn" id="composerSubmit" type="button">Guardar</button>
+              </div>
+              <div class="composer-row">
+                <button class="secondary-action" id="statusAdvanceBtn" type="button">Avanzar etapa</button>
+                <button class="secondary-action" id="statusBlockBtn" type="button">Marcar bloqueo</button>
+                <button class="secondary-action" id="statusReadyBtn" type="button">Marcar listo</button>
+              </div>
+            </div>
+          </div>
+          <div class="detail-pane" id="detailPane-business">
+            <div class="case-block" style="margin-top:18px">
+              <div class="panel-title" style="font-size:20px">Inteligencia comercial</div>
+              <div class="business-grid" id="businessGrid"></div>
+            </div>
+            <div class="composer-card">
+              <strong>Playbook de crecimiento</strong>
+              <span id="businessPlaybook">Aquí aparecerán las siguientes acciones de negocio recomendadas para este expediente.</span>
+              <div class="composer-row" id="businessActions"></div>
+            </div>
           </div>
         </div>
 
@@ -1364,6 +1513,14 @@ const CASES = {
       ["Cliente", "Firmo en cuanto salga de trabajar esta tarde.", "Hoy · 10:04"]
     ]
   }
+};
+
+const CASE_BUSINESS = {
+  mariana: { mrr: "149 EUR/mes", tier: "Premium anual", upsell: "Alta", renewal: "82%", referral: "Media", playbook: "Ofrecer seguimiento familiar y capturar referral cuando se cierre el padrón." },
+  julian: { mrr: "299 EUR/mes", tier: "Business", upsell: "Media", renewal: "74%", referral: "Baja", playbook: "Blindar la respuesta al requerimiento y, una vez resuelto, ofrecer fiscalidad de autónomo asociada." },
+  lina: { mrr: "79 EUR/mes", tier: "Standard", upsell: "Media", renewal: "61%", referral: "Media", playbook: "Reducir fricción de onboarding y ofrecer paquete de revisión premium si repite incidencias." },
+  carlos: { mrr: "129 EUR/mes", tier: "Premium", upsell: "Alta", renewal: "68%", referral: "Alta", playbook: "Salvar experiencia primero; luego abrir reseña y posible plan familiar o renovación recurrente." },
+  nadia: { mrr: "109 EUR/mes", tier: "Standard+", upsell: "Alta", renewal: "89%", referral: "Alta", playbook: "En cuanto firme y presente, activar solicitud de reseña y detectar trámites del entorno familiar." }
 };
 
 const ROLE_VIEWS = {
@@ -1727,10 +1884,15 @@ const checklistList = document.getElementById("checklistList");
 const messageList = document.getElementById("messageList");
 const alertList = document.getElementById("alertList");
 const roadmapList = document.getElementById("roadmapList");
+const workflowGrid = document.getElementById("workflowGrid");
+const businessGrid = document.getElementById("businessGrid");
+const businessActions = document.getElementById("businessActions");
+const detailTabs = document.getElementById("detailTabs");
 let currentRole = "superadmin";
 let currentCaseId = ROLE_VIEWS.superadmin.defaultCaseId;
 let currentFilter = "todos";
 let currentModuleIndex = 0;
+let currentDetailTab = "overview";
 let toastTimer = null;
 let activityLog = [
   {
@@ -1738,6 +1900,17 @@ let activityLog = [
     detail: "El panel se ha preparado con una vista por rol, una cartera de expedientes y un flujo de trabajo seleccionable."
   }
 ];
+const appState = {
+  cases: Object.fromEntries(Object.entries(CASES).map(([id, item]) => [id, {
+    status: [...item.status],
+    docsProgress: item.docsProgress,
+    nextMilestone: item.nextMilestone,
+    owner: item.owner,
+    timeline: item.timeline.map((entry) => [...entry]),
+    checklist: item.checklist.map((entry) => [...entry]),
+    messages: item.messages.map((entry) => [...entry])
+  }]))
+};
 
 function chipStatusClass(status) {
   return ({ ok: "ok", warn: "warn", danger: "danger", info: "info" })[status] || "info";
@@ -1806,15 +1979,62 @@ function renderQuickActions(activeRole) {
   `).join("");
 }
 
+function getRuntimeCase(id) {
+  return appState.cases[id];
+}
+
 function runAction(label, origin = "manual") {
   const item = CASES[currentCaseId];
-  const detail = `${label} sobre ${item.client} en ${currentRole}. Siguiente hito asociado: ${item.nextMilestone}.`;
+  const runtime = getRuntimeCase(currentCaseId);
+  applyActionEffect(label, item, runtime);
+  const detail = `${label} sobre ${item.client} en ${currentRole}. Siguiente hito asociado: ${runtime.nextMilestone}.`;
   pushActivity(label, detail);
   showToast(`${label} preparado`);
+  renderRole(currentRole);
   if (origin === "module") {
     const targetPanel = MODULE_SECTIONS[currentRole][currentModuleIndex] || "panel-overview";
     focusPanel(targetPanel, true);
   }
+}
+
+function applyActionEffect(label, item, runtime) {
+  const now = "Ahora";
+  if (/llamar|actualización|update|seguimiento|recordatorio|reseña/i.test(label)) {
+    runtime.messages.unshift(["Soporte", `${label} programado para ${item.client}.`, now]);
+  }
+  if (/pedir|solicitar|resubida|documentos/i.test(label)) {
+    runtime.status = ["Pendiente cliente", "warn"];
+    runtime.nextMilestone = "Esperando documentación o respuesta del cliente";
+    runtime.messages.unshift(["Operaciones", `${label} lanzado con instrucciones claras al cliente.`, now]);
+  }
+  if (/presentar|defensa|escrito|qa completo|listo/i.test(label)) {
+    runtime.status = ["Listo para siguiente etapa", "ok"];
+    runtime.docsProgress = Math.min(100, runtime.docsProgress + 8);
+    runtime.nextMilestone = "Esperando validación o presentación final";
+  }
+  if (/bloqueo|override|revisar fricción/i.test(label)) {
+    runtime.status = ["Bloqueado", "danger"];
+    runtime.nextMilestone = "Resolver bloqueo interno antes de avanzar";
+  }
+  if (/reasignar|reequilibrar|apoyo legal/i.test(label)) {
+    runtime.owner = currentRole === "superadmin" ? "Asignación ejecutiva" : runtime.owner;
+    runtime.timeline.unshift(["Reasignación interna", `${label} activado para mejorar capacidad o especialización.`, "info"]);
+  }
+}
+
+function renderDetailTabs() {
+  const tabs = [
+    ["overview", "Resumen"],
+    ["docs", "Documentos"],
+    ["messages", "Mensajes"],
+    ["business", "Comercial"]
+  ];
+  detailTabs.innerHTML = tabs.map(([id, label]) => `
+    <button class="detail-tab ${currentDetailTab === id ? "is-on" : ""}" type="button" data-detail-tab="${id}">${label}</button>
+  `).join("");
+  ["overview", "docs", "messages", "business"].forEach((id) => {
+    document.getElementById(`detailPane-${id}`).classList.toggle("is-on", currentDetailTab === id);
+  });
 }
 
 function setActiveModule(index, shouldScroll = true) {
@@ -1887,14 +2107,14 @@ function renderCaseList(activeRole) {
           <div class="case-row-code">${item.id}</div>
           <div class="case-row-name">${item.client}</div>
         </div>
-        <span class="status ${chipStatusClass(item.status[1])}">${item.status[0]}</span>
+        <span class="status ${chipStatusClass(getRuntimeCase(item.key).status[1])}">${getRuntimeCase(item.key).status[0]}</span>
       </div>
-      <div class="case-row-meta">${item.procedure} · ${item.office} · ${item.owner}</div>
-      <div class="case-row-meta">Siguiente hito: ${item.nextMilestone}</div>
+      <div class="case-row-meta">${item.procedure} · ${item.office} · ${getRuntimeCase(item.key).owner}</div>
+      <div class="case-row-meta">Siguiente hito: ${getRuntimeCase(item.key).nextMilestone}</div>
       <div class="case-row-foot">
         <div class="progress-inline">
-          <div class="progress-track"><div class="progress-fill" style="width:${item.docsProgress}%"></div></div>
-          <span class="progress-label">${item.docsProgress}% docs</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${getRuntimeCase(item.key).docsProgress}%"></div></div>
+          <span class="progress-label">${getRuntimeCase(item.key).docsProgress}% docs</span>
         </div>
         <div class="progress-label">${item.lastTouch}</div>
       </div>
@@ -1946,17 +2166,19 @@ function renderPermissions(activeRole) {
 
 function renderCase(activeRole) {
   const item = CASES[currentCaseId];
+  const runtime = getRuntimeCase(currentCaseId);
   document.getElementById("caseName").textContent = item.client;
-  document.getElementById("caseMeta").textContent = `${item.id} · ${item.procedure} · ${item.office} · Responsable: ${item.owner}`;
+  document.getElementById("caseMeta").textContent = `${item.id} · ${item.procedure} · ${item.office} · Responsable: ${runtime.owner}`;
   const caseStatus = document.getElementById("caseStatus");
-  caseStatus.textContent = item.status[0];
-  caseStatus.className = `status ${chipStatusClass(item.status[1])}`;
+  caseStatus.textContent = runtime.status[0];
+  caseStatus.className = `status ${chipStatusClass(runtime.status[1])}`;
 
   document.getElementById("caseNarrative").textContent = item.narrative;
   document.getElementById("caseBadges").innerHTML = item.badges.map((badge) => `<span class="mini-tag">${badge}</span>`).join("");
   document.getElementById("caseActions").innerHTML = item.actions[activeRole].map((action, index) => `
     <button class="detail-btn ${index > 0 ? "secondary" : ""}" type="button" data-detail-action="${action}">${action}</button>
   `).join("");
+  renderDetailTabs();
 
   document.getElementById("caseKvs").innerHTML = item.summary[activeRole].map(([label, value]) => `
     <div class="case-kv">
@@ -1965,7 +2187,7 @@ function renderCase(activeRole) {
     </div>
   `).join("");
 
-  timeline.innerHTML = item.timeline.map(([title, detail, state]) => `
+  timeline.innerHTML = runtime.timeline.map(([title, detail, state]) => `
     <div class="timeline-item">
       <div class="priority-top">
         <div class="priority-title">${title}</div>
@@ -1975,7 +2197,7 @@ function renderCase(activeRole) {
     </div>
   `).join("");
 
-  checklistList.innerHTML = item.checklist.map(([title, detail, state]) => `
+  checklistList.innerHTML = runtime.checklist.map(([title, detail, state]) => `
     <div class="checklist-item">
       <div class="checklist-top">
         <div class="priority-title">${title}</div>
@@ -1985,7 +2207,7 @@ function renderCase(activeRole) {
     </div>
   `).join("");
 
-  messageList.innerHTML = item.messages.map(([author, body, meta]) => `
+  messageList.innerHTML = runtime.messages.map(([author, body, meta]) => `
     <div class="message-item">
       <div class="message-top">
         <div class="priority-title">${author}</div>
@@ -1993,6 +2215,37 @@ function renderCase(activeRole) {
       </div>
       <div class="message-note">${body}</div>
     </div>
+  `).join("");
+
+  workflowGrid.innerHTML = [
+    ["Estado actual", `${runtime.status[0]} · ${runtime.docsProgress}% de completitud documental.`],
+    ["Siguiente hito", runtime.nextMilestone],
+    ["Owner activo", runtime.owner],
+    ["Acción sugerida", item.actions[activeRole][0]]
+  ].map(([title, detail]) => `
+    <div class="workflow-card">
+      <strong>${title}</strong>
+      <span>${detail}</span>
+    </div>
+  `).join("");
+
+  const business = CASE_BUSINESS[currentCaseId];
+  businessGrid.innerHTML = [
+    ["Ingreso esperado", business.mrr],
+    ["Tier comercial", business.tier],
+    ["Upsell opportunity", business.upsell],
+    ["Probabilidad renovación", business.renewal],
+    ["Referral potencial", business.referral],
+    ["Palanca siguiente", runtime.nextMilestone]
+  ].map(([title, detail]) => `
+    <div class="business-card">
+      <strong>${title}</strong>
+      <span>${detail}</span>
+    </div>
+  `).join("");
+  document.getElementById("businessPlaybook").textContent = business.playbook;
+  businessActions.innerHTML = ["Preparar upsell", "Solicitar reseña", "Explorar plan familiar"].map((label) => `
+    <button class="secondary-action" type="button" data-business-action="${label}">${label}</button>
   `).join("");
 }
 
@@ -2084,6 +2337,7 @@ caseList.addEventListener("click", (event) => {
   const row = event.target.closest("[data-case]");
   if (!row) return;
   currentCaseId = row.dataset.case;
+  currentDetailTab = "overview";
   pushActivity("Expediente seleccionado", `Has abierto ${CASES[currentCaseId].client} para trabajar desde la vista de ${ROLE_VIEWS[currentRole].label}.`);
   renderRole(currentRole);
 });
@@ -2109,6 +2363,65 @@ document.getElementById("caseActions").addEventListener("click", (event) => {
   const button = event.target.closest("[data-detail-action]");
   if (!button) return;
   runAction(button.dataset.detailAction, "detail");
+});
+
+detailTabs.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-detail-tab]");
+  if (!button) return;
+  currentDetailTab = button.dataset.detailTab;
+  renderDetailTabs();
+});
+
+document.getElementById("businessActions").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-business-action]");
+  if (!button) return;
+  runAction(button.dataset.businessAction, "business");
+});
+
+document.getElementById("composerSubmit").addEventListener("click", () => {
+  const type = document.getElementById("composerType").value;
+  const text = document.getElementById("composerText").value.trim();
+  if (!text) {
+    showToast("Escribe un mensaje antes de guardar");
+    return;
+  }
+  const runtime = getRuntimeCase(currentCaseId);
+  const author = type === "internal" ? currentRole : "Cliente update";
+  runtime.messages.unshift([author, text, "Ahora"]);
+  pushActivity(type === "internal" ? "Nota interna guardada" : "Update al cliente registrada", `${CASES[currentCaseId].client}: ${text}`);
+  document.getElementById("composerText").value = "";
+  renderRole(currentRole);
+  currentDetailTab = "messages";
+  renderDetailTabs();
+});
+
+document.getElementById("statusAdvanceBtn").addEventListener("click", () => {
+  const runtime = getRuntimeCase(currentCaseId);
+  runtime.docsProgress = Math.min(100, runtime.docsProgress + 10);
+  runtime.status = ["En avance", "info"];
+  runtime.nextMilestone = "Revisar siguiente etapa del expediente";
+  runtime.timeline.unshift(["Etapa avanzada", "Se ha movido el expediente a una fase superior desde el CMS.", "info"]);
+  pushActivity("Etapa avanzada", `El expediente de ${CASES[currentCaseId].client} ha progresado internamente.`);
+  renderRole(currentRole);
+});
+
+document.getElementById("statusBlockBtn").addEventListener("click", () => {
+  const runtime = getRuntimeCase(currentCaseId);
+  runtime.status = ["Bloqueado", "danger"];
+  runtime.nextMilestone = "Resolver bloqueo antes de continuar";
+  runtime.timeline.unshift(["Bloqueo registrado", "Se ha marcado un bloqueo operativo o jurídico desde la ficha.", "danger"]);
+  pushActivity("Bloqueo registrado", `Se ha bloqueado el expediente de ${CASES[currentCaseId].client} para evitar avance incorrecto.`);
+  renderRole(currentRole);
+});
+
+document.getElementById("statusReadyBtn").addEventListener("click", () => {
+  const runtime = getRuntimeCase(currentCaseId);
+  runtime.status = ["Listo", "ok"];
+  runtime.docsProgress = Math.max(runtime.docsProgress, 95);
+  runtime.nextMilestone = "Esperando validación final o presentación";
+  runtime.timeline.unshift(["Marcado como listo", "El expediente queda preparado para la siguiente validación.", "ok"]);
+  pushActivity("Expediente listo", `${CASES[currentCaseId].client} ha quedado listo para el siguiente handoff.`);
+  renderRole(currentRole);
 });
 
 const initialRole = roleOrder.includes(window.location.hash.replace("#", "")) ? window.location.hash.replace("#", "") : "superadmin";
