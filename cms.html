@@ -140,6 +140,7 @@ button { cursor: pointer; border: 0; }
 }
 
 .side-item {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,6 +149,8 @@ button { cursor: pointer; border: 0; }
   border-radius: 14px;
   color: rgba(255,255,255,0.8);
   background: transparent;
+  border: 1px solid transparent;
+  text-align: left;
   transition: background 0.18s ease, transform 0.18s ease;
 }
 
@@ -155,6 +158,14 @@ button { cursor: pointer; border: 0; }
 .side-item.active {
   background: rgba(255,255,255,0.08);
   transform: translateX(3px);
+}
+
+.side-item.active {
+  border-color: rgba(255,255,255,0.12);
+}
+
+.side-item.is-locked {
+  opacity: 0.78;
 }
 
 .pill-lock,
@@ -312,6 +323,94 @@ button { cursor: pointer; border: 0; }
   margin: 22px 0 26px;
 }
 
+.utility-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.utility-card {
+  padding: 20px 22px;
+}
+
+.utility-title {
+  margin: 0 0 8px;
+  font-family: var(--fd);
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--navy);
+}
+
+.utility-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.context-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.context-chip {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.quick-btn {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--navy);
+}
+
+.activity-feed {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.activity-item {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #f9fbfd;
+}
+
+.activity-item strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.activity-item span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .role-chip {
   border-radius: 999px;
   padding: 11px 15px;
@@ -342,6 +441,11 @@ button { cursor: pointer; border: 0; }
   border: 1px solid rgba(15,23,42,0.08);
   border-radius: var(--card);
   box-shadow: var(--shadow);
+}
+
+.panel-focus {
+  border-color: rgba(61,82,160,0.26);
+  box-shadow: 0 18px 44px rgba(61,82,160,0.12);
 }
 
 .kpi {
@@ -792,6 +896,7 @@ button { cursor: pointer; border: 0; }
 }
 
 @media (max-width: 1180px) {
+  .utility-grid,
   .grid-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace,
   .hero-grid { grid-template-columns: 1fr; }
@@ -819,6 +924,28 @@ button { cursor: pointer; border: 0; }
   .grid-kpis,
   .case-kvs,
   .perm-grid { grid-template-columns: 1fr; }
+}
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 30;
+  max-width: 360px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 18px 44px rgba(11,29,53,0.28);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
 </head>
@@ -861,7 +988,7 @@ button { cursor: pointer; border: 0; }
       </div>
     </div>
 
-    <section class="hero card">
+    <section class="hero card" id="panel-overview">
       <div class="eyebrow">Vista interna del producto</div>
       <div class="hero-grid">
         <div>
@@ -877,11 +1004,28 @@ button { cursor: pointer; border: 0; }
 
     <div class="role-strip" id="roleStrip"></div>
 
+    <section class="utility-grid">
+      <div class="card utility-card">
+        <div class="eyebrow">Contexto activo</div>
+        <h2 class="utility-title" id="moduleTitle">Resumen ejecutivo</h2>
+        <p class="utility-copy" id="moduleCopy"></p>
+        <div class="context-meta" id="contextMeta"></div>
+      </div>
+
+      <div class="card utility-card">
+        <div class="eyebrow">Centro de acciones</div>
+        <h2 class="utility-title" id="activityTitle">Últimos movimientos</h2>
+        <p class="utility-copy" id="activityCopy">Cada acción relevante del CMS queda reflejada aquí para que el flujo se sienta operativo, no decorativo.</p>
+        <div class="quick-actions" id="quickActions"></div>
+        <div class="activity-feed" id="activityFeed"></div>
+      </div>
+    </section>
+
     <section class="grid-kpis" id="kpiGrid"></section>
 
     <section class="workspace">
       <div class="stack">
-        <div class="card panel">
+        <div class="card panel" id="panel-cases">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Expedientes activos</h2>
@@ -896,7 +1040,7 @@ button { cursor: pointer; border: 0; }
           <div class="case-list" id="caseList"></div>
         </div>
 
-        <div class="card panel">
+        <div class="card panel" id="panel-queue">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Bandeja prioritaria</h2>
@@ -907,7 +1051,7 @@ button { cursor: pointer; border: 0; }
           <div class="priority-list" id="priorityList"></div>
         </div>
 
-        <div class="card panel">
+        <div class="card panel" id="panel-board">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Flujo de trabajo</h2>
@@ -918,7 +1062,7 @@ button { cursor: pointer; border: 0; }
           <div class="kanban" id="kanbanBoard"></div>
         </div>
 
-        <div class="card panel">
+        <div class="card panel" id="panel-permissions">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Permisos y alcance del rol</h2>
@@ -931,7 +1075,7 @@ button { cursor: pointer; border: 0; }
       </div>
 
       <div class="stack">
-        <div class="card case-card">
+        <div class="card case-card" id="panel-detail">
           <div class="case-header">
             <div class="case-top">
               <div>
@@ -960,7 +1104,7 @@ button { cursor: pointer; border: 0; }
           </div>
         </div>
 
-        <div class="card panel">
+        <div class="card panel" id="panel-alerts">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Alertas y automatizaciones</h2>
@@ -971,7 +1115,7 @@ button { cursor: pointer; border: 0; }
           <div class="alert-list" id="alertList"></div>
         </div>
 
-        <div class="card panel">
+        <div class="card panel" id="panel-roadmap">
           <div class="panel-head">
             <div>
               <h2 class="panel-title">Roadmap inmediato</h2>
@@ -986,6 +1130,7 @@ button { cursor: pointer; border: 0; }
     </section>
   </main>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
 const CASES = {
@@ -1554,8 +1699,23 @@ const ROLE_VIEWS = {
 };
 
 const roleOrder = ["superadmin", "abogado", "operaciones", "soporte"];
+const MODULE_SECTIONS = {
+  superadmin: ["panel-overview", "panel-cases", "panel-detail", "panel-queue", "panel-alerts", "panel-board", "panel-permissions"],
+  abogado: ["panel-overview", "panel-cases", "panel-detail", "panel-board", "panel-alerts", "panel-permissions", "panel-roadmap"],
+  operaciones: ["panel-cases", "panel-detail", "panel-detail", "panel-board", "panel-permissions", "panel-alerts", "panel-roadmap"],
+  soporte: ["panel-cases", "panel-detail", "panel-roadmap", "panel-alerts", "panel-permissions", "panel-permissions", "panel-overview"]
+};
+const ROLE_QUICK_ACTIONS = {
+  superadmin: ["Crear despacho", "Reequilibrar carga", "Revisar SLA"],
+  abogado: ["Abrir estrategia", "Preparar escrito", "Solicitar documentos"],
+  operaciones: ["Pedir resubida", "Validar checklist", "Hacer handoff legal"],
+  soporte: ["Registrar llamada", "Enviar actualización", "Escalar caso"]
+};
 const moduleNav = document.getElementById("moduleNav");
 const roleStrip = document.getElementById("roleStrip");
+const quickActions = document.getElementById("quickActions");
+const activityFeed = document.getElementById("activityFeed");
+const toast = document.getElementById("toast");
 const kpiGrid = document.getElementById("kpiGrid");
 const priorityList = document.getElementById("priorityList");
 const kanbanBoard = document.getElementById("kanbanBoard");
@@ -1570,9 +1730,107 @@ const roadmapList = document.getElementById("roadmapList");
 let currentRole = "superadmin";
 let currentCaseId = ROLE_VIEWS.superadmin.defaultCaseId;
 let currentFilter = "todos";
+let currentModuleIndex = 0;
+let toastTimer = null;
+let activityLog = [
+  {
+    title: "CMS inicializado",
+    detail: "El panel se ha preparado con una vista por rol, una cartera de expedientes y un flujo de trabajo seleccionable."
+  }
+];
 
 function chipStatusClass(status) {
   return ({ ok: "ok", warn: "warn", danger: "danger", info: "info" })[status] || "info";
+}
+
+function toModuleSummary(role, moduleName) {
+  const item = CASES[currentCaseId];
+  const summaries = {
+    superadmin: `Módulo pensado para dirección. Ahora mismo el foco está en ${item.client}, con siguiente hito: ${item.nextMilestone.toLowerCase()}.`,
+    abogado: `Este módulo reduce ruido y pone el criterio jurídico delante. ${item.client} es el expediente activo para contextualizar cada decisión.`,
+    operaciones: `Aquí prima el tiempo operativo: calidad documental, bloqueos y handoff limpio. ${item.client} es el caso activo de referencia.`,
+    soporte: `Este módulo organiza la comunicación y el contexto del cliente. ${item.client} sirve como ejemplo vivo del estado que debería explicarse con claridad.`
+  };
+  return `${moduleName}. ${summaries[role]}`;
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function pushActivity(title, detail) {
+  activityLog.unshift({ title, detail });
+  activityLog = activityLog.slice(0, 5);
+  renderActivity();
+}
+
+function renderActivity() {
+  activityFeed.innerHTML = activityLog.map((entry) => `
+    <div class="activity-item">
+      <strong>${entry.title}</strong>
+      <span>${entry.detail}</span>
+    </div>
+  `).join("");
+}
+
+function focusPanel(panelId, shouldScroll = true) {
+  document.querySelectorAll(".panel-focus").forEach((node) => node.classList.remove("panel-focus"));
+  const target = document.getElementById(panelId);
+  if (!target) return;
+  target.classList.add("panel-focus");
+  if (shouldScroll) {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function renderContext(activeRole) {
+  const view = ROLE_VIEWS[activeRole];
+  const moduleItem = view.modules[currentModuleIndex] || view.modules[0];
+  const currentCase = CASES[currentCaseId];
+  document.getElementById("moduleTitle").textContent = moduleItem.name;
+  document.getElementById("moduleCopy").textContent = toModuleSummary(activeRole, moduleItem.name);
+  document.getElementById("contextMeta").innerHTML = [
+    view.label,
+    currentCase.client,
+    currentCase.procedure,
+    currentCase.nextMilestone
+  ].map((label) => `<span class="context-chip">${label}</span>`).join("");
+}
+
+function renderQuickActions(activeRole) {
+  quickActions.innerHTML = ROLE_QUICK_ACTIONS[activeRole].map((label) => `
+    <button class="quick-btn" type="button" data-quick-action="${label}">${label}</button>
+  `).join("");
+}
+
+function runAction(label, origin = "manual") {
+  const item = CASES[currentCaseId];
+  const detail = `${label} sobre ${item.client} en ${currentRole}. Siguiente hito asociado: ${item.nextMilestone}.`;
+  pushActivity(label, detail);
+  showToast(`${label} preparado`);
+  if (origin === "module") {
+    const targetPanel = MODULE_SECTIONS[currentRole][currentModuleIndex] || "panel-overview";
+    focusPanel(targetPanel, true);
+  }
+}
+
+function setActiveModule(index, shouldScroll = true) {
+  const view = ROLE_VIEWS[currentRole];
+  const module = view.modules[index];
+  if (!module) return;
+  if (module.access !== "ok") {
+    pushActivity("Acceso restringido", `${view.label} no tiene acceso a ${module.name}.`);
+    showToast(`Acceso restringido a ${module.name}`);
+    return;
+  }
+  currentModuleIndex = index;
+  renderModules(currentRole);
+  renderContext(currentRole);
+  const panelId = MODULE_SECTIONS[currentRole][index] || "panel-overview";
+  focusPanel(panelId, shouldScroll);
 }
 
 function getVisibleCases(activeRole) {
@@ -1591,10 +1849,10 @@ function renderRoleSwitch(activeRole) {
 function renderModules(activeRole) {
   const view = ROLE_VIEWS[activeRole];
   moduleNav.innerHTML = view.modules.map((item, index) => `
-    <div class="side-item ${index === 0 ? "active" : ""}">
+    <button class="side-item ${index === currentModuleIndex ? "active" : ""} ${item.access !== "ok" ? "is-locked" : ""}" type="button" data-module-index="${index}">
       <span>${item.name}</span>
       <span class="${item.access === "ok" ? "pill-ok" : "pill-lock"}">${item.access === "ok" ? "Activo" : "Restringido"}</span>
-    </div>
+    </button>
   `).join("");
 }
 
@@ -1687,7 +1945,6 @@ function renderPermissions(activeRole) {
 }
 
 function renderCase(activeRole) {
-  const view = ROLE_VIEWS[activeRole];
   const item = CASES[currentCaseId];
   document.getElementById("caseName").textContent = item.client;
   document.getElementById("caseMeta").textContent = `${item.id} · ${item.procedure} · ${item.office} · Responsable: ${item.owner}`;
@@ -1698,7 +1955,7 @@ function renderCase(activeRole) {
   document.getElementById("caseNarrative").textContent = item.narrative;
   document.getElementById("caseBadges").innerHTML = item.badges.map((badge) => `<span class="mini-tag">${badge}</span>`).join("");
   document.getElementById("caseActions").innerHTML = item.actions[activeRole].map((action, index) => `
-    <button class="detail-btn ${index > 0 ? "secondary" : ""}" type="button">${action}</button>
+    <button class="detail-btn ${index > 0 ? "secondary" : ""}" type="button" data-detail-action="${action}">${action}</button>
   `).join("");
 
   document.getElementById("caseKvs").innerHTML = item.summary[activeRole].map(([label, value]) => `
@@ -1767,7 +2024,11 @@ function renderRoadmap(activeRole) {
 
 function renderRole(activeRole) {
   const view = ROLE_VIEWS[activeRole];
+  const roleChanged = currentRole !== activeRole;
   currentRole = activeRole;
+  if (roleChanged) {
+    currentModuleIndex = 0;
+  }
   if (!ROLE_VIEWS[activeRole].caseFilters.some(([value]) => value === currentFilter)) {
     currentFilter = "todos";
   }
@@ -1789,6 +2050,8 @@ function renderRole(activeRole) {
 
   renderRoleSwitch(activeRole);
   renderModules(activeRole);
+  renderContext(activeRole);
+  renderQuickActions(activeRole);
   renderCaseFilters(activeRole);
   renderCaseList(activeRole);
   renderKPIs(activeRole);
@@ -1798,6 +2061,7 @@ function renderRole(activeRole) {
   renderCase(activeRole);
   renderAlerts(activeRole);
   renderRoadmap(activeRole);
+  focusPanel(MODULE_SECTIONS[activeRole][currentModuleIndex] || "panel-overview", false);
 
   const nextHash = `#${activeRole}`;
   if (window.location.hash !== nextHash) window.location.hash = nextHash;
@@ -1820,11 +2084,36 @@ caseList.addEventListener("click", (event) => {
   const row = event.target.closest("[data-case]");
   if (!row) return;
   currentCaseId = row.dataset.case;
+  pushActivity("Expediente seleccionado", `Has abierto ${CASES[currentCaseId].client} para trabajar desde la vista de ${ROLE_VIEWS[currentRole].label}.`);
   renderRole(currentRole);
+});
+
+moduleNav.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-module-index]");
+  if (!button) return;
+  setActiveModule(Number(button.dataset.moduleIndex), true);
+});
+
+quickActions.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-quick-action]");
+  if (!button) return;
+  runAction(button.dataset.quickAction, "quick");
+});
+
+document.getElementById("ctaButton").addEventListener("click", () => {
+  runAction(document.getElementById("ctaButton").textContent, "cta");
+  setActiveModule(Math.min(1, ROLE_VIEWS[currentRole].modules.length - 1), true);
+});
+
+document.getElementById("caseActions").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-detail-action]");
+  if (!button) return;
+  runAction(button.dataset.detailAction, "detail");
 });
 
 const initialRole = roleOrder.includes(window.location.hash.replace("#", "")) ? window.location.hash.replace("#", "") : "superadmin";
 renderRole(initialRole);
+renderActivity();
 </script>
 </body>
 </html>
