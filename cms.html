@@ -421,7 +421,10 @@ button { cursor: pointer; border: 0; }
 }
 
 .priority-list,
+.case-list,
 .timeline,
+.checklist-list,
+.message-list,
 .alert-list,
 .module-list {
   display: grid;
@@ -429,7 +432,10 @@ button { cursor: pointer; border: 0; }
 }
 
 .priority-item,
+.case-row,
 .timeline-item,
+.checklist-item,
+.message-item,
 .alert-item,
 .module-item {
   display: grid;
@@ -450,14 +456,16 @@ button { cursor: pointer; border: 0; }
 
 .priority-title,
 .module-title,
-.case-name {
+.case-name,
+.case-row-name {
   font-weight: 700;
   color: var(--navy);
 }
 
 .priority-meta,
 .module-meta,
-.muted-line {
+.muted-line,
+.case-row-meta {
   font-size: 13px;
   color: var(--muted);
   line-height: 1.6;
@@ -476,6 +484,116 @@ button { cursor: pointer; border: 0; }
 .status.danger { background: var(--danger-bg); color: var(--danger-ink); }
 .status.ok { background: var(--mint); color: var(--mint-ink); }
 .status.info { background: var(--sky); color: var(--indigo); }
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.toolbar-title {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.filter-row,
+.action-row,
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip,
+.action-chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.filter-chip.is-on {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.case-row {
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+.case-row:hover,
+.case-row.is-on {
+  border-color: rgba(61,82,160,0.34);
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+.case-row-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.case-row-name {
+  font-size: 15px;
+}
+
+.case-row-code {
+  font-size: 11px;
+  color: var(--muted-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.case-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.case-row-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.progress-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-track {
+  width: 120px;
+  height: 8px;
+  border-radius: 999px;
+  background: #e7eef8;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--indigo), var(--terra));
+  border-radius: 999px;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
 
 .kanban {
   display: grid;
@@ -551,6 +669,11 @@ button { cursor: pointer; border: 0; }
   background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
 }
 
+.case-header {
+  display: grid;
+  gap: 14px;
+}
+
 .case-top {
   display: flex;
   justify-content: space-between;
@@ -562,6 +685,33 @@ button { cursor: pointer; border: 0; }
 .case-block {
   display: grid;
   gap: 14px;
+}
+
+.case-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.detail-btn {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 13px;
+  background: var(--navy);
+  color: #fff;
+}
+
+.detail-btn.secondary {
+  background: #fff;
+  color: var(--navy);
+  border: 1px solid var(--line);
 }
 
 .case-kvs {
@@ -588,6 +738,26 @@ button { cursor: pointer; border: 0; }
 .case-kv-value {
   font-weight: 700;
   color: var(--navy);
+}
+
+.checklist-item,
+.message-item {
+  background: rgba(255,255,255,0.9);
+}
+
+.checklist-top,
+.message-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.checklist-note,
+.message-note {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .perm-grid {
@@ -676,8 +846,8 @@ button { cursor: pointer; border: 0; }
     <div class="side-group">
       <div class="side-label">Estado del proyecto</div>
       <div class="side-note">
-        <strong>Fase 1</strong>
-        <p>Front-end del panel, arquitectura de roles, métricas, cola operativa, permisos y un expediente maestro de referencia.</p>
+        <strong>Fase 2</strong>
+        <p>Panel por roles con cartera de expedientes, filtros operativos, ficha dinámica del caso y acciones internas según perfil.</p>
       </div>
     </div>
   </aside>
@@ -714,6 +884,21 @@ button { cursor: pointer; border: 0; }
         <div class="card panel">
           <div class="panel-head">
             <div>
+              <h2 class="panel-title">Expedientes activos</h2>
+              <p class="panel-sub" id="caseListCopy">Selección dinámica de expedientes según el rol activo.</p>
+            </div>
+            <div class="mini-tag" id="caseListTag"></div>
+          </div>
+          <div class="toolbar">
+            <div class="toolbar-title" id="caseToolbarCopy">Cartera priorizada para este perfil.</div>
+            <div class="filter-row" id="caseFilters"></div>
+          </div>
+          <div class="case-list" id="caseList"></div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head">
+            <div>
               <h2 class="panel-title">Bandeja prioritaria</h2>
               <p class="panel-sub">Lo primero que debería mirar esta persona al abrir la plataforma.</p>
             </div>
@@ -747,18 +932,31 @@ button { cursor: pointer; border: 0; }
 
       <div class="stack">
         <div class="card case-card">
-          <div class="case-top">
-            <div>
-              <div class="eyebrow" style="margin-bottom:10px">Expediente de referencia</div>
-              <div class="case-name" id="caseName"></div>
-              <div class="muted-line" id="caseMeta"></div>
+          <div class="case-header">
+            <div class="case-top">
+              <div>
+                <div class="eyebrow" style="margin-bottom:10px">Ficha dinámica del expediente</div>
+                <div class="case-name" id="caseName"></div>
+                <div class="muted-line" id="caseMeta"></div>
+              </div>
+              <div class="status info" id="caseStatus"></div>
             </div>
-            <div class="status info" id="caseStatus"></div>
+            <div class="badge-row" id="caseBadges"></div>
+            <div class="case-subtitle" id="caseNarrative"></div>
+            <div class="detail-actions" id="caseActions"></div>
           </div>
-          <div class="case-block case-kvs" id="caseKvs"></div>
+          <div class="case-block case-kvs" id="caseKvs" style="margin-top:18px"></div>
           <div class="case-block" style="margin-top:18px">
             <div class="panel-title" style="font-size:20px">Timeline accionable</div>
             <div class="timeline" id="timeline"></div>
+          </div>
+          <div class="case-block" style="margin-top:18px">
+            <div class="panel-title" style="font-size:20px">Checklist y calidad documental</div>
+            <div class="checklist-list" id="checklistList"></div>
+          </div>
+          <div class="case-block" style="margin-top:18px">
+            <div class="panel-title" style="font-size:20px">Conversaciones y notas internas</div>
+            <div class="message-list" id="messageList"></div>
           </div>
         </div>
 
@@ -790,6 +988,239 @@ button { cursor: pointer; border: 0; }
 </div>
 
 <script>
+const CASES = {
+  mariana: {
+    id: "EXP-240531",
+    client: "Mariana Costa",
+    procedure: "Arraigo social",
+    office: "Valencia",
+    owner: "Laura Serrano",
+    status: ["At risk", "warn"],
+    priority: "Alta",
+    source: "Landing web",
+    premium: "Premium anual",
+    docsProgress: 72,
+    nextMilestone: "Validar padrón y reenviar a abogado",
+    lastTouch: "Hace 42 minutos",
+    roleTags: ["saturacion", "premium", "docs"],
+    narrative: "Cliente con alta probabilidad de aprobación si se corrige el bloqueo documental hoy. Ideal para ver cómo cada rol actúa sobre el mismo expediente sin perder contexto compartido.",
+    badges: ["Español", "Con pareja", "Cliente premium"],
+    actions: {
+      superadmin: ["Reasignar cartera", "Abrir override SLA"],
+      abogado: ["Redactar estrategia", "Solicitar prueba adicional"],
+      operaciones: ["Pedir resubida", "Marcar QA completo"],
+      soporte: ["Llamar cliente", "Enviar update claro"]
+    },
+    summary: {
+      superadmin: [["Riesgo", "Falta padrón actualizado"], ["Valor cliente", "Premium anual"], ["SLA restante", "13h para primer cierre"], ["Última acción", "Hace 42 minutos"]],
+      abogado: [["Prioridad", "Alta"], ["Viabilidad", "Alta si corrige padrón"], ["Bloqueo legal", "Prueba de arraigo incompleta"], ["Dueño actual", "Laura Serrano"]],
+      operaciones: [["Checklist completo", "6 de 8"], ["Documento crítico", "Padrón actualizado"], ["Última subida", "Hoy · 09:14"], ["Siguiente dueño", "Operaciones"]],
+      soporte: [["Sentimiento", "Expectante"], ["Último contacto", "Hoy · 10:05"], ["Pregunta abierta", "Qué falta exactamente"], ["Canal recomendado", "Llamada + email"]]
+    },
+    timeline: [
+      ["Lead convertido", "Llegó desde la landing, pagó pack premium y cerró intake en menos de dos horas.", "ok"],
+      ["Diagnóstico legal", "Se confirmó arraigo social viable con buena trazabilidad documental.", "ok"],
+      ["Bloqueo documental", "El padrón aportado está caducado y no sirve para presentación.", "warn"],
+      ["Próxima acción", "Actualizar padrón, revalidar checklist y enviar al abogado esta tarde.", "danger"]
+    ],
+    checklist: [
+      ["Pasaporte", "Documento correcto y legible.", "ok"],
+      ["Empadronamiento", "Caducado. Necesita nueva versión.", "danger"],
+      ["Antecedentes penales", "Apostilla correcta, traducción validada.", "ok"],
+      ["Contrato / medios", "En revisión por consistencia.", "warn"]
+    ],
+    messages: [
+      ["Cliente", "Necesito saber si con esto ya podéis presentarlo o me falta algo más.", "Hoy · 10:05"],
+      ["Operaciones", "Le hemos pedido padrón actualizado con ejemplo visual adjunto.", "Hoy · 10:22"],
+      ["Abogado", "En cuanto suba padrón correcto, no veo impedimento para avanzar.", "Hoy · 11:01"]
+    ]
+  },
+  julian: {
+    id: "EXP-240612",
+    client: "Julián Herrera",
+    procedure: "Residencia por cuenta propia",
+    office: "Madrid",
+    owner: "Tú",
+    status: ["Requerimiento", "danger"],
+    priority: "Urgente",
+    source: "Referral partner",
+    premium: "Business",
+    docsProgress: 88,
+    nextMilestone: "Responder requerimiento antes del 13 mayo",
+    lastTouch: "Hace 18 minutos",
+    roleTags: ["requerimiento", "legal", "premium"],
+    narrative: "Caso jurídicamente avanzado con presión de plazo. La diferencia aquí no es conseguir más documentos, sino responder con criterio sólido antes del vencimiento.",
+    badges: ["Autónomo", "Business", "Plazo 24h"],
+    actions: {
+      superadmin: ["Desbloquear recursos", "Asignar apoyo legal"],
+      abogado: ["Editar escrito final", "Subir defensa"],
+      operaciones: ["Verificar anexos", "Marcar listo para firma"],
+      soporte: ["Confirmar recepción", "Gestionar llamada urgente"]
+    },
+    summary: {
+      superadmin: [["Riesgo", "Vence mañana a las 13:00"], ["Impacto", "Cliente business de alto valor"], ["Estado legal", "Defensa en borrador"], ["Necesidad", "Apoyo documental inmediato"]],
+      abogado: [["Prioridad", "Máxima"], ["Próximo vencimiento", "13 mayo · 13:00"], ["Escrito base", "Borrador 92%"], ["Faltan", "Extractos y plan económico final"]],
+      operaciones: [["Anexos completos", "5 de 6"], ["Pendiente", "Extractos bancarios nuevos"], ["QA legal", "Listo salvo último documento"], ["Handoff", "Directo a abogado"]],
+      soporte: [["Sentimiento", "Tenso"], ["Último contacto", "Hoy · 08:40"], ["Duda principal", "Si llegamos a tiempo"], ["Canal", "Llamada prioritaria"]]
+    },
+    timeline: [
+      ["Presentación realizada", "El expediente se presentó correctamente el 28 abril.", "ok"],
+      ["Requerimiento recibido", "Exigen reforzar solvencia y plan económico.", "danger"],
+      ["Borrador jurídico", "La respuesta está avanzada y necesita cierre técnico.", "warn"],
+      ["Próxima acción", "Recibir extractos firmados y enviar antes de mañana a mediodía.", "danger"]
+    ],
+    checklist: [
+      ["Modelo de respuesta", "Borrador preparado y alineado con criterio interno.", "ok"],
+      ["Extractos bancarios", "Pendientes de versión actualizada.", "danger"],
+      ["Plan de actividad", "Versión revisada, pendiente anexar.", "warn"],
+      ["Firma cliente", "Disponible para activar en cuanto se cierre escrito.", "ok"]
+    ],
+    messages: [
+      ["Cliente", "¿Seguimos a tiempo o me recomendáis aportar algo más?", "Hoy · 08:40"],
+      ["Abogado", "Si entran hoy los extractos, cerramos el escrito antes de las 18:00.", "Hoy · 09:02"],
+      ["Soporte", "Cliente informado de prioridad alta y llamada programada.", "Hoy · 09:15"]
+    ]
+  },
+  lina: {
+    id: "EXP-240648",
+    client: "Lina Gómez",
+    procedure: "Arraigo para la formación",
+    office: "Barcelona",
+    owner: "Cola documental",
+    status: ["Bloqueado", "warn"],
+    priority: "Media",
+    source: "Campaña Meta",
+    premium: "Standard",
+    docsProgress: 54,
+    nextMilestone: "Resubir contrato firmado",
+    lastTouch: "Hoy · 09:14",
+    roleTags: ["docs", "resubida"],
+    narrative: "Caso operativo por excelencia: el valor está en guiar bien la corrección documental para que el abogado no pierda tiempo en un expediente inmaduro.",
+    badges: ["Formación", "Android upload", "Standard"],
+    actions: {
+      superadmin: ["Revisar fricción", "Abrir incidencia de producto"],
+      abogado: ["Revisar vía", "Esperar handoff"],
+      operaciones: ["Solicitar contrato válido", "Clasificar documentos"],
+      soporte: ["Explicar incidencia", "Enviar guía al cliente"]
+    },
+    summary: {
+      superadmin: [["Riesgo", "Fricción de subida móvil"], ["Valor", "Caso estándar"], ["Cuello de botella", "Contrato sin firma"], ["Aprendizaje", "Incidencia repetida en Android"]],
+      abogado: [["Estado legal", "Aún no listo"], ["Pendiente crítico", "Contrato firmado"], ["Viabilidad", "Buena cuando complete docs"], ["Dueño actual", "Operaciones"]],
+      operaciones: [["Checklist completo", "6 de 8"], ["Archivo defectuoso", "Contrato sin firma"], ["Última subida", "Hoy · 09:14"], ["Próximo paso", "Pedir resubida guiada"]],
+      soporte: [["Sentimiento", "Confundida"], ["Último contacto", "Hoy · 10:31"], ["Motivo", "No entiende el rechazo"], ["Canal", "Email con ejemplo"]]
+    },
+    timeline: [
+      ["Registro automático", "Checklist generado correctamente tras el intake.", "ok"],
+      ["Documentos base", "Pasaporte, padrón y antecedentes aprobados.", "ok"],
+      ["Incidencia detectada", "Contrato sin firma del empleador.", "warn"],
+      ["Próxima acción", "Enviar ejemplo válido y pausar handoff al abogado.", "danger"]
+    ],
+    checklist: [
+      ["Pasaporte", "Aprobado.", "ok"],
+      ["Padrón", "Aprobado.", "ok"],
+      ["Contrato de formación", "Sin firma. Rechazado.", "danger"],
+      ["Seguro médico", "Pendiente de revisión.", "warn"]
+    ],
+    messages: [
+      ["Cliente", "No entiendo por qué el contrato está mal si me lo mandó la academia.", "Hoy · 10:31"],
+      ["Operaciones", "He preparado respuesta con captura del ejemplo correcto.", "Hoy · 10:46"],
+      ["Soporte", "Conviene explicarlo sin tecnicismos y confirmar siguiente paso.", "Hoy · 11:00"]
+    ]
+  },
+  carlos: {
+    id: "EXP-240701",
+    client: "Carlos Mejía",
+    procedure: "Renovación de residencia",
+    office: "Sevilla",
+    owner: "Atención cliente",
+    status: ["Cliente sensible", "danger"],
+    priority: "Alta",
+    source: "Cliente recurrente",
+    premium: "Premium",
+    docsProgress: 67,
+    nextMilestone: "Llamada de calma y aclaración de documentos",
+    lastTouch: "Ayer · 18:42",
+    roleTags: ["soporte", "premium", "sla"],
+    narrative: "Caso ideal para construir la capa de experiencia de cliente: la información existe, pero todavía no está empaquetada con claridad ni empatía suficiente.",
+    badges: ["Renovación", "Premium", "NPS en riesgo"],
+    actions: {
+      superadmin: ["Ver calidad servicio", "Forzar seguimiento premium"],
+      abogado: ["Añadir nota clara", "Confirmar siguiente hito"],
+      operaciones: ["Revisar docs pendientes", "Actualizar estado real"],
+      soporte: ["Llamar ahora", "Enviar resumen comprensible"]
+    },
+    summary: {
+      superadmin: [["Riesgo", "Posible churn premium"], ["Estado", "Esperando docs actualizados"], ["Impacto", "Riesgo NPS"], ["Siguiente paso", "Check-in manual hoy"]],
+      abogado: [["Estado legal", "Sin bloqueo jurídico fuerte"], ["Pendiente", "Extracto actualizado"], ["Riesgo", "Mala comunicación"], ["Dueño", "Soporte + operaciones"]],
+      operaciones: [["Docs completos", "4 de 6"], ["Pendiente crítico", "Extracto actualizado"], ["Última revisión", "Ayer · 17:50"], ["Acción", "Revalidar al recibir archivo"]],
+      soporte: [["Sentimiento", "Frustrado"], ["Último contacto", "Ayer · 18:42"], ["Motivo", "No entiende por qué sigue en preparación"], ["Canal", "Llamada hoy"]]
+    },
+    timeline: [
+      ["Renovación abierta", "Cliente recurrente con historial positivo.", "ok"],
+      ["Bloqueo suave", "Falta extracto bancario actualizado y nadie se lo explicó bien.", "warn"],
+      ["Escalada de experiencia", "Cliente ya muestra frustración por la espera.", "danger"],
+      ["Próxima acción", "Llamar hoy, resumir estado y reenviar ejemplo correcto.", "danger"]
+    ],
+    checklist: [
+      ["TIE actual", "Aprobado.", "ok"],
+      ["Seguro médico", "Aprobado.", "ok"],
+      ["Extracto bancario", "Desactualizado.", "danger"],
+      ["Justificante padrón", "Pendiente de revisión.", "warn"]
+    ],
+    messages: [
+      ["Cliente", "Llevo días sin entender qué falta exactamente.", "Ayer · 18:42"],
+      ["Soporte", "Conviene llamada manual antes de volver a pedir el documento.", "Hoy · 09:10"],
+      ["Operaciones", "Tenemos ya la plantilla con ejemplo correcto para reenviar.", "Hoy · 09:22"]
+    ]
+  },
+  nadia: {
+    id: "EXP-240590",
+    client: "Nadia Belkacem",
+    procedure: "Tarjeta familiar UE",
+    office: "Madrid",
+    owner: "Laura Serrano",
+    status: ["Lista para firma", "ok"],
+    priority: "Media",
+    source: "Organic search",
+    premium: "Standard+",
+    docsProgress: 96,
+    nextMilestone: "Firma electrónica y presentación",
+    lastTouch: "Hace 2 horas",
+    roleTags: ["firma", "legal"],
+    narrative: "Caso casi listo que ayuda a ver una ficha de expediente sana, sin alarmas graves, y sirve para validar la parte de cierre del funnel.",
+    badges: ["Familiar UE", "Firma pendiente", "Standard+"],
+    actions: {
+      superadmin: ["Ver throughput", "No intervenir"],
+      abogado: ["Enviar firma", "Presentar expediente"],
+      operaciones: ["Último QA", "Preparar resguardo"],
+      soporte: ["Recordar firma", "Confirmar presentación"]
+    },
+    summary: {
+      superadmin: [["Estado", "Casi presentado"], ["Riesgo", "Bajo"], ["SLA", "Dentro del objetivo"], ["Valor", "Standard+"]],
+      abogado: [["Escrito", "Finalizado"], ["Pendiente", "Firma del cliente"], ["Riesgo", "Bajo"], ["Presentación", "Mismo día si firma"]],
+      operaciones: [["Checklist", "8 de 8"], ["QA documental", "Completo"], ["Siguiente paso", "Esperar firma"], ["Resguardo", "Plantilla preparada"]],
+      soporte: [["Sentimiento", "Positivo"], ["Último contacto", "Hoy · 09:12"], ["Motivo", "Recordar firma"], ["Canal", "WhatsApp/email"]]
+    },
+    timeline: [
+      ["Expediente completo", "Documentación revisada y aprobada por operaciones.", "ok"],
+      ["Validación legal", "Abogada confirma estrategia y listo para enviar.", "ok"],
+      ["Pendiente cliente", "Solo falta firma electrónica.", "warn"],
+      ["Próxima acción", "Lanzar recordatorio y presentar en cuanto firme.", "ok"]
+    ],
+    checklist: [
+      ["Pasaporte", "Aprobado.", "ok"],
+      ["Vínculo familiar", "Aprobado.", "ok"],
+      ["Seguro / medios", "Aprobado.", "ok"],
+      ["Firma autorización", "Pendiente cliente.", "warn"]
+    ],
+    messages: [
+      ["Abogado", "Todo listo. En cuanto firme, presento hoy mismo.", "Hoy · 09:12"],
+      ["Soporte", "Preparado recordatorio amable para no enfriar el caso.", "Hoy · 09:30"],
+      ["Cliente", "Firmo en cuanto salga de trabajar esta tarde.", "Hoy · 10:04"]
+    ]
+  }
+};
+
 const ROLE_VIEWS = {
   superadmin: {
     label: "Super admin",
@@ -860,7 +1291,19 @@ const ROLE_VIEWS = {
       ["Cuadro de mando financiero", "MRR, CAC, tasa de conversión por canal y margen por tipo de expediente."],
       ["Motor de rebalanceo", "Reasignación automática de expedientes según carga, idioma y especialidad."],
       ["Alertas regulatorias", "Avisos por cambios normativos que impacten trámites activos."]
-    ]
+    ],
+    caseListCopy: "Vista transversal de expedientes que requieren palanca de dirección, reasignación o vigilancia de margen.",
+    caseListTag: "5 expedientes observados",
+    caseToolbarCopy: "Filtra por tipo de señal para ver dónde conviene intervenir.",
+    caseFilters: [
+      ["todos", "Todos"],
+      ["premium", "Premium"],
+      ["saturacion", "Saturación"],
+      ["requerimiento", "Requerimientos"],
+      ["docs", "Bloqueos docs"]
+    ],
+    caseIds: ["mariana", "julian", "carlos", "lina", "nadia"],
+    defaultCaseId: "mariana"
   },
   abogado: {
     label: "Abogado",
@@ -931,7 +1374,18 @@ const ROLE_VIEWS = {
       ["Editor jurídico", "Plantillas con bloques reutilizables, argumentos y control de versiones."],
       ["Copiloto legal", "Asistente que sugiera riesgos, jurisprudencia y documentos faltantes."],
       ["Firma y presentación", "Conector con firma electrónica y checklist previo a envío."]
-    ]
+    ],
+    caseListCopy: "Cartera jurídica priorizada por vencimiento, requerimiento y madurez para presentación.",
+    caseListTag: "4 expedientes en foco",
+    caseToolbarCopy: "La idea es que el abogado entre y sepa qué merece criterio hoy sin ruido operativo extra.",
+    caseFilters: [
+      ["todos", "Todos"],
+      ["requerimiento", "Requerimientos"],
+      ["legal", "Criterio legal"],
+      ["firma", "Listos para firma"]
+    ],
+    caseIds: ["julian", "nadia", "mariana", "carlos"],
+    defaultCaseId: "julian"
   },
   operaciones: {
     label: "Operaciones",
@@ -1002,7 +1456,18 @@ const ROLE_VIEWS = {
       ["Validador inteligente", "Comprobación visual y semántica antes de aceptar una subida."],
       ["Inbox unificado", "Pantalla única para email, formularios y futuras integraciones WhatsApp."],
       ["Macros operativas", "Respuestas guardadas por tipo de incidencia documental."]
-    ]
+    ],
+    caseListCopy: "Cola operativa priorizada por completitud documental, QA y urgencias de handoff.",
+    caseListTag: "4 expedientes en cola",
+    caseToolbarCopy: "Aquí filtramos por la naturaleza del bloqueo operativo, no por el criterio jurídico.",
+    caseFilters: [
+      ["todos", "Todos"],
+      ["docs", "Bloqueos docs"],
+      ["resubida", "Resubidas"],
+      ["premium", "Prioridad premium"]
+    ],
+    caseIds: ["lina", "mariana", "julian", "nadia"],
+    defaultCaseId: "lina"
   },
   soporte: {
     label: "Atención al cliente",
@@ -1073,7 +1538,18 @@ const ROLE_VIEWS = {
       ["Inbox omnicanal", "Unificar email, formulario, chat web y futuras llamadas registradas."],
       ["Vista cliente 360", "Timeline simplificado con tono de servicio y próximos pasos claros."],
       ["Macros inteligentes", "Respuestas sugeridas según estado del expediente y tipo de incidencia."]
-    ]
+    ],
+    caseListCopy: "Conversaciones activas donde una actualización clara puede bajar ansiedad o evitar churn.",
+    caseListTag: "4 clientes sensibles",
+    caseToolbarCopy: "Filtros enfocados en sentimiento, premium y necesidad de escalar internamente.",
+    caseFilters: [
+      ["todos", "Todos"],
+      ["premium", "Premium"],
+      ["sla", "SLA"],
+      ["docs", "Dudas docs"]
+    ],
+    caseIds: ["carlos", "mariana", "lina", "nadia"],
+    defaultCaseId: "carlos"
   }
 };
 
@@ -1084,12 +1560,25 @@ const kpiGrid = document.getElementById("kpiGrid");
 const priorityList = document.getElementById("priorityList");
 const kanbanBoard = document.getElementById("kanbanBoard");
 const permGrid = document.getElementById("permGrid");
+const caseList = document.getElementById("caseList");
+const caseFilters = document.getElementById("caseFilters");
 const timeline = document.getElementById("timeline");
+const checklistList = document.getElementById("checklistList");
+const messageList = document.getElementById("messageList");
 const alertList = document.getElementById("alertList");
 const roadmapList = document.getElementById("roadmapList");
+let currentRole = "superadmin";
+let currentCaseId = ROLE_VIEWS.superadmin.defaultCaseId;
+let currentFilter = "todos";
 
 function chipStatusClass(status) {
   return ({ ok: "ok", warn: "warn", danger: "danger", info: "info" })[status] || "info";
+}
+
+function getVisibleCases(activeRole) {
+  return ROLE_VIEWS[activeRole].caseIds
+    .map((id) => ({ key: id, ...CASES[id] }))
+    .filter((item) => currentFilter === "todos" || item.roleTags.includes(currentFilter));
 }
 
 function renderRoleSwitch(activeRole) {
@@ -1118,6 +1607,45 @@ function renderKPIs(activeRole) {
       <div class="kpi-foot">${foot}</div>
     </article>
   `).join("");
+}
+
+function renderCaseFilters(activeRole) {
+  const view = ROLE_VIEWS[activeRole];
+  caseFilters.innerHTML = view.caseFilters.map(([value, label]) => `
+    <button class="filter-chip ${value === currentFilter ? "is-on" : ""}" type="button" data-filter="${value}">${label}</button>
+  `).join("");
+}
+
+function renderCaseList(activeRole) {
+  const visible = getVisibleCases(activeRole);
+  if (!visible.some((item) => item.key === currentCaseId)) {
+    currentCaseId = visible[0] ? visible[0].key : ROLE_VIEWS[activeRole].defaultCaseId;
+  }
+
+  caseList.innerHTML = visible.map((item) => `
+    <button class="case-row ${item.key === currentCaseId ? "is-on" : ""}" type="button" data-case="${item.key}">
+      <div class="case-row-top">
+        <div>
+          <div class="case-row-code">${item.id}</div>
+          <div class="case-row-name">${item.client}</div>
+        </div>
+        <span class="status ${chipStatusClass(item.status[1])}">${item.status[0]}</span>
+      </div>
+      <div class="case-row-meta">${item.procedure} · ${item.office} · ${item.owner}</div>
+      <div class="case-row-meta">Siguiente hito: ${item.nextMilestone}</div>
+      <div class="case-row-foot">
+        <div class="progress-inline">
+          <div class="progress-track"><div class="progress-fill" style="width:${item.docsProgress}%"></div></div>
+          <span class="progress-label">${item.docsProgress}% docs</span>
+        </div>
+        <div class="progress-label">${item.lastTouch}</div>
+      </div>
+    </button>
+  `).join("");
+
+  if (!visible.length) {
+    caseList.innerHTML = `<div class="case-row"><div class="case-row-name">No hay expedientes con ese filtro</div><div class="case-row-meta">Cambia el filtro para volver a la cartera visible de este rol.</div></div>`;
+  }
 }
 
 function renderPriorities(activeRole) {
@@ -1160,26 +1688,53 @@ function renderPermissions(activeRole) {
 
 function renderCase(activeRole) {
   const view = ROLE_VIEWS[activeRole];
-  document.getElementById("caseName").textContent = view.case.name;
-  document.getElementById("caseMeta").textContent = view.case.meta;
+  const item = CASES[currentCaseId];
+  document.getElementById("caseName").textContent = item.client;
+  document.getElementById("caseMeta").textContent = `${item.id} · ${item.procedure} · ${item.office} · Responsable: ${item.owner}`;
   const caseStatus = document.getElementById("caseStatus");
-  caseStatus.textContent = view.case.status[0];
-  caseStatus.className = `status ${chipStatusClass(view.case.status[1])}`;
+  caseStatus.textContent = item.status[0];
+  caseStatus.className = `status ${chipStatusClass(item.status[1])}`;
 
-  document.getElementById("caseKvs").innerHTML = view.case.kvs.map(([label, value]) => `
+  document.getElementById("caseNarrative").textContent = item.narrative;
+  document.getElementById("caseBadges").innerHTML = item.badges.map((badge) => `<span class="mini-tag">${badge}</span>`).join("");
+  document.getElementById("caseActions").innerHTML = item.actions[activeRole].map((action, index) => `
+    <button class="detail-btn ${index > 0 ? "secondary" : ""}" type="button">${action}</button>
+  `).join("");
+
+  document.getElementById("caseKvs").innerHTML = item.summary[activeRole].map(([label, value]) => `
     <div class="case-kv">
       <div class="case-kv-label">${label}</div>
       <div class="case-kv-value">${value}</div>
     </div>
   `).join("");
 
-  timeline.innerHTML = view.case.timeline.map(([title, detail, state]) => `
+  timeline.innerHTML = item.timeline.map(([title, detail, state]) => `
     <div class="timeline-item">
       <div class="priority-top">
         <div class="priority-title">${title}</div>
         <span class="status ${chipStatusClass(state)}">${state === "ok" ? "Hecho" : state === "warn" ? "Pendiente" : state === "danger" ? "Urgente" : "Contexto"}</span>
       </div>
       <div class="priority-meta">${detail}</div>
+    </div>
+  `).join("");
+
+  checklistList.innerHTML = item.checklist.map(([title, detail, state]) => `
+    <div class="checklist-item">
+      <div class="checklist-top">
+        <div class="priority-title">${title}</div>
+        <span class="status ${chipStatusClass(state)}">${state === "ok" ? "OK" : state === "warn" ? "Revisar" : "Bloquea"}</span>
+      </div>
+      <div class="checklist-note">${detail}</div>
+    </div>
+  `).join("");
+
+  messageList.innerHTML = item.messages.map(([author, body, meta]) => `
+    <div class="message-item">
+      <div class="message-top">
+        <div class="priority-title">${author}</div>
+        <div class="progress-label">${meta}</div>
+      </div>
+      <div class="message-note">${body}</div>
     </div>
   `).join("");
 }
@@ -1212,6 +1767,13 @@ function renderRoadmap(activeRole) {
 
 function renderRole(activeRole) {
   const view = ROLE_VIEWS[activeRole];
+  currentRole = activeRole;
+  if (!ROLE_VIEWS[activeRole].caseFilters.some(([value]) => value === currentFilter)) {
+    currentFilter = "todos";
+  }
+  if (!ROLE_VIEWS[activeRole].caseIds.includes(currentCaseId)) {
+    currentCaseId = view.defaultCaseId;
+  }
   document.getElementById("heroTitle").textContent = view.heroTitle;
   document.getElementById("heroCopy").textContent = view.heroCopy;
   document.getElementById("heroFocusTitle").textContent = view.focusTitle;
@@ -1221,9 +1783,14 @@ function renderRole(activeRole) {
   document.getElementById("permissionTag").textContent = view.permissionTag;
   document.getElementById("alertTag").textContent = view.alertTag;
   document.getElementById("ctaButton").textContent = view.cta;
+  document.getElementById("caseListCopy").textContent = view.caseListCopy;
+  document.getElementById("caseListTag").textContent = view.caseListTag;
+  document.getElementById("caseToolbarCopy").textContent = view.caseToolbarCopy;
 
   renderRoleSwitch(activeRole);
   renderModules(activeRole);
+  renderCaseFilters(activeRole);
+  renderCaseList(activeRole);
   renderKPIs(activeRole);
   renderPriorities(activeRole);
   renderBoard(activeRole);
@@ -1240,6 +1807,20 @@ roleStrip.addEventListener("click", (event) => {
   const chip = event.target.closest("[data-role]");
   if (!chip) return;
   renderRole(chip.dataset.role);
+});
+
+caseFilters.addEventListener("click", (event) => {
+  const chip = event.target.closest("[data-filter]");
+  if (!chip) return;
+  currentFilter = chip.dataset.filter;
+  renderRole(currentRole);
+});
+
+caseList.addEventListener("click", (event) => {
+  const row = event.target.closest("[data-case]");
+  if (!row) return;
+  currentCaseId = row.dataset.case;
+  renderRole(currentRole);
 });
 
 const initialRole = roleOrder.includes(window.location.hash.replace("#", "")) ? window.location.hash.replace("#", "") : "superadmin";
