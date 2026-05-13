@@ -12,9 +12,12 @@
 :root {
   --navy: #0b1d35;
   --navy-2: #142b49;
+  --navy-3: #1f3d66;
   --indigo: #3d52a0;
+  --indigo-soft: rgba(61, 82, 160, 0.12);
   --sky: #eaf1ff;
   --terra: #bc5535;
+  --terra-soft: rgba(188, 85, 53, 0.14);
   --mint: #e9f7ef;
   --mint-ink: #0a7a55;
   --cream: #f6f3ee;
@@ -28,8 +31,11 @@
   --warn-ink: #a05a00;
   --danger-bg: #fef0f0;
   --danger-ink: #b3261e;
+  --surface: rgba(255,255,255,0.9);
+  --surface-2: #f7faff;
   --card: 22px;
   --shadow: 0 18px 40px rgba(11, 29, 53, 0.08);
+  --shadow-strong: 0 26px 60px rgba(11, 29, 53, 0.12);
   --fd: "Bricolage Grotesque", sans-serif;
   --fb: "Instrument Sans", sans-serif;
 }
@@ -45,8 +51,9 @@ body {
   font-family: var(--fb);
   color: var(--ink);
   background:
-    radial-gradient(circle at top right, rgba(61, 82, 160, 0.1), transparent 26%),
-    linear-gradient(180deg, #f8fafc 0%, #eef3f9 100%);
+    radial-gradient(circle at top right, rgba(61, 82, 160, 0.15), transparent 24%),
+    radial-gradient(circle at left 30%, rgba(188, 85, 53, 0.08), transparent 28%),
+    linear-gradient(180deg, #f9fbfe 0%, #eef3f9 54%, #edf2f8 100%);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -56,7 +63,7 @@ button { cursor: pointer; border: 0; }
 .shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 296px minmax(0, 1fr);
 }
 
 .sidebar {
@@ -69,6 +76,8 @@ button { cursor: pointer; border: 0; }
   display: flex;
   flex-direction: column;
   gap: 26px;
+  overflow: auto;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.04);
 }
 
 .brand {
@@ -187,7 +196,9 @@ button { cursor: pointer; border: 0; }
 }
 
 .main {
-  padding: 26px;
+  padding: 28px 28px 56px;
+  max-width: 1440px;
+  width: 100%;
 }
 
 .topbar {
@@ -200,11 +211,11 @@ button { cursor: pointer; border: 0; }
 
 .search {
   flex: 1;
-  max-width: 480px;
+  max-width: 520px;
   padding: 14px 16px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.92);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
 }
 
@@ -219,6 +230,7 @@ button { cursor: pointer; border: 0; }
   border-radius: 14px;
   padding: 12px 16px;
   font-weight: 600;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
 .ghost-btn {
@@ -227,17 +239,29 @@ button { cursor: pointer; border: 0; }
   color: var(--navy);
 }
 
+.ghost-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(61,82,160,0.26);
+  background: #fff;
+}
+
 .solid-btn {
   background: var(--navy);
   color: #fff;
   box-shadow: 0 10px 22px rgba(11,29,53,0.16);
 }
 
+.solid-btn:hover {
+  transform: translateY(-1px);
+  background: var(--navy-2);
+  box-shadow: 0 16px 28px rgba(11,29,53,0.18);
+}
+
 .hero {
   background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(234,241,255,0.94));
   border: 1px solid rgba(61,82,160,0.12);
   border-radius: 28px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-strong);
   padding: 28px;
   overflow: hidden;
   position: relative;
@@ -299,10 +323,11 @@ button { cursor: pointer; border: 0; }
 }
 
 .hero-highlight {
-  background: rgba(255,255,255,0.76);
+  background: rgba(255,255,255,0.82);
   border: 1px solid rgba(61,82,160,0.12);
   border-radius: 22px;
   padding: 20px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .hero-highlight strong {
@@ -323,6 +348,45 @@ button { cursor: pointer; border: 0; }
   margin: 22px 0 26px;
 }
 
+.focus-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.focus-card {
+  padding: 18px 18px 20px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,255,0.95));
+  border: 1px solid rgba(61,82,160,0.12);
+  box-shadow: var(--shadow);
+}
+
+.focus-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  margin-bottom: 10px;
+}
+
+.focus-value {
+  font-family: var(--fd);
+  font-size: 22px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.focus-meta {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .utility-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
@@ -332,6 +396,7 @@ button { cursor: pointer; border: 0; }
 
 .utility-card {
   padding: 20px 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,255,0.92));
 }
 
 .utility-title {
@@ -382,6 +447,13 @@ button { cursor: pointer; border: 0; }
   border: 1px solid var(--line);
   background: #fff;
   color: var(--navy);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.quick-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(61,82,160,0.26);
+  background: var(--sky);
 }
 
 .activity-feed {
@@ -394,7 +466,7 @@ button { cursor: pointer; border: 0; }
   padding: 14px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  background: #f9fbfd;
+  background: linear-gradient(180deg, #fbfdff, #f5f9ff);
 }
 
 .activity-item strong {
@@ -441,6 +513,7 @@ button { cursor: pointer; border: 0; }
   border: 1px solid rgba(15,23,42,0.08);
   border-radius: var(--card);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
 }
 
 .panel-focus {
@@ -450,6 +523,7 @@ button { cursor: pointer; border: 0; }
 
 .kpi {
   padding: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,250,255,0.94));
 }
 
 .kpi-label {
@@ -488,6 +562,7 @@ button { cursor: pointer; border: 0; }
 
 .panel {
   padding: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.94));
 }
 
 .panel-head {
@@ -546,7 +621,7 @@ button { cursor: pointer; border: 0; }
   gap: 8px;
   padding: 16px;
   border-radius: 18px;
-  background: #f9fbfd;
+  background: linear-gradient(180deg, #fbfdff, #f6f9fd);
   border: 1px solid var(--line);
 }
 
@@ -639,6 +714,7 @@ button { cursor: pointer; border: 0; }
   border-color: rgba(61,82,160,0.34);
   background: #fff;
   transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(61,82,160,0.08);
 }
 
 .case-row-top {
@@ -707,7 +783,7 @@ button { cursor: pointer; border: 0; }
 
 .lane {
   border-radius: 20px;
-  background: #f6f9fd;
+  background: linear-gradient(180deg, #f8fbff, #f3f7fc);
   border: 1px solid var(--line);
   padding: 16px;
 }
@@ -771,6 +847,16 @@ button { cursor: pointer; border: 0; }
 .case-card {
   padding: 22px;
   background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+  position: relative;
+}
+
+.case-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 22px 0 0 22px;
+  background: linear-gradient(180deg, var(--indigo), var(--terra));
 }
 
 .case-header {
@@ -818,6 +904,12 @@ button { cursor: pointer; border: 0; }
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.03em;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.detail-tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(61,82,160,0.26);
 }
 
 .detail-tab.is-on {
@@ -833,12 +925,24 @@ button { cursor: pointer; border: 0; }
   font-size: 13px;
   background: var(--navy);
   color: #fff;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.detail-btn:hover {
+  transform: translateY(-1px);
+  background: var(--navy-2);
+  box-shadow: 0 12px 22px rgba(11,29,53,0.16);
 }
 
 .detail-btn.secondary {
   background: #fff;
   color: var(--navy);
   border: 1px solid var(--line);
+}
+
+.detail-btn.secondary:hover {
+  border-color: rgba(61,82,160,0.26);
+  background: var(--sky);
 }
 
 .case-kvs {
@@ -908,7 +1012,7 @@ button { cursor: pointer; border: 0; }
 .composer-card {
   padding: 16px;
   border-radius: 18px;
-  background: rgba(255,255,255,0.9);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,255,0.92));
   border: 1px solid var(--line);
 }
 
@@ -952,6 +1056,12 @@ button { cursor: pointer; border: 0; }
   background: var(--navy);
   color: #fff;
   font-weight: 700;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.composer-btn:hover {
+  transform: translateY(-1px);
+  background: var(--navy-2);
 }
 
 .composer-row {
@@ -969,6 +1079,13 @@ button { cursor: pointer; border: 0; }
   color: var(--navy);
   font-weight: 700;
   font-size: 13px;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.secondary-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(61,82,160,0.26);
+  background: var(--sky);
 }
 
 .perm-grid {
@@ -981,7 +1098,7 @@ button { cursor: pointer; border: 0; }
   padding: 16px;
   border-radius: 16px;
   border: 1px solid var(--line);
-  background: #fbfdff;
+  background: linear-gradient(180deg, #fbfdff, #f5f9ff);
 }
 
 .perm-item strong {
@@ -1003,6 +1120,7 @@ button { cursor: pointer; border: 0; }
 }
 
 @media (max-width: 1180px) {
+  .focus-strip,
   .utility-grid,
   .grid-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace,
@@ -1015,19 +1133,29 @@ button { cursor: pointer; border: 0; }
     position: static;
     height: auto;
   }
+  .focus-strip { grid-template-columns: 1fr 1fr; }
   .kanban { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 680px) {
-  .main { padding: 16px; }
+  .main { padding: 16px 16px 44px; }
   .topbar {
     flex-direction: column;
     align-items: stretch;
+  }
+  .role-strip,
+  .detail-tabs,
+  .context-meta,
+  .quick-actions {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
   .top-actions {
     width: 100%;
     justify-content: space-between;
   }
+  .focus-strip { grid-template-columns: 1fr; }
   .grid-kpis,
   .case-kvs,
   .perm-grid,
@@ -1129,6 +1257,29 @@ button { cursor: pointer; border: 0; }
         <div class="quick-actions" id="quickActions"></div>
         <div class="activity-feed" id="activityFeed"></div>
       </div>
+    </section>
+
+    <section class="focus-strip" id="focusStrip">
+      <article class="focus-card">
+        <div class="focus-label">Expediente activo</div>
+        <div class="focus-value" id="focusCaseName">Mariana Costa</div>
+        <div class="focus-meta" id="focusCaseMeta">Arraigo social · Valencia</div>
+      </article>
+      <article class="focus-card">
+        <div class="focus-label">Siguiente mejor acción</div>
+        <div class="focus-value" id="focusAction">Reasignar cartera</div>
+        <div class="focus-meta" id="focusActionMeta">La plataforma resume lo importante para no obligar a interpretar demasiado.</div>
+      </article>
+      <article class="focus-card">
+        <div class="focus-label">Estado y riesgo</div>
+        <div class="focus-value" id="focusRisk">At risk</div>
+        <div class="focus-meta" id="focusRiskMeta">Pendiente de validar padrón y desbloquear el siguiente hito.</div>
+      </article>
+      <article class="focus-card">
+        <div class="focus-label">Señal de negocio</div>
+        <div class="focus-value" id="focusBusiness">Upsell alto</div>
+        <div class="focus-meta" id="focusBusinessMeta">Cliente premium con potencial de renovación y plan familiar.</div>
+      </article>
     </section>
 
     <section class="grid-kpis" id="kpiGrid"></section>
@@ -1979,6 +2130,20 @@ function renderQuickActions(activeRole) {
   `).join("");
 }
 
+function renderFocusStrip(activeRole) {
+  const baseCase = CASES[currentCaseId];
+  const runtime = getRuntimeCase(currentCaseId);
+  const business = CASE_BUSINESS[currentCaseId];
+  document.getElementById("focusCaseName").textContent = baseCase.client;
+  document.getElementById("focusCaseMeta").textContent = `${baseCase.procedure} · ${baseCase.office} · Responsable: ${runtime.owner}`;
+  document.getElementById("focusAction").textContent = baseCase.actions[activeRole][0];
+  document.getElementById("focusActionMeta").textContent = runtime.nextMilestone;
+  document.getElementById("focusRisk").textContent = runtime.status[0];
+  document.getElementById("focusRiskMeta").textContent = `${runtime.docsProgress}% de completitud · siguiente paso: ${runtime.nextMilestone.toLowerCase()}.`;
+  document.getElementById("focusBusiness").textContent = `${business.upsell} upsell`;
+  document.getElementById("focusBusinessMeta").textContent = `${business.tier} · renovación ${business.renewal} · referral ${business.referral.toLowerCase()}.`;
+}
+
 function getRuntimeCase(id) {
   return appState.cases[id];
 }
@@ -2305,6 +2470,7 @@ function renderRole(activeRole) {
   renderModules(activeRole);
   renderContext(activeRole);
   renderQuickActions(activeRole);
+  renderFocusStrip(activeRole);
   renderCaseFilters(activeRole);
   renderCaseList(activeRole);
   renderKPIs(activeRole);
