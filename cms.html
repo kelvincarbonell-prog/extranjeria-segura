@@ -387,6 +387,192 @@ button { cursor: pointer; border: 0; }
   line-height: 1.55;
 }
 
+.panel-caption {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.access-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+  gap: 16px;
+}
+
+.access-col {
+  display: grid;
+  gap: 14px;
+}
+
+.template-list,
+.team-list,
+.access-module-grid,
+.access-summary {
+  display: grid;
+  gap: 10px;
+}
+
+.template-card,
+.team-card,
+.access-module-card,
+.summary-card {
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #fbfdff, #f4f8fd);
+}
+
+.template-card {
+  text-align: left;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.template-card:hover,
+.template-card.is-on {
+  transform: translateY(-1px);
+  border-color: rgba(61,82,160,0.28);
+  box-shadow: 0 14px 26px rgba(61,82,160,0.08);
+}
+
+.template-top,
+.team-top,
+.access-module-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.template-name,
+.team-name,
+.access-module-name,
+.access-headline {
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.template-meta,
+.team-meta,
+.access-module-meta,
+.summary-meta {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.summary-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--navy);
+}
+
+.summary-card span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.access-editor {
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,249,255,0.94));
+  border: 1px solid rgba(61,82,160,0.14);
+}
+
+.access-editor-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.access-editor-copy {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 6px 0 0;
+}
+
+.access-module-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.access-module-card {
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.access-module-card.is-enabled {
+  border-color: rgba(10,122,85,0.22);
+  background: linear-gradient(180deg, #f6fff9, #eefaf4);
+}
+
+.access-module-card.is-disabled {
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.toggle-btn,
+.grant-btn {
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.toggle-btn {
+  background: var(--navy);
+  color: #fff;
+}
+
+.toggle-btn.secondary {
+  background: #fff;
+  color: var(--navy);
+  border: 1px solid var(--line);
+}
+
+.toggle-btn:hover,
+.grant-btn:hover {
+  transform: translateY(-1px);
+}
+
+.grant-btn {
+  background: #fff;
+  color: var(--navy);
+  border: 1px solid var(--line);
+}
+
+.grant-btn.primary {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.team-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.team-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.panel-hidden {
+  display: none !important;
+}
+
 .utility-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
@@ -1123,6 +1309,8 @@ button { cursor: pointer; border: 0; }
   .focus-strip,
   .utility-grid,
   .grid-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .access-shell,
+  .access-module-grid { grid-template-columns: 1fr; }
   .workspace,
   .hero-grid { grid-template-columns: 1fr; }
 }
@@ -1159,6 +1347,7 @@ button { cursor: pointer; border: 0; }
   .grid-kpis,
   .case-kvs,
   .perm-grid,
+  .access-module-grid,
   .workflow-grid,
   .business-grid,
   .composer-grid { grid-template-columns: 1fr; }
@@ -1286,6 +1475,42 @@ button { cursor: pointer; border: 0; }
 
     <section class="workspace">
       <div class="stack">
+        <div class="card panel" id="panel-access">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title">Usuarios, tipos y accesos</h2>
+              <p class="panel-sub">Centro de gobierno para que el super admin defina qué puede ver y editar cada perfil.</p>
+            </div>
+            <div class="mini-tag">RBAC visual</div>
+          </div>
+          <p class="panel-caption">La lógica está pensada en dos capas: plantillas por tipo de usuario y asignación de esa plantilla a usuarios concretos del equipo.</p>
+          <div class="access-shell">
+            <div class="access-col">
+              <div>
+                <div class="eyebrow" style="margin-bottom:10px">Tipos de usuario</div>
+                <div class="template-list" id="templateList"></div>
+              </div>
+              <div>
+                <div class="eyebrow" style="margin-bottom:10px">Equipo y asignación</div>
+                <div class="team-list" id="teamList"></div>
+              </div>
+            </div>
+            <div class="access-col">
+              <div class="access-editor">
+                <div class="access-editor-head">
+                  <div>
+                    <div class="access-headline" id="accessHeadline">Super admin</div>
+                    <p class="access-editor-copy" id="accessCopy">Aquí se edita la plantilla de acceso del tipo de usuario seleccionado.</p>
+                  </div>
+                  <div class="mini-tag" id="accessStatsTag">0 módulos activos</div>
+                </div>
+                <div class="access-summary" id="accessSummary"></div>
+                <div class="access-module-grid" id="accessModuleGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card panel" id="panel-cases">
           <div class="panel-head">
             <div>
@@ -1674,6 +1899,72 @@ const CASE_BUSINESS = {
   nadia: { mrr: "109 EUR/mes", tier: "Standard+", upsell: "Alta", renewal: "89%", referral: "Alta", playbook: "En cuanto firme y presente, activar solicitud de reseña y detectar trámites del entorno familiar." }
 };
 
+const ACCESS_MODULES = [
+  { key: "overview", label: "Resumen ejecutivo", desc: "KPIs, salud del negocio y visión global." },
+  { key: "users", label: "Usuarios y accesos", desc: "Alta, baja, plantillas y gobierno de permisos." },
+  { key: "cases", label: "Expedientes", desc: "Listado, filtros, responsables y detalle del caso." },
+  { key: "queue", label: "Capacidad y SLA", desc: "Carga, colas prioritarias y tiempos de respuesta." },
+  { key: "docs", label: "Operaciones documentales", desc: "Checklist, validación y handoff documental." },
+  { key: "messages", label: "Mensajes y soporte", desc: "Notas internas, updates y contexto de cliente." },
+  { key: "business", label: "Comercial y upsell", desc: "Renovación, referral, tickets y oportunidades." },
+  { key: "billing", label: "Facturación", desc: "Cobros, morosidad, planes y valor del cliente." },
+  { key: "automation", label: "Automatizaciones", desc: "Alertas, reglas y flujos automáticos." },
+  { key: "audit", label: "Auditoría", desc: "Trazabilidad, overrides y control interno." }
+];
+
+const USER_TYPE_DEFS = {
+  superadmin: {
+    label: "Super admin",
+    desc: "Control total de negocio, usuarios, automatizaciones y overrides.",
+    modules: ["overview", "users", "cases", "queue", "docs", "messages", "business", "billing", "automation", "audit"]
+  },
+  admin_despacho: {
+    label: "Admin de despacho",
+    desc: "Gestiona la operativa de una oficina, equipo y carga sin tocar configuración global.",
+    modules: ["overview", "users", "cases", "queue", "docs", "messages", "business"]
+  },
+  abogado: {
+    label: "Abogado",
+    desc: "Criterio jurídico, estrategia, requerimientos y presentación.",
+    modules: ["overview", "cases", "docs", "messages", "business"]
+  },
+  paralegal: {
+    label: "Paralegal",
+    desc: "Apoyo legal y preparación documental sin acceso global de negocio.",
+    modules: ["cases", "docs", "messages"]
+  },
+  operaciones: {
+    label: "Operaciones",
+    desc: "QA documental, resubidas, checklist y handoff a legal.",
+    modules: ["cases", "queue", "docs", "messages"]
+  },
+  soporte: {
+    label: "Atención al cliente",
+    desc: "Estado del caso, updates y experiencia de cliente.",
+    modules: ["cases", "messages", "business"]
+  },
+  comercial: {
+    label: "Comercial",
+    desc: "Captación, upgrade, renovación y oportunidades de crecimiento.",
+    modules: ["overview", "cases", "business", "billing"]
+  },
+  finanzas: {
+    label: "Finanzas",
+    desc: "Cobros, morosidad, valor del cliente y alertas de facturación.",
+    modules: ["overview", "billing", "audit"]
+  }
+};
+
+const TEAM_USERS = [
+  { id: "user-1", name: "Clara Molina", office: "Madrid", roleType: "admin_despacho" },
+  { id: "user-2", name: "Laura Serrano", office: "Valencia", roleType: "abogado" },
+  { id: "user-3", name: "Javier Rubio", office: "Barcelona", roleType: "paralegal" },
+  { id: "user-4", name: "Nadia Torres", office: "Remoto", roleType: "operaciones" },
+  { id: "user-5", name: "Paula Sáez", office: "Sevilla", roleType: "soporte" },
+  { id: "user-6", name: "Iván Costa", office: "Madrid", roleType: "comercial" },
+  { id: "user-7", name: "Mar Orduña", office: "Central", roleType: "finanzas" }
+];
+
 const ROLE_VIEWS = {
   superadmin: {
     label: "Super admin",
@@ -1688,8 +1979,9 @@ const ROLE_VIEWS = {
     alertTag: "Automatizaciones globales",
     modules: [
       { name: "Resumen ejecutivo", access: "ok" },
-      { name: "Expedientes", access: "ok" },
-      { name: "Equipo legal", access: "ok" },
+      { name: "Usuarios y accesos", access: "ok" },
+      { name: "Expedientes críticos", access: "ok" },
+      { name: "Capacidad y SLA", access: "ok" },
       { name: "Operaciones documentales", access: "ok" },
       { name: "Facturación y cobros", access: "ok" },
       { name: "Automatizaciones", access: "ok" },
@@ -2008,7 +2300,7 @@ const ROLE_VIEWS = {
 
 const roleOrder = ["superadmin", "abogado", "operaciones", "soporte"];
 const MODULE_SECTIONS = {
-  superadmin: ["panel-overview", "panel-cases", "panel-detail", "panel-queue", "panel-alerts", "panel-board", "panel-permissions"],
+  superadmin: ["panel-overview", "panel-access", "panel-cases", "panel-queue", "panel-board", "panel-alerts", "panel-permissions"],
   abogado: ["panel-overview", "panel-cases", "panel-detail", "panel-board", "panel-alerts", "panel-permissions", "panel-roadmap"],
   operaciones: ["panel-cases", "panel-detail", "panel-detail", "panel-board", "panel-permissions", "panel-alerts", "panel-roadmap"],
   soporte: ["panel-cases", "panel-detail", "panel-roadmap", "panel-alerts", "panel-permissions", "panel-permissions", "panel-overview"]
@@ -2039,11 +2331,15 @@ const workflowGrid = document.getElementById("workflowGrid");
 const businessGrid = document.getElementById("businessGrid");
 const businessActions = document.getElementById("businessActions");
 const detailTabs = document.getElementById("detailTabs");
+const templateList = document.getElementById("templateList");
+const teamList = document.getElementById("teamList");
+const accessModuleGrid = document.getElementById("accessModuleGrid");
 let currentRole = "superadmin";
 let currentCaseId = ROLE_VIEWS.superadmin.defaultCaseId;
 let currentFilter = "todos";
 let currentModuleIndex = 0;
 let currentDetailTab = "overview";
+let currentUserTypeKey = "admin_despacho";
 let toastTimer = null;
 let activityLog = [
   {
@@ -2060,7 +2356,12 @@ const appState = {
     timeline: item.timeline.map((entry) => [...entry]),
     checklist: item.checklist.map((entry) => [...entry]),
     messages: item.messages.map((entry) => [...entry])
-  }]))
+  }])),
+  accessTemplates: Object.fromEntries(Object.entries(USER_TYPE_DEFS).map(([key, item]) => [key, {
+    ...item,
+    modules: [...item.modules]
+  }])),
+  teamUsers: TEAM_USERS.map((item) => ({ ...item }))
 };
 
 function chipStatusClass(status) {
@@ -2142,6 +2443,99 @@ function renderFocusStrip(activeRole) {
   document.getElementById("focusRiskMeta").textContent = `${runtime.docsProgress}% de completitud · siguiente paso: ${runtime.nextMilestone.toLowerCase()}.`;
   document.getElementById("focusBusiness").textContent = `${business.upsell} upsell`;
   document.getElementById("focusBusinessMeta").textContent = `${business.tier} · renovación ${business.renewal} · referral ${business.referral.toLowerCase()}.`;
+}
+
+function renderAccessPanel() {
+  const panel = document.getElementById("panel-access");
+  panel.classList.toggle("panel-hidden", currentRole !== "superadmin");
+  if (currentRole !== "superadmin") return;
+
+  const template = appState.accessTemplates[currentUserTypeKey];
+  const activeModules = template.modules.length;
+
+  templateList.innerHTML = Object.entries(appState.accessTemplates).map(([key, item]) => `
+    <button class="template-card ${key === currentUserTypeKey ? "is-on" : ""}" type="button" data-template-key="${key}">
+      <div class="template-top">
+        <div class="template-name">${item.label}</div>
+        <span class="status info">${item.modules.length} módulos</span>
+      </div>
+      <div class="template-meta">${item.desc}</div>
+    </button>
+  `).join("");
+
+  document.getElementById("accessHeadline").textContent = template.label;
+  document.getElementById("accessCopy").textContent = template.desc;
+  document.getElementById("accessStatsTag").textContent = `${activeModules} módulos activos`;
+
+  document.getElementById("accessSummary").innerHTML = [
+    ["Plantilla activa", template.label],
+    ["Usuarios con este tipo", `${appState.teamUsers.filter((item) => item.roleType === currentUserTypeKey).length} personas`],
+    ["Cobertura", activeModules > 6 ? "Amplia" : activeModules > 3 ? "Media" : "Acotada"]
+  ].map(([title, detail]) => `
+    <div class="summary-card">
+      <strong>${title}</strong>
+      <span>${detail}</span>
+    </div>
+  `).join("");
+
+  accessModuleGrid.innerHTML = ACCESS_MODULES.map((module) => {
+    const enabled = template.modules.includes(module.key);
+    return `
+      <div class="access-module-card ${enabled ? "is-enabled" : "is-disabled"}">
+        <div class="access-module-top">
+          <div>
+            <div class="access-module-name">${module.label}</div>
+            <div class="access-module-meta">${module.desc}</div>
+          </div>
+          <button class="toggle-btn ${enabled ? "" : "secondary"}" type="button" data-access-module="${module.key}">
+            ${enabled ? "Con acceso" : "Bloqueado"}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  teamList.innerHTML = appState.teamUsers.map((user) => `
+    <div class="team-card">
+      <div class="team-top">
+        <div>
+          <div class="team-name">${user.name}</div>
+          <div class="team-meta">${user.office} · ${appState.accessTemplates[user.roleType].label}</div>
+        </div>
+        <button class="grant-btn ${user.roleType === currentUserTypeKey ? "primary" : ""}" type="button" data-assign-user="${user.id}">
+          ${user.roleType === currentUserTypeKey ? "Asignado" : "Dar este acceso"}
+        </button>
+      </div>
+      <div class="team-badges">
+        <span class="team-badge">${appState.accessTemplates[user.roleType].modules.length} módulos</span>
+        <span class="team-badge">${user.roleType}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function toggleAccessModule(moduleKey) {
+  const template = appState.accessTemplates[currentUserTypeKey];
+  const hasAccess = template.modules.includes(moduleKey);
+  if (hasAccess) {
+    template.modules = template.modules.filter((key) => key !== moduleKey);
+    pushActivity("Acceso retirado", `Se ha retirado ${ACCESS_MODULES.find((item) => item.key === moduleKey).label} al tipo ${template.label}.`);
+    showToast("Acceso retirado");
+  } else {
+    template.modules.push(moduleKey);
+    pushActivity("Acceso concedido", `Se ha concedido ${ACCESS_MODULES.find((item) => item.key === moduleKey).label} al tipo ${template.label}.`);
+    showToast("Acceso concedido");
+  }
+  renderAccessPanel();
+}
+
+function assignTemplateToUser(userId) {
+  const user = appState.teamUsers.find((item) => item.id === userId);
+  if (!user) return;
+  user.roleType = currentUserTypeKey;
+  pushActivity("Usuario actualizado", `${user.name} ahora tiene el tipo ${appState.accessTemplates[currentUserTypeKey].label}.`);
+  showToast(`Acceso actualizado para ${user.name}`);
+  renderAccessPanel();
 }
 
 function getRuntimeCase(id) {
@@ -2471,6 +2865,7 @@ function renderRole(activeRole) {
   renderContext(activeRole);
   renderQuickActions(activeRole);
   renderFocusStrip(activeRole);
+  renderAccessPanel();
   renderCaseFilters(activeRole);
   renderCaseList(activeRole);
   renderKPIs(activeRole);
@@ -2512,6 +2907,25 @@ moduleNav.addEventListener("click", (event) => {
   const button = event.target.closest("[data-module-index]");
   if (!button) return;
   setActiveModule(Number(button.dataset.moduleIndex), true);
+});
+
+templateList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-template-key]");
+  if (!button) return;
+  currentUserTypeKey = button.dataset.templateKey;
+  renderAccessPanel();
+});
+
+accessModuleGrid.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-access-module]");
+  if (!button) return;
+  toggleAccessModule(button.dataset.accessModule);
+});
+
+teamList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-assign-user]");
+  if (!button) return;
+  assignTemplateToUser(button.dataset.assignUser);
 });
 
 quickActions.addEventListener("click", (event) => {
