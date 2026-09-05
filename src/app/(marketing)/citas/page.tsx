@@ -68,6 +68,7 @@ export default function CitasPage() {
                     {locales.filter((l) => l.ready).map((l) => (
                       <option key={l.code}>{l.native}</option>
                     ))}
+                    <option>Otro idioma (lo consultamos)</option>
                   </select>
                 </label>
                 <label className="flex flex-col gap-1.5">

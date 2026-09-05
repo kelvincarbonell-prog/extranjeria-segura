@@ -37,7 +37,7 @@ const FAQS = [
   },
   {
     q: "¿En qué idiomas atendéis?",
-    a: "Atendemos en español e inglés. La plataforma está construida para ocho idiomas y los iremos activando a medida que el contenido jurídico esté revisado en cada uno; no publicamos requisitos legales traducidos automáticamente.",
+    a: "La plataforma está publicada en español. Está construida para ocho idiomas y los iremos activando a medida que el contenido jurídico esté revisado en cada uno: no publicamos requisitos legales traducidos automáticamente, porque un requisito mal traducido no es un fallo estético. Si necesitas atención en otro idioma, dínoslo al reservar la consulta y lo organizamos.",
   },
 ];
 

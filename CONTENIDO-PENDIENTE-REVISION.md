@@ -144,8 +144,11 @@ fecha de última revisión y sin promesas de resultado.
 
 ## 8. Idiomas
 
-`src/content/site.ts` → `locales`. Español e inglés están marcados `ready: true`;
-los otros seis aparecen como «próximamente» y **no se sirven**.
+`src/content/site.ts` → `locales`. Solo español está marcado `ready: true`. Los
+otros siete aparecen como «próximamente» y **no se sirven**.
+
+`ready` significa «el contenido jurídico existe y está revisado en este
+idioma», no «el selector lo lista». Hoy solo el español lo cumple.
 
 Motivo: un requisito de extranjería mal traducido no es un fallo estético.
 Cuando se traduzca cada idioma, el contenido jurídico debe revisarse en ese

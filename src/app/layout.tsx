@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
   robots: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  alternates: { canonical: "/", languages: { "es-ES": "/", "en-US": "/en" } },
+  alternates: { canonical: "/" },
   appleWebApp: { capable: true, title: site.name, statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
 };

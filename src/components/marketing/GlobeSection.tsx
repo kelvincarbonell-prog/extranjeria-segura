@@ -53,8 +53,11 @@ export function GlobeSection() {
 
             <Reveal delay={0.14}>
               <div className="border-ink-100 mt-9 border-t pt-7">
-                <p className="text-ink-400 mb-3 text-[11px] font-bold tracking-[0.12em] uppercase">
-                  Plataforma preparada en {locales.length} idiomas
+                <p className="text-ink-400 mb-1 text-[11px] font-bold tracking-[0.12em] uppercase">
+                  Arquitectura preparada para {locales.length} idiomas
+                </p>
+                <p className="text-ink-400 mb-3 text-[12.5px]">
+                  Publicamos cada idioma cuando su contenido jurídico está revisado, no antes.
                 </p>
                 <ul className="flex flex-wrap gap-x-5 gap-y-2">
                   {locales.map((l) => (

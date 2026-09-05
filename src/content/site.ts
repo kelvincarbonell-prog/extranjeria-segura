@@ -118,7 +118,10 @@ export const footerNav = {
  * ------------------------------------------------------------------ */
 export const locales = [
   { code: "es", label: "Español", native: "Español", dir: "ltr", ready: true },
-  { code: "en", label: "Inglés", native: "English", dir: "ltr", ready: true },
+  // `ready` means "the legal content exists and has been reviewed in this
+  // locale", not "the switcher lists it". Nothing but Spanish qualifies today,
+  // and claiming otherwise would be the same fabrication we refuse elsewhere.
+  { code: "en", label: "Inglés", native: "English", dir: "ltr", ready: false },
   { code: "pt", label: "Portugués", native: "Português", dir: "ltr", ready: false },
   { code: "fr", label: "Francés", native: "Français", dir: "ltr", ready: false },
   { code: "it", label: "Italiano", native: "Italiano", dir: "ltr", ready: false },
