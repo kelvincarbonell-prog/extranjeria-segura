@@ -6,7 +6,7 @@ import { useReducedMotion } from "motion/react";
 /**
  * Confetti — brand-restrained.
  *
- * Not the rainbow burst. 46 thin shards in the brand ramp plus the positive
+ * Not the rainbow burst. 32 thin shards in the brand ramp plus the positive
  * signal green, falling once, then the canvas removes itself from the DOM.
  * Nothing loops, nothing flashes, and it never renders under reduced motion:
  * a celebratory strobe is an accessibility hazard, and this is a screen people
@@ -46,8 +46,10 @@ export function Confetti() {
     canvas.height = H * dpr;
     ctx.scale(dpr, dpr);
 
-    const shards: Shard[] = Array.from({ length: 46 }, (_, i) => ({
-      x: W * (0.2 + Math.random() * 0.6),
+    const shards: Shard[] = Array.from({ length: 32 }, (_, i) => ({
+      // Biased to the margins so the shards frame the headline rather than
+      // sitting on top of it while someone is trying to read their result.
+      x: W * (i % 2 === 0 ? 0.04 + Math.random() * 0.28 : 0.68 + Math.random() * 0.28),
       y: -20 - Math.random() * H * 0.4,
       vx: (Math.random() - 0.5) * 1.6,
       vy: 1.6 + Math.random() * 2.4,
