@@ -61,7 +61,7 @@ export function CaseTimeline({ steps }: { steps: readonly Step[] }) {
       {/* -------- Horizontal (desktop) -------- */}
       <ol className="hidden lg:flex lg:items-start">
         {steps.map((s, i) => (
-          <li key={s.key} className="relative flex flex-1 flex-col items-center text-center last:flex-none">
+          <li key={s.key} className="relative flex flex-1 flex-col items-center px-1 text-center">
             {i < steps.length - 1 && (
               <span
                 aria-hidden
@@ -74,7 +74,7 @@ export function CaseTimeline({ steps }: { steps: readonly Step[] }) {
             <Node state={s.state} index={i} reduce={reduce} compact />
             <span
               className={cn(
-                "mt-2.5 max-w-[92px] text-[11.5px] leading-tight",
+                "mt-2.5 flex min-h-[28px] max-w-[92px] items-start justify-center text-[11.5px] leading-tight",
                 s.state === "todo" ? "text-ink-300" : "text-ink-700 font-medium",
                 s.state === "active" && "text-ink-900 font-semibold",
               )}

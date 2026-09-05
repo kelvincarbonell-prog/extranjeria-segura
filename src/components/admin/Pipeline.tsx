@@ -116,7 +116,7 @@ export function Pipeline() {
                 }}
                 className={cn(
                   "flex w-[264px] shrink-0 flex-col rounded-lg p-2.5 transition-colors duration-200",
-                  isOver ? "bg-brand-50 ring-brand-600/25 ring-2 ring-inset" : "bg-canvas-deep",
+                  isOver ? "bg-brand-50 ring-brand-600/25 ring-2 ring-inset" : "bg-canvas-deep ring-1 ring-inset ring-ink-900/[.05]",
                 )}
               >
                 <header className="mb-2.5 flex items-center justify-between px-1.5 pt-1">

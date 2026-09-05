@@ -23,10 +23,15 @@ export function Header() {
 
   useMotionValueEvent(scrollY, "change", (v) => setCondensed(v > 24));
 
-  React.useEffect(() => {
+  // Reset navigation state when the route changes. Done during render with a
+  // previous-value check — the pattern React documents for state that must
+  // follow a prop — rather than in an effect, which would render twice.
+  const [lastPath, setLastPath] = React.useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setMega(false);
     setMobile(false);
-  }, [pathname]);
+  }
 
   React.useEffect(() => {
     document.body.style.overflow = mobile ? "hidden" : "";
@@ -67,13 +72,21 @@ export function Header() {
                 : "inset 0 0 0 1px rgba(10,13,22,.05), 0 2px 10px -6px rgba(10,13,22,.12)",
             }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="glass relative flex h-16 items-center justify-between gap-4 rounded-[18px] pr-2 pl-4 md:h-[68px] md:pr-2.5 md:pl-5"
+            /* Three-column grid rather than an absolutely centred nav: at
+               1280–1440 the centred version overlapped the wordmark. The nav
+               centres within the space actually left over, so it can never
+               collide however wide the locale or the CTA label becomes. */
+            className="glass relative grid h-16 grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[18px] pr-2 pl-4 md:h-[68px] md:pr-2.5 md:pl-5"
           >
-            <Logo size="sm" className="md:hidden" />
-            <Logo size="md" className="hidden md:inline-flex" />
+            {/* Both lockups live in ONE grid cell — as separate children they
+                consumed two columns and pushed the actions onto a second row. */}
+            <div className="flex items-center">
+              <Logo size="sm" className="md:hidden" />
+              <Logo size="md" className="hidden md:inline-flex" />
+            </div>
 
             {/* ---------- Desktop nav ---------- */}
-            <nav aria-label="Principal" className="absolute left-1/2 hidden -translate-x-1/2 lg:block">
+            <nav aria-label="Principal" className="hidden min-w-0 justify-center lg:flex">
               <ul className="flex items-center gap-1">
                 {primaryNav.map((item) => {
                   const active = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -116,7 +129,7 @@ export function Header() {
             </nav>
 
             {/* ---------- Right cluster ---------- */}
-            <div className="flex items-center gap-1.5 md:gap-2">
+            <div className="flex items-center justify-end gap-1.5 md:gap-2">
               <div className="hidden md:block">
                 <LanguageSwitcher />
               </div>
@@ -152,7 +165,7 @@ export function Header() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.99 }}
                   transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute top-[calc(100%+10px)] left-1/2 hidden w-[min(1080px,calc(100vw-4rem))] -translate-x-1/2 lg:block"
+                  className="absolute top-[calc(100%+10px)] left-1/2 z-10 hidden w-[min(1080px,calc(100vw-4rem))] -translate-x-1/2 lg:block"
                 >
                   <MegaMenu />
                 </motion.div>

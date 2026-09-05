@@ -117,7 +117,7 @@ export function HeroStage() {
                       aria-hidden
                       className={cn(
                         "absolute top-[18px] left-[8.5px] w-px",
-                        step.state === "done" ? "bg-signal-ok/35" : "bg-ink-150 bg-ink-100",
+                        step.state === "done" ? "bg-signal-ok/40" : "bg-ink-100",
                       )}
                       style={{ height: "calc(100% - 8px)" }}
                     />
@@ -188,7 +188,7 @@ export function HeroStage() {
 
         {/* ============== Depth plane +90: validated notification ============== */}
         <Floating
-          className="absolute -top-6 -right-4 sm:-right-14"
+          className="absolute -top-7 right-0 sm:-right-8 lg:-right-12"
           z={90}
           delay={0.9}
           drift={-8}
@@ -203,7 +203,7 @@ export function HeroStage() {
 
         {/* ============== Depth plane +130: reviewed notification ============== */}
         <Floating
-          className="absolute -bottom-8 -left-3 sm:-left-16"
+          className="absolute -bottom-8 left-0 sm:-left-8 lg:-left-12"
           z={130}
           delay={1.35}
           drift={8}
@@ -219,7 +219,7 @@ export function HeroStage() {
 
         {/* ============== Depth plane +60: passport tile ============== */}
         <Floating
-          className="absolute top-24 -left-6 hidden sm:block sm:-left-20"
+          className="absolute top-28 hidden xl:block xl:-left-32"
           z={60}
           delay={1.1}
           drift={10}
@@ -230,7 +230,7 @@ export function HeroStage() {
 
         {/* ============== Depth plane +70: calendar tile ============== */}
         <Floating
-          className="absolute -right-2 bottom-24 hidden sm:block sm:-right-16"
+          className="absolute bottom-28 hidden xl:block xl:-right-24"
           z={70}
           delay={1.55}
           drift={-10}
@@ -241,7 +241,7 @@ export function HeroStage() {
 
         {/* ============== Depth plane +40: digital seal ============== */}
         <Floating
-          className="absolute -top-10 left-10 hidden md:block"
+          className="absolute -top-11 left-8 hidden lg:block"
           z={40}
           delay={1.7}
           drift={6}

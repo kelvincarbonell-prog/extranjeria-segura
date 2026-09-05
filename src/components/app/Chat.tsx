@@ -23,6 +23,10 @@ const HANDOVER_TRIGGERS = [
   "apostilla", "válido", "valido", "puedo", "antecedente", "expulsión", "multa",
 ];
 
+/** Kept out of the component so the clock is never read during render. */
+const nowIso = () => new Date().toISOString();
+const newId = (prefix: string) => `${prefix}${Math.random().toString(36).slice(2, 10)}`;
+
 const QUICK = [
   "¿En qué punto está mi expediente?",
   "¿Qué documentos me faltan?",
@@ -46,11 +50,11 @@ export function Chat() {
     if (!body) return;
 
     const mine: DemoMessage = {
-      id: `u${Date.now()}`,
+      id: newId("u"),
       from: "cliente",
       authorName: "Tú",
       body,
-      at: new Date().toISOString(),
+      at: nowIso(),
     };
     setMessages((m) => [...m, mine]);
     setDraft("");
@@ -64,13 +68,13 @@ export function Chat() {
         setMessages((m) => [
           ...m,
           {
-            id: `a${Date.now()}`,
+            id: newId("a"),
             from: "asistente",
             authorName: "Asistente de Extranjería Segura",
             body: needsHuman
               ? "Esto afecta a los requisitos de tu expediente, así que no te lo voy a responder yo. Voy a trasladar tu consulta a tu especialista, que te contesta en horario laboral."
               : "Tu expediente está en la fase de documentación, con 4 de 8 documentos validados. Lo que nos falta de tu parte es el certificado de antecedentes penales y la nueva versión del contrato firmada por la empresa. En cuanto los tengamos, tu especialista cierra la revisión.",
-            at: new Date().toISOString(),
+            at: nowIso(),
           },
         ]);
       },

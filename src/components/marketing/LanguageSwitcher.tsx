@@ -3,9 +3,13 @@
 import * as React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { locales, type LocaleCode } from "@/content/site";
+import {
+  subscribeLocale,
+  getLocaleSnapshot,
+  getLocaleServerSnapshot,
+  setLocale,
+} from "@/lib/locale-store";
 import { cn } from "@/lib/utils";
-
-const STORAGE_KEY = "es.locale";
 
 /**
  * Locale control.
@@ -17,23 +21,16 @@ const STORAGE_KEY = "es.locale";
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false);
-  const [current, setCurrent] = React.useState<LocaleCode>("es");
   const ref = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY) as LocaleCode | null;
-      if (saved) {
-        setCurrent(saved);
-        return;
-      }
-      // Browser-language detection, first visit only.
-      const nav = navigator.language.slice(0, 2) as LocaleCode;
-      if (locales.some((l) => l.code === nav && l.ready)) setCurrent(nav);
-    } catch {
-      /* storage unavailable — Spanish stands */
-    }
-  }, []);
+  // Locale is external state (localStorage + <html lang>), so it is read
+  // through a store rather than restored inside an effect: the first client
+  // render already has the right value and there is no flash of Spanish.
+  const current = React.useSyncExternalStore(
+    subscribeLocale,
+    getLocaleSnapshot,
+    getLocaleServerSnapshot,
+  );
 
   React.useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -44,15 +41,8 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   }, []);
 
   const pick = (code: LocaleCode) => {
-    setCurrent(code);
     setOpen(false);
-    try {
-      localStorage.setItem(STORAGE_KEY, code);
-    } catch {
-      /* ignore */
-    }
-    document.documentElement.lang = code;
-    document.documentElement.dir = locales.find((l) => l.code === code)?.dir ?? "ltr";
+    setLocale(code);
   };
 
   const active = locales.find((l) => l.code === current) ?? locales[0];

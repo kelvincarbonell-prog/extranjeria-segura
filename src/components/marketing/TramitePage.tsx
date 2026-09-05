@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Category, Tramite } from "@/content/taxonomy";
 import type { CITIES, NATIONALITIES } from "@/content/geo";
-import { OFFICIAL_SOURCES, reviewedBy, site } from "@/content/site";
+import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Badge, Card, LegalNote, Divider } from "@/components/ui/primitives";
@@ -67,7 +67,7 @@ export function TramitePage({
             </ol>
           </nav>
 
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+          <div className="max-w-3xl">
             <div>
               <span className="bg-brand-50 text-brand-700 mb-5 inline-flex items-center gap-2 rounded-full py-1.5 pr-3.5 pl-2.5 text-[12px] font-semibold">
                 <Glyph name={category.glyph} className="size-4" />
@@ -89,72 +89,37 @@ export function TramitePage({
                   Hablar con un especialista
                 </Button>
               </div>
+
+              {/* Mobile/tablet: the rail is hidden, so the headline facts
+                  travel with the hero instead of disappearing. */}
+              <dl className="border-ink-100 mt-9 grid grid-cols-2 gap-x-6 gap-y-4 border-t pt-6 sm:grid-cols-3 lg:hidden">
+                <div>
+                  <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                    Honorarios
+                  </dt>
+                  <dd className="text-ink-900 font-display mt-1 text-[19px] font-extrabold tracking-[-0.03em] tabular-nums">
+                    {t.feeFromCents !== null ? `desde ${eur(t.feeFromCents)}` : "A medida"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                    Documentación
+                  </dt>
+                  <dd className="text-ink-900 font-display mt-1 text-[19px] font-extrabold tracking-[-0.03em]">
+                    {t.documents.length} docs
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                    Última revisión
+                  </dt>
+                  <dd className="text-ink-700 mt-1 text-[13.5px] font-medium">
+                    {formatDateES(t.updatedAt, "short")}
+                  </dd>
+                </div>
+              </dl>
             </div>
 
-            {/* ---- Sticky fact panel ---- */}
-            <aside className="lg:sticky lg:top-28 lg:self-start">
-              <Card padding="none" className="overflow-hidden">
-                <dl className="divide-ink-100 divide-y">
-                  <div className="p-5">
-                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
-                      Honorarios
-                    </dt>
-                    <dd className="text-ink-900 font-display mt-1.5 text-[26px] leading-none font-extrabold tracking-[-0.035em] tabular-nums">
-                      {t.feeFromCents !== null ? (
-                        <>
-                          <span className="text-ink-400 text-[15px] font-medium">desde </span>
-                          {eur(t.feeFromCents)}
-                        </>
-                      ) : (
-                        <span className="text-[20px]">A medida</span>
-                      )}
-                    </dd>
-                    <dd className="text-ink-400 mt-2 text-[12px] leading-relaxed">
-                      {t.adminFeesNote}
-                    </dd>
-                  </div>
-
-                  <div className="p-5">
-                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
-                      Documentación
-                    </dt>
-                    <dd className="text-ink-900 mt-1.5 text-[15px] font-semibold">
-                      {t.documents.length} documentos
-                    </dd>
-                    <dd className="text-ink-400 mt-1 text-[12.5px]">
-                      {t.documents.filter((d) => d.source === "cliente").length} los aportas tú ·{" "}
-                      {t.documents.filter((d) => d.source !== "cliente").length} los gestionamos
-                    </dd>
-                  </div>
-
-                  <div className="p-5">
-                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
-                      Plazos
-                    </dt>
-                    <dd className="text-ink-600 mt-1.5 text-[13px] leading-relaxed">
-                      {t.timeframe}
-                    </dd>
-                  </div>
-
-                  <div className="bg-canvas-deep p-5">
-                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
-                      Última revisión
-                    </dt>
-                    <dd className="text-ink-700 mt-1.5 text-[13px] font-medium">
-                      {formatDateES(t.updatedAt)}
-                    </dd>
-                    <dd className="text-ink-400 mt-0.5 text-[12.5px]">
-                      Revisado por {reviewedBy()}
-                    </dd>
-                    {t.pendingLegalReview && (
-                      <dd className="mt-3">
-                        <Badge tone="warn">Pendiente de firma jurídica</Badge>
-                      </dd>
-                    )}
-                  </div>
-                </dl>
-              </Card>
-            </aside>
           </div>
         </div>
       </section>
@@ -425,7 +390,73 @@ export function TramitePage({
 
           {/* ---- Right rail: table of contents ---- */}
           <aside className="hidden lg:block">
-            <div className="sticky top-28">
+            <div className="sticky top-28 flex flex-col gap-8">
+              {/* Facts first: price, document count, timeframe, review date. */}
+              <div>
+                          <Card padding="none" className="overflow-hidden">
+                <dl className="divide-ink-100 divide-y">
+                  <div className="p-5">
+                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                      Honorarios
+                    </dt>
+                    <dd className="text-ink-900 font-display mt-1.5 text-[26px] leading-none font-extrabold tracking-[-0.035em] tabular-nums">
+                      {t.feeFromCents !== null ? (
+                        <>
+                          <span className="text-ink-400 text-[15px] font-medium">desde </span>
+                          {eur(t.feeFromCents)}
+                        </>
+                      ) : (
+                        <span className="text-[20px]">A medida</span>
+                      )}
+                    </dd>
+                    <dd className="text-ink-400 mt-2 text-[12px] leading-relaxed">
+                      {t.adminFeesNote}
+                    </dd>
+                  </div>
+
+                  <div className="p-5">
+                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                      Documentación
+                    </dt>
+                    <dd className="text-ink-900 mt-1.5 text-[15px] font-semibold">
+                      {t.documents.length} documentos
+                    </dd>
+                    <dd className="text-ink-400 mt-1 text-[12.5px]">
+                      {t.documents.filter((d) => d.source === "cliente").length} los aportas tú ·{" "}
+                      {t.documents.filter((d) => d.source !== "cliente").length} los gestionamos
+                    </dd>
+                  </div>
+
+                  <div className="p-5">
+                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                      Plazos
+                    </dt>
+                    <dd className="text-ink-600 mt-1.5 text-[13px] leading-relaxed">
+                      {t.timeframe}
+                    </dd>
+                  </div>
+
+                  <div className="bg-canvas-deep p-5">
+                    <dt className="text-ink-400 text-[11px] font-bold tracking-[0.11em] uppercase">
+                      Última revisión
+                    </dt>
+                    <dd className="text-ink-700 mt-1.5 text-[13px] font-medium">
+                      {formatDateES(t.updatedAt)}
+                    </dd>
+                    <dd className="text-ink-400 mt-0.5 text-[12.5px]">
+                      Revisado por {reviewedBy()}
+                    </dd>
+                    {t.pendingLegalReview && (
+                      <dd className="mt-3">
+                        <Badge tone="warn">Pendiente de firma jurídica</Badge>
+                      </dd>
+                    )}
+                  </div>
+                </dl>
+              </Card>
+              </div>
+
+              <div>
               <p className="text-ink-400 mb-4 text-[11px] font-bold tracking-[0.11em] uppercase">
                 En esta página
               </p>
@@ -473,6 +504,7 @@ export function TramitePage({
                 >
                   Comprobarlo
                 </Button>
+              </div>
               </div>
             </div>
           </aside>

@@ -16,9 +16,16 @@ import { cn } from "@/lib/utils";
 
 type Variant = "gradient" | "solid" | "inverse" | "mono";
 
+/**
+ * Arch: 24 units wide by 28 tall (a door is taller than it is wide — at 24×32
+ * the silhouette read as a generic squircle, which is the one thing the mark
+ * must not do). Semicircular head, lightly rounded feet.
+ */
 const ARCH =
-  "M6 33 V18 A14 14 0 0 1 34 18 V33 A3 3 0 0 1 31 36 H9 A3 3 0 0 1 6 33 Z";
-const PATH_CUT = "M13.5 21 L18.5 26 L36 8.5";
+  "M8 32.5 V20 A12 12 0 0 1 32 20 V32.5 A3.5 3.5 0 0 1 28.5 36 H11.5 A3.5 3.5 0 0 1 8 32.5 Z";
+
+/** The path: a check whose long arm continues at 45° and exits the arch. */
+const PATH_CUT = "M13.6 22.4 L18.4 27.2 L34.5 11.1";
 
 export function Isotipo({
   className,
@@ -71,7 +78,7 @@ export function Isotipo({
           <path
             d={PATH_CUT}
             stroke="#000"
-            strokeWidth="5.2"
+            strokeWidth="5.6"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -97,9 +104,9 @@ export function IsotipoTile({ className, radius = 22 }: { className?: string; ra
         </linearGradient>
         <mask id="tile-m" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
           <rect width="100" height="100" fill="#000" />
-          <g transform="translate(22 22) scale(1.4)">
+          <g transform="translate(20 20) scale(1.5)">
             <path d={ARCH} fill="#fff" />
-            <path d={PATH_CUT} stroke="#000" strokeWidth="5.2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={PATH_CUT} stroke="#000" strokeWidth="5.6" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         </mask>
       </defs>

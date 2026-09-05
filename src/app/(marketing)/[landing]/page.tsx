@@ -10,7 +10,6 @@ import {
   landingTitle,
   landingDescription,
 } from "@/content/seo-landings";
-import { CATEGORY_MAP } from "@/content/taxonomy";
 import { OFFICIAL_SOURCES, reviewedBy, site } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
@@ -53,7 +52,6 @@ export default async function Page({ params }: { params: Promise<{ landing: stri
   if (!l) notFound();
 
   const t = l.tramite;
-  const category = CATEGORY_MAP[t.category];
   const siblings = siblingLandings(l);
   const cross = crossLandings(l);
 

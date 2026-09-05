@@ -241,10 +241,19 @@
 
 /* Fine engineering grid — background texture, never decoration */
 @utility grid-fine {
+  /* Texture, not decoration: at 0.045 the lines were legible enough to
+     interfere with body copy on small screens, where the grid cell is a
+     larger share of the viewport. */
   background-image:
-    linear-gradient(to right, rgb(10 13 22 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(10 13 22 / 0.045) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(to right, rgb(10 13 22 / 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(10 13 22 / 0.032) 1px, transparent 1px);
+  background-size: 44px 44px;
+  @media (width >= 48rem) {
+    background-image:
+      linear-gradient(to right, rgb(10 13 22 / 0.042) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(10 13 22 / 0.042) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
 }
 
 @utility grid-fade {

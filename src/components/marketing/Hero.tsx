@@ -50,7 +50,7 @@ export function Hero() {
             <TextReveal
               as="h2"
               text="Nosotros resolvemos los papeles."
-              className="text-display-lg sm:text-display-xl lg:text-display-2xl text-ink-300 mt-1"
+              className="text-display-lg sm:text-display-xl lg:text-display-2xl text-ink-400 mt-1"
               delay={0.26}
             />
 

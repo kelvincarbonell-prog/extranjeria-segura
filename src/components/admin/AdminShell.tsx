@@ -30,7 +30,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [role, setRole] = React.useState<Role>("admin");
 
   return (
-    <div className="bg-canvas-deep min-h-dvh">
+    <div className="bg-canvas min-h-dvh">
       <header className="bg-surface border-ink-100 sticky top-0 z-40 border-b">
         <div className="flex h-14 items-center gap-4 px-4 sm:px-6">
           <Logo size="sm" href="/admin" />
@@ -101,7 +101,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={cn(
                   "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium",
-                  active ? "bg-ink-950 text-white" : "text-ink-500 bg-canvas-deep",
+                  active ? "bg-ink-950 text-white" : "text-ink-500 bg-ink-50",
                 )}
               >
                 <Glyph name={item.glyph} className="size-3.5" />

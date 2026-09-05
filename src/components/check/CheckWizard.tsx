@@ -12,53 +12,71 @@ import { LegalNote } from "@/components/ui/primitives";
 import { CheckDraw } from "@/components/motion/primitives";
 import { CheckResultView } from "./CheckResult";
 import { AnalysisCurtain } from "./AnalysisCurtain";
+import {
+  subscribeAnswers,
+  getAnswersSnapshot,
+  getAnswersServerSnapshot,
+  saveAnswers,
+  clearAnswers,
+} from "@/lib/check-store";
 import { cn } from "@/lib/utils";
-
-const STORAGE_KEY = "es.check.answers";
 
 type Phase = "asking" | "analysing" | "result";
 
+/**
+ * Outer gate.
+ *
+ * Persisted answers live in sessionStorage, which the server cannot see. Rather
+ * than mounting the wizard empty and repopulating it inside an effect — which
+ * flashes question 1 before jumping to question 5 — we read the store through
+ * useSyncExternalStore and hand the restored answers to the wizard as a pure
+ * lazy initial value.
+ */
 export function CheckWizard() {
   const params = useSearchParams();
+  const persisted = React.useSyncExternalStore(
+    subscribeAnswers,
+    getAnswersSnapshot,
+    getAnswersServerSnapshot,
+  );
+
+  if (persisted === null) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center">
+        <span className="skeleton h-2 w-40" />
+      </div>
+    );
+  }
+
+  // A ?objetivo= deep link (from the intent router or a trámite page) seeds the
+  // first answer without discarding a questionnaire already in progress.
+  const objetivo = params.get("objetivo");
+  const initial: Answers =
+    objetivo && QUESTIONS[0].options.some((o) => o.value === objetivo)
+      ? { ...persisted, objetivo }
+      : persisted;
+
+  return <Wizard initialAnswers={initial} />;
+}
+
+function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
   const reduce = useReducedMotion();
 
-  const [answers, setAnswers] = React.useState<Answers>({});
-  const [index, setIndex] = React.useState(0);
+  const [answers, setAnswers] = React.useState<Answers>(initialAnswers);
+  const [index, setIndex] = React.useState(() => {
+    // Resume at the first unanswered active question.
+    const active = activeQuestions(initialAnswers);
+    const firstGap = active.findIndex((q) => initialAnswers[q.id] === undefined);
+    return firstGap === -1 ? Math.max(0, active.length - 1) : firstGap;
+  });
   const [direction, setDirection] = React.useState(1);
   const [phase, setPhase] = React.useState<Phase>("asking");
   const [result, setResult] = React.useState<CheckResult | null>(null);
-  const [restored, setRestored] = React.useState(false);
   const liveRef = React.useRef<HTMLDivElement>(null);
 
-  /* ---- Restore a session in progress, and honour ?objetivo= deep links ---- */
   React.useEffect(() => {
-    let initial: Answers = {};
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (raw) initial = JSON.parse(raw) as Answers;
-    } catch {
-      /* storage unavailable */
-    }
-    const objetivo = params.get("objetivo");
-    if (objetivo && QUESTIONS[0].options.some((o) => o.value === objetivo)) {
-      initial = { ...initial, objetivo };
-    }
-    setAnswers(initial);
-    // Resume at the first unanswered active question.
-    const active = activeQuestions(initial);
-    const firstGap = active.findIndex((q) => initial[q.id] === undefined);
-    setIndex(firstGap === -1 ? Math.max(0, active.length - 1) : firstGap);
-    setRestored(true);
-  }, [params]);
-
-  React.useEffect(() => {
-    if (!restored) return;
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-    } catch {
-      /* ignore */
-    }
-  }, [answers, restored]);
+    saveAnswers(answers);
+  }, [answers]);
 
   const active = React.useMemo(() => activeQuestions(answers), [answers]);
   const question: Question | undefined = active[Math.min(index, active.length - 1)];
@@ -96,15 +114,11 @@ export function CheckWizard() {
   };
 
   const restart = () => {
+    clearAnswers();
     setAnswers({});
     setIndex(0);
     setResult(null);
     setPhase("asking");
-    try {
-      sessionStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
   };
 
   /* ---- Keyboard: 1–9 to pick, ← to go back, Enter to advance ---- */
@@ -130,14 +144,6 @@ export function CheckWizard() {
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, question, index, answers]);
-
-  if (!restored) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center">
-        <div className="skeleton h-2 w-40" />
-      </div>
-    );
-  }
 
   /* ------------------------------------------------------------------ */
 

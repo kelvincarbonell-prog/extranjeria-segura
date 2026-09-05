@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useReducedMotion } from "motion/react";
 
 /**
  * Confetti — brand-restrained.
@@ -27,14 +28,12 @@ interface Shard {
 }
 
 export function Confetti() {
+  const reduce = useReducedMotion();
   const ref = React.useRef<HTMLCanvasElement>(null);
   const [alive, setAlive] = React.useState(true);
 
   React.useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setAlive(false);
-      return;
-    }
+    if (reduce) return;
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -95,9 +94,11 @@ export function Confetti() {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [reduce]);
 
-  if (!alive) return null;
+  // Reduced motion never gets a canvas at all: a celebratory strobe is an
+  // accessibility hazard, and this screen is reached while people are anxious.
+  if (reduce || !alive) return null;
 
   return (
     <canvas

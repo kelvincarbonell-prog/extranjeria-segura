@@ -186,6 +186,18 @@ export function Progress({
 /* ------------------------------------------------------------------ *
  * Avatar — initials fallback, no stock photography anywhere in the system.
  * ------------------------------------------------------------------ */
+/** Brand-adjacent identity colours: blues, teals, slates and one warm ochre. */
+const AVATAR_RAMP: [string, string][] = [
+  ["#4159FA", "#1B2AC2"],
+  ["#0F9E7B", "#0B6A55"],
+  ["#3B6FC4", "#1F4685"],
+  ["#5A6377", "#323949"],
+  ["#B07B2E", "#7A5116"],
+  ["#2E8FA8", "#1B5D72"],
+  ["#6C6FD6", "#3E3F9B"],
+  ["#3F7D5A", "#27543C"],
+];
+
 export function Avatar({
   name,
   src,
@@ -206,8 +218,12 @@ export function Avatar({
     .map((n) => n[0]?.toUpperCase())
     .join("");
 
-  // Deterministic hue from the name so an advisor keeps the same identity colour.
-  const hue = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  // Deterministic colour so a person keeps the same identity everywhere.
+  // Drawn from a curated ramp rather than the full hue circle: an unconstrained
+  // hash produces magentas and limes that fight the brand blue every time a
+  // new name appears.
+  const index = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_RAMP.length;
+  const ramp = AVATAR_RAMP[index];
 
   return (
     <span
@@ -223,7 +239,7 @@ export function Avatar({
         fontSize: size * 0.36,
         background: src
           ? undefined
-          : `linear-gradient(140deg, hsl(${hue} 62% 52%), hsl(${(hue + 34) % 360} 58% 36%))`,
+          : `linear-gradient(140deg, ${ramp[0]}, ${ramp[1]})`,
       }}
       aria-hidden
     >

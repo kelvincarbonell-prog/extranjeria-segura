@@ -114,7 +114,7 @@ export function NeedsFinder() {
               <>
                 Dinos qué quieres conseguir.
                 <br />
-                <span className="text-ink-300">Nosotros encontramos el camino.</span>
+                <span className="text-ink-400">Nosotros encontramos el camino.</span>
               </>
             }
             lede="No necesitas saber el nombre del trámite. Empieza por tu objetivo y nosotros traducimos."

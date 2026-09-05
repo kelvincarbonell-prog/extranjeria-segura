@@ -29,7 +29,7 @@ export function GlobeSection() {
               <h2 className="text-display-md md:text-display-lg text-ink-900">
                 De cualquier parte del mundo.
                 <br />
-                <span className="text-ink-300">A España.</span>
+                <span className="text-ink-400">A España.</span>
               </h2>
               <p className="text-ink-500 mt-5 max-w-lg text-[17px] leading-[1.6]">
                 Todo el proceso es telemático. Puedes empezar tu expediente desde Bogotá, São Paulo,
