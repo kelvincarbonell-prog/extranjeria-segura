@@ -13,7 +13,7 @@ Nada de lo que sigue es un descuido. Es una decisión.
 
 ### 1.1 Contenido de los trámites
 
-Los 22 trámites de `src/content/tramites.ts` llevan `pendingLegalReview: true`.
+Los 25 trámites de `src/content/tramites.ts` llevan `pendingLegalReview: true`.
 La interfaz muestra el aviso **«Pendiente de firma jurídica»** en cada ficha
 mientras esa marca siga activa.
 
