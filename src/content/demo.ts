@@ -391,3 +391,85 @@ export const DEMO_PIPELINE: DemoCaseCard[] = [
   { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", slaDays: null, valueCents: 74900, updatedAt: "2026-08-05" },
   { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", slaDays: null, valueCents: 39900, updatedAt: "2026-07-30" },
 ];
+
+/* ------------------------------------------------------------------ *
+ * VIGILANCIA DE PLAZOS
+ *
+ * Los expedientes de demostración se describen por HECHOS con fecha, no por
+ * un contador de días. `DEMO_PIPELINE` guarda `slaDays: 6`, y ese seis dejó
+ * de ser cierto al día siguiente de escribirlo: es la forma equivocada de
+ * modelar un plazo, y aquí está la buena.
+ *
+ * Un hecho —«se notificó el requerimiento el 2 de septiembre»— no caduca. Los
+ * días que quedan se calculan al mirarlos, contra la norma que fija el plazo.
+ * ------------------------------------------------------------------ */
+
+import type { Expediente } from "@/lib/vigilancia";
+
+export const DEMO_EXPEDIENTES: Expediente[] = [
+  {
+    id: "c5",
+    referencia: "ES-2033",
+    cliente: "Wei L.",
+    tramite: "Renovación de residencia",
+    responsable: "A. Ruiz",
+    hechos: [{ tipo: "requerimiento-notificado", fecha: "2026-08-26" }],
+  },
+  {
+    id: "c2",
+    referencia: "ES-2051",
+    cliente: "Ibrahim K.",
+    tramite: "Nacionalidad por residencia",
+    responsable: "A. Ruiz",
+    hechos: [{ tipo: "requerimiento-notificado", fecha: "2026-09-02", diasConcedidos: 10 }],
+  },
+  {
+    id: "c4",
+    referencia: "ES-2039",
+    cliente: "Carlos M.",
+    tramite: "Reagrupación familiar",
+    responsable: "L. Ortega",
+    hechos: [{ tipo: "presentacion", fecha: "2026-06-30" }],
+  },
+  {
+    id: "c11",
+    referencia: "ES-2021",
+    cliente: "Paulo S.",
+    tramite: "Nómada digital",
+    responsable: "L. Ortega",
+    hechos: [
+      { tipo: "presentacion", fecha: "2026-05-20" },
+      { tipo: "resolucion-notificada", fecha: "2026-09-01", sentido: "denegatoria" },
+    ],
+  },
+  {
+    id: "c1",
+    referencia: "ES-2048",
+    cliente: "María G.",
+    tramite: "Arraigo sociolaboral",
+    responsable: "A. Ruiz",
+    hechos: [
+      {
+        tipo: "caducidad-documento",
+        fecha: "2026-09-20",
+        etiqueta: "Certificado de antecedentes penales",
+      },
+    ],
+  },
+  {
+    id: "c3",
+    referencia: "ES-2044",
+    cliente: "Sofia B.",
+    tramite: "Nómada digital",
+    responsable: "L. Ortega",
+    hechos: [{ tipo: "caducidad-tarjeta", fecha: "2026-11-15" }],
+  },
+  {
+    id: "c6",
+    referencia: "ES-2055",
+    cliente: "Ana P.",
+    tramite: "Arraigo social",
+    responsable: "Sin asignar",
+    hechos: [],
+  },
+];
