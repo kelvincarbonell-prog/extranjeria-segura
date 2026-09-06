@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#141B33"/><stop offset="1" stop-color="#05070D"/>
+    </linearGradient>
+    <linearGradient id="g" x1="40" y1="26" x2="140" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FA0FF"/><stop offset="1" stop-color="#2438E8"/>
+    </linearGradient>
+    <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="180" height="180">
+      <rect width="180" height="180" fill="#000"/>
+      <g transform="translate(38 38) scale(2.6)">
+        <path d="M8 32.5 V20 A12 12 0 0 1 32 20 V32.5 A3.5 3.5 0 0 1 28.5 36 H11.5 A3.5 3.5 0 0 1 8 32.5 Z" fill="#fff"/>
+        <path d="M13.6 22.4 L18.4 27.2 L34.5 11.1" stroke="#000" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </mask>
+  </defs>
+  <rect width="180" height="180" fill="url(#bg)"/>
+  <g mask="url(#m)"><rect width="180" height="180" fill="url(#g)"/></g>
+</svg>
