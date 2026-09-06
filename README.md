@@ -36,6 +36,38 @@ Detalle en [`supabase/README.md`](supabase/README.md).
 
 ---
 
+## Despliegue
+
+Es automático y no requiere ningún paso manual.
+
+| Rama | Qué ocurre | Dónde aparece |
+| --- | --- | --- |
+| `main` | Vercel construye y publica en producción | El dominio del proyecto |
+| Cualquier otra | Vercel construye y publica un preview | Comentario de Vercel en el PR |
+
+Delante del despliegue hay una puerta: `.github/workflows/ci.yml` ejecuta
+`typecheck`, `lint` y `build` en cada PR y en cada push a `main`. El build es la
+comprobación que más cosas atrapa, porque genera las 177 páginas estáticas: un
+error en el contenido de un trámite o en una combinación de SEO programático
+falla ahí y no en producción.
+
+> **Para que la puerta cierre de verdad**, hay que activar la protección de rama
+> en GitHub: *Settings → Branches → Add rule → `main`*, marcando **Require
+> status checks to pass before merging** y seleccionando el check `verificar`.
+> Sin eso, CI informa pero no impide fusionar.
+
+### Variables de entorno
+
+El proyecto compila y funciona sin ninguna. Las integraciones desactivadas lo
+indican en pantalla en vez de fallar. Cuando quieras activar alguna, copia las
+claves de [`.env.example`](.env.example) en *Vercel → Settings → Environment
+Variables* y vuelve a desplegar.
+
+La única que conviene fijar desde el principio es `NEXT_PUBLIC_SITE_URL`: se usa
+para las URL canónicas, el sitemap y las etiquetas Open Graph.
+
+---
+
 ## Estructura
 
 ```
