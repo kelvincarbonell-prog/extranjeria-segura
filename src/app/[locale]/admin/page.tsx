@@ -1,26 +1,43 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_PIPELINE, PIPELINE_STAGES } from "@/content/demo";
+import { DEMO_PIPELINE, DEMO_EXPEDIENTES, PIPELINE_STAGES } from "@/content/demo";
 import { Card, Badge, DemoTag, Progress } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
+import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
+import { plazoPrincipal } from "@/lib/vigilancia";
 import { eur, cn } from "@/lib/utils";
 
 export const metadata = { title: "Panel" };
 
 /**
- * Internal dashboard.
+ * PANEL DEL DESPACHO.
  *
- * The top row is deliberately operational rather than vanity: overdue SLA and
- * unassigned cases come before revenue, because in immigration a missed
- * deadline is a client's life, not a missed quarter.
+ * La primera fila es operativa y no de vanidad a propósito: plazos vencidos y
+ * expedientes sin responsable van antes que la facturación, porque en
+ * extranjería un plazo perdido es la vida de alguien, no un trimestre flojo.
+ *
+ * ─── DE DÓNDE SALEN LOS DÍAS ────────────────────────────────────────────
+ *
+ * De los hechos del expediente, no de un campo. Esta pantalla leía `slaDays`,
+ * un número escrito a mano que dejaba de ser cierto al día siguiente: la
+ * alerta de arriba —lo primero que se ve al abrir el panel— podía estar
+ * anunciando un vencimiento que ya no existía o, peor, callando uno nuevo.
+ * Ahora sale de `plazoPrincipal()`, igual que la tabla de expedientes y el
+ * tablero, y cada número lleva detrás su fecha y su norma.
  */
 export default function AdminHome() {
+  const plazos = plazoPrincipal(DEMO_EXPEDIENTES);
+  const conPlazo = DEMO_PIPELINE.filter((c) => plazos.has(c.id));
+
   const active = DEMO_PIPELINE.filter(
     (c) => !["archivado", "resolucion"].includes(c.stage),
   );
-  const overdue = DEMO_PIPELINE.filter((c) => c.slaDays !== null && c.slaDays < 0);
-  const urgent = DEMO_PIPELINE.filter((c) => c.slaDays !== null && c.slaDays >= 0 && c.slaDays <= 2);
+  const overdue = conPlazo.filter((c) => plazos.get(c.id)!.cuenta.estado === "vencido");
+  const urgent = conPlazo.filter((c) => {
+    const { cuenta } = plazos.get(c.id)!;
+    return cuenta.estado !== "vencido" && cuenta.critico;
+  });
   const unassigned = DEMO_PIPELINE.filter((c) => c.owner === "Sin asignar");
   const leads = DEMO_PIPELINE.filter((c) => ["lead", "diagnostico", "consulta"].includes(c.stage));
   const contracted = DEMO_PIPELINE.filter(
@@ -78,10 +95,15 @@ export default function AdminHome() {
       <Reveal delay={0.04}>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Metric label="Expedientes activos" value={String(active.length)} sub="en tramitación" glyph="path" />
+          {/* El subtítulo decía «vencen en 48 h o menos» y contaba dos cosas
+              que no son eso: los ya vencidos —que no vencen, vencieron— y los
+              que están dentro del umbral crítico, que son siete días y no dos.
+              El umbral lo fija `cuenta.critico` en plazos.ts; aquí solo se
+              nombra lo que ese umbral significa. */}
           <Metric
             label="Plazos críticos"
             value={String(overdue.length + urgent.length)}
-            sub="vencen en 48 h o menos"
+            sub="vencidos o a 7 días o menos"
             glyph="clock"
             tone={overdue.length > 0 ? "risk" : urgent.length > 0 ? "warn" : "ok"}
           />
@@ -123,7 +145,7 @@ export default function AdminHome() {
           </Card>
         </Reveal>
 
-        {/* ---------------- SLA queue ---------------- */}
+        {/* ---------------- Cola por plazo ---------------- */}
         <Reveal delay={0.08}>
           <Card padding="none" className="overflow-hidden">
             <div className="border-ink-100 border-b px-5 py-4">
@@ -131,34 +153,27 @@ export default function AdminHome() {
               <p className="text-ink-400 text-[12px]">Lo que vence antes, primero</p>
             </div>
             <ul className="divide-ink-100 divide-y">
-              {[...DEMO_PIPELINE]
-                .filter((c) => c.slaDays !== null)
-                .sort((a, b) => (a.slaDays ?? 0) - (b.slaDays ?? 0))
+              {[...conPlazo]
+                .sort((a, b) => plazos.get(a.id)!.cuenta.dias - plazos.get(b.id)!.cuenta.dias)
                 .slice(0, 6)
-                .map((c) => (
-                  <li key={c.id} className="flex items-center gap-3 px-5 py-3.5">
-                    <span
-                      className={cn(
-                        "flex size-8 shrink-0 items-center justify-center rounded-[10px] text-[11px] font-bold",
-                        (c.slaDays ?? 0) < 0
-                          ? "bg-signal-risk-soft text-signal-risk"
-                          : (c.slaDays ?? 0) <= 2
-                            ? "bg-signal-warn-soft text-signal-warn"
-                            : "bg-ink-50 text-ink-400",
-                      )}
-                    >
-                      {(c.slaDays ?? 0) < 0 ? "!" : c.slaDays}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="text-ink-900 block truncate text-[13.5px] font-medium">
-                        {c.client}
+                .map((c) => {
+                  const plazo = plazos.get(c.id)!;
+                  return (
+                    <li key={c.id} className="flex items-center gap-3 px-5 py-3.5">
+                      <CuentaPlazo plazo={plazo} className="shrink-0" />
+                      <span className="min-w-0 flex-1">
+                        <span className="text-ink-900 block truncate text-[13.5px] font-medium">
+                          {c.client}
+                        </span>
+                        {/* Qué vence, no solo cuándo. «6 d» junto a un nombre
+                            no dice qué hay que hacer con ese expediente hoy. */}
+                        <span className="text-ink-400 block truncate text-[12px]">
+                          {c.reference} · {plazo.titulo}
+                        </span>
                       </span>
-                      <span className="text-ink-400 block truncate text-[12px]">
-                        {c.reference} · {c.tramite}
-                      </span>
-                    </span>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
             </ul>
           </Card>
         </Reveal>

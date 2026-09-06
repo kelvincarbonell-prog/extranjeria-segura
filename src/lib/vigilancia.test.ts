@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { aperturaRenovacion, plazosDe, vigilar, type Expediente } from "./vigilancia";
+import {
+  aperturaRenovacion,
+  plazoPrincipal,
+  plazosDe,
+  vigilar,
+  type Expediente,
+} from "./vigilancia";
 import { parseDia } from "./plazos";
 
 const HOY = parseDia("2026-09-06");
@@ -154,4 +160,100 @@ test("una resolución favorable también supera el silencio y no abre recursos",
     HOY,
   );
   assert.equal(p.length, 0, "ni silencio ni recursos: no hay nada que vigilar");
+});
+
+/* ------------------------------------------------------------------ *
+ * plazoPrincipal: el reloj que manda en cada expediente
+ * ------------------------------------------------------------------ */
+
+test("el plazo principal es el que menos margen deja", () => {
+  const mapa = plazoPrincipal(
+    [
+      exp(
+        [
+          { tipo: "caducidad-tarjeta", fecha: "2026-11-15" },
+          { tipo: "requerimiento-notificado", fecha: "2026-09-02" },
+        ],
+        "e1",
+      ),
+    ],
+    HOY,
+  );
+
+  assert.equal(mapa.get("e1")?.origen, "requerimiento", "el requerimiento vence mucho antes");
+});
+
+test("un plazo vencido manda sobre uno abierto", () => {
+  // Es la parte que se hace mal por instinto: lo vencido parece pasado y se
+  // manda al final. Es al revés — exige una decisión hoy.
+  const mapa = plazoPrincipal(
+    [
+      exp(
+        [
+          { tipo: "requerimiento-notificado", fecha: "2026-08-01" },
+          { tipo: "caducidad-documento", fecha: "2026-09-20", etiqueta: "Antecedentes penales" },
+        ],
+        "e1",
+      ),
+    ],
+    HOY,
+  );
+
+  const p = mapa.get("e1");
+  assert.equal(p?.origen, "requerimiento");
+  assert.equal(p?.cuenta.estado, "vencido");
+});
+
+test("un expediente sin hechos no aparece en el mapa", () => {
+  // Ausente y «cero días» no son lo mismo. La tabla ordena por este número y
+  // un cero colaría un expediente tranquilo en cabeza de la lista de urgentes.
+  const mapa = plazoPrincipal([exp([], "e1")], HOY);
+  assert.equal(mapa.has("e1"), false);
+  assert.equal(mapa.size, 0);
+});
+
+test("cada expediente tiene su propio reloj, no el del vecino", () => {
+  const mapa = plazoPrincipal(
+    [
+      exp([{ tipo: "requerimiento-notificado", fecha: "2026-09-02" }], "e1"),
+      exp([{ tipo: "presentacion", fecha: "2026-06-30" }], "e2"),
+      exp([], "e3"),
+    ],
+    HOY,
+  );
+
+  assert.equal(mapa.size, 2);
+  assert.equal(mapa.get("e1")?.origen, "requerimiento");
+  assert.equal(mapa.get("e2")?.origen, "silencio");
+  assert.equal(mapa.get("e1")?.expedienteId, "e1");
+  assert.equal(mapa.get("e2")?.expedienteId, "e2");
+});
+
+test("el plazo principal coincide con lo que vigilar() considera urgente", () => {
+  // Las dos funciones alimentan pantallas distintas del mismo panel. Si
+  // discreparan, la alerta de inicio y la lista de plazos dirían cosas
+  // distintas sobre el mismo expediente, que es justo lo que se venía a
+  // arreglar.
+  const expedientes = [
+    exp([{ tipo: "requerimiento-notificado", fecha: "2026-08-01" }], "e1"),
+    exp([{ tipo: "presentacion", fecha: "2026-06-30" }], "e2"),
+    exp([], "e3"),
+  ];
+
+  const mapa = plazoPrincipal(expedientes, HOY);
+  const { vencidos, sinPlazo } = vigilar(expedientes, HOY);
+
+  const vencidosSegunMapa = [...mapa.values()]
+    .filter((p) => p.cuenta.estado === "vencido")
+    .map((p) => p.expedienteId);
+
+  assert.deepEqual(
+    vencidosSegunMapa,
+    [...new Set(vencidos.map((p) => p.expedienteId))],
+    "los expedientes vencidos son los mismos por las dos vías",
+  );
+  assert.deepEqual(
+    sinPlazo.map((e) => e.id),
+    expedientes.filter((e) => !mapa.has(e.id)).map((e) => e.id),
+  );
 });

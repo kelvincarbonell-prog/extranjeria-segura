@@ -67,14 +67,48 @@ for (const width of WIDTHS) {
           for (const el of document.querySelectorAll("body *")) {
             const r = el.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) continue;
-            // Ignore elements inside a deliberate horizontal scroller.
-            let p = el.parentElement, inScroller = false;
+
+            // Ignorar lo que va dentro de un scroller horizontal deliberado
+            // —un tablero, una tabla ancha—: ahí desbordar es la intención.
+            //
+            // Con una excepción que costó encontrar. Un elemento
+            // `position: absolute` SIN ancestro posicionado tiene como bloque
+            // contenedor el elemento raíz, y entonces el `overflow` del
+            // scroller no lo recorta: se coloca donde le toque —a 2.900 px, en
+            // el caso real— y ensancha el documento entero. Estar dentro del
+            // scroller por parentesco en el DOM no basta para estar dentro de
+            // él a efectos de recorte.
+            //
+            // Sin esta distinción, la auditoría avisaba de 2.347 px de
+            // desbordamiento y no señalaba ni un solo culpable, porque el
+            // culpable era justo uno de los que se saltaban. Un aviso sin
+            // culpable es media auditoría: dice que hay un problema y deja el
+            // trabajo entero a quien lo lea.
+            let p = el.parentElement;
+            let scroller = null;
+            let hayAncestroPosicionado = false;
+            const posicion = getComputedStyle(el).position;
+
             while (p && p !== document.body) {
               const s = getComputedStyle(p);
-              if (s.overflowX === "auto" || s.overflowX === "scroll") { inScroller = true; break; }
+              if (!scroller && (s.overflowX === "auto" || s.overflowX === "scroll")) scroller = p;
+              // Lo que crea bloque contenedor para un absoluto: estar
+              // posicionado, o llevar transform o filter —que es lo que aplica
+              // una animación de layout y por eso conviene contarlo—.
+              if (
+                !scroller &&
+                (s.position !== "static" || s.transform !== "none" || s.filter !== "none")
+              ) {
+                hayAncestroPosicionado = true;
+              }
+              if (scroller) break;
               p = p.parentElement;
             }
-            if (inScroller) continue;
+
+            const escapaDelScroller =
+              scroller && posicion === "absolute" && !hayAncestroPosicionado;
+
+            if (scroller && !escapaDelScroller) continue;
             if (r.right > vw + 1 || r.left < -1) {
               out.offenders.push({
                 tag: el.tagName.toLowerCase(),

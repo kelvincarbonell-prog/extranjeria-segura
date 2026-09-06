@@ -370,38 +370,46 @@ export interface DemoCaseCard {
   tramite: string;
   stage: StageId;
   owner: string;
-  /** Days until the next hard deadline; negative = overdue. */
-  slaDays: number | null;
+  /**
+   * Aquí había un `slaDays: number | null` —los días que faltaban para el
+   * próximo plazo, escritos a mano—. No está: los días se derivan de los
+   * hechos del expediente con `plazoPrincipal()`. Un número guardado deja de
+   * ser cierto al día siguiente, y tres pantallas leyéndolo por su cuenta
+   * daban tres respuestas distintas a la misma pregunta.
+   */
   valueCents: number;
   updatedAt: string;
   flags?: string[];
 }
 
 export const DEMO_PIPELINE: DemoCaseCard[] = [
-  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", slaDays: 6, valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", slaDays: 2, valueCents: 39900, updatedAt: "2026-08-12" },
-  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", slaDays: 1, valueCents: 74900, updatedAt: "2026-08-11" },
-  { id: "c4", reference: "ES-2039", client: "Carlos M.", tramite: "Reagrupación familiar", stage: "presentado", owner: "L. Ortega", slaDays: null, valueCents: 54900, updatedAt: "2026-08-08" },
-  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", slaDays: -1, valueCents: 29900, updatedAt: "2026-08-12", flags: ["Plazo vencido"] },
-  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", slaDays: 9, valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", slaDays: 3, valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", slaDays: 4, valueCents: 39900, updatedAt: "2026-08-12" },
-  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Sin asignar", slaDays: null, valueCents: 74900, updatedAt: "2026-08-12" },
-  { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", slaDays: null, valueCents: 0, updatedAt: "2026-08-12" },
-  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", slaDays: null, valueCents: 74900, updatedAt: "2026-08-05" },
-  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", slaDays: null, valueCents: 39900, updatedAt: "2026-07-30" },
+  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", valueCents: 44900, updatedAt: "2026-08-12" },
+  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", valueCents: 39900, updatedAt: "2026-08-12" },
+  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", valueCents: 74900, updatedAt: "2026-08-11" },
+  { id: "c4", reference: "ES-2039", client: "Carlos M.", tramite: "Reagrupación familiar", stage: "presentado", owner: "L. Ortega", valueCents: 54900, updatedAt: "2026-08-08" },
+  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", valueCents: 29900, updatedAt: "2026-08-12", flags: ["Plazo vencido"] },
+  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 44900, updatedAt: "2026-08-12" },
+  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 44900, updatedAt: "2026-08-12" },
+  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 39900, updatedAt: "2026-08-12" },
+  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Sin asignar", valueCents: 74900, updatedAt: "2026-08-12" },
+  { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", valueCents: 0, updatedAt: "2026-08-12" },
+  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 74900, updatedAt: "2026-08-05" },
+  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", valueCents: 39900, updatedAt: "2026-07-30" },
 ];
 
 /* ------------------------------------------------------------------ *
  * VIGILANCIA DE PLAZOS
  *
- * Los expedientes de demostración se describen por HECHOS con fecha, no por
- * un contador de días. `DEMO_PIPELINE` guarda `slaDays: 6`, y ese seis dejó
- * de ser cierto al día siguiente de escribirlo: es la forma equivocada de
- * modelar un plazo, y aquí está la buena.
+ * Los expedientes se describen por HECHOS con fecha, no por un contador de
+ * días. Un hecho —«se notificó el requerimiento el 2 de septiembre»— no
+ * caduca; los días que quedan se calculan al mirarlos, contra la norma que
+ * fija el plazo.
  *
- * Un hecho —«se notificó el requerimiento el 2 de septiembre»— no caduca. Los
- * días que quedan se calculan al mirarlos, contra la norma que fija el plazo.
+ * Están los doce, incluidos los que no tienen ningún plazo vivo. Estaban solo
+ * siete, y los cinco ausentes no salían como «sin plazo»: salían como si no
+ * existieran. En un panel de vigilancia son dos cosas muy distintas —«nada
+ * corre en este expediente» y «este expediente no está vigilado»— y la
+ * segunda es la que pierde casos.
  * ------------------------------------------------------------------ */
 
 import type { Expediente } from "@/lib/vigilancia";
@@ -470,6 +478,52 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     cliente: "Ana P.",
     tramite: "Arraigo social",
     responsable: "Sin asignar",
+    hechos: [],
+  },
+
+  /* Los cinco sin plazo vivo. Un lead al que todavía no se le ha presentado
+     nada no tiene ningún reloj administrativo corriendo, y no hay que
+     inventarle uno: la urgencia comercial de contestarle es otra cosa, se
+     mide de otra forma y mezclarla con los plazos de la Administración es
+     justo lo que vuelve inservible un panel de plazos. */
+  {
+    id: "c7",
+    referencia: "ES-2057",
+    cliente: "Youssef A.",
+    tramite: "Arraigo sociolaboral",
+    responsable: "Comercial",
+    hechos: [],
+  },
+  {
+    id: "c8",
+    referencia: "ES-2058",
+    cliente: "Elena V.",
+    tramite: "Nacionalidad por residencia",
+    responsable: "Comercial",
+    hechos: [],
+  },
+  {
+    id: "c9",
+    referencia: "ES-2059",
+    cliente: "Diego R.",
+    tramite: "Nómada digital",
+    responsable: "Sin asignar",
+    hechos: [],
+  },
+  {
+    id: "c10",
+    referencia: "ES-2060",
+    cliente: "Fatou N.",
+    tramite: "Protección internacional",
+    responsable: "Sin asignar",
+    hechos: [],
+  },
+  {
+    id: "c12",
+    referencia: "ES-2018",
+    cliente: "Nadia H.",
+    tramite: "Arraigo familiar",
+    responsable: "A. Ruiz",
     hechos: [],
   },
 ];

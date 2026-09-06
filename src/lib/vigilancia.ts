@@ -242,3 +242,32 @@ export function vigilar(expedientes: Expediente[], referencia = hoy()): Vigilanc
     sinPlazo: expedientes.filter((e) => !conPlazo.has(e.id)),
   };
 }
+
+/**
+ * El plazo que manda en cada expediente: el más próximo a vencer.
+ *
+ * Existe para que todas las pantallas del panel enseñen el mismo número. El
+ * panel de inicio, la tabla de expedientes y el tablero mostraban cada uno su
+ * propio contador de días leído de un campo guardado (`slaDays`), y bastaba
+ * con que alguien actualizara uno para que los tres discreparan. Ahora los
+ * tres derivan de aquí, y aquí se deriva de los hechos.
+ *
+ * Un expediente sin plazo vivo no aparece en el mapa. Es distinto de tener
+ * cero días: significa que nada corre, y la pantalla debe poder decir eso en
+ * lugar de pintar un contador a cero que asusta sin motivo.
+ */
+export function plazoPrincipal(
+  expedientes: Expediente[],
+  referencia = hoy(),
+): Map<string, PlazoVivo> {
+  const mapa = new Map<string, PlazoVivo>();
+
+  for (const exp of expedientes) {
+    // `plazosDe` ya devuelve ordenado por días restantes: el primero es el que
+    // menos margen deja, incluidos los vencidos, que van delante.
+    const [primero] = plazosDe(exp, referencia);
+    if (primero) mapa.set(exp.id, primero);
+  }
+
+  return mapa;
+}

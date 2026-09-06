@@ -5,21 +5,29 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { PIPELINE_STAGES, DEMO_PIPELINE, type DemoCaseCard, type StageId } from "@/content/demo";
 import { Badge, DemoTag } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
+import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
+import type { PlazoVivo } from "@/lib/vigilancia";
 import { eur, cn } from "@/lib/utils";
 
 /**
- * CRM pipeline.
+ * TABLERO DEL PIPELINE.
  *
- * Drag and drop with a keyboard equivalent, because a board you can only
- * operate with a mouse excludes part of the team. Every card is focusable and
- * can be moved with the arrow keys while focused.
+ * Arrastrar y soltar, con equivalente de teclado: un tablero que solo se
+ * maneja con ratón deja fuera a parte del equipo. Cada tarjeta es enfocable y
+ * se mueve con las flechas mientras tiene el foco.
  *
- * SLA is surfaced on the card itself: in immigration the deadline is the
- * business, and a case that is one day from a subsanación deadline must not
- * require opening it to find that out.
+ * El plazo va en la propia tarjeta porque en extranjería el plazo *es* el
+ * negocio: un expediente a un día de que venza la subsanación no puede exigir
+ * que lo abras para enterarte.
+ *
+ * Ese plazo llega ya calculado desde el servidor. Antes lo leía de `slaDays`,
+ * un campo guardado en la tarjeta que envejecía solo.
  */
 
-export function Pipeline() {
+/** Sin plazo vivo se ordena al final, no al principio con un cero. */
+const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
+
+export function Pipeline({ plazos }: { plazos: Map<string, PlazoVivo> }) {
   const [cases, setCases] = React.useState<DemoCaseCard[]>(DEMO_PIPELINE);
   const [dragging, setDragging] = React.useState<string | null>(null);
   const [over, setOver] = React.useState<StageId | null>(null);
@@ -96,7 +104,17 @@ export function Pipeline() {
       <div className="no-scrollbar -mx-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6">
         <div className="flex min-w-max gap-3">
           {PIPELINE_STAGES.map((stage) => {
-            const items = visible.filter((c) => c.stage === stage.id);
+            // Lo que menos margen deja, arriba. La cabecera de la página lo
+            // prometía —«los plazos vencidos suben al principio»— y la columna
+            // salía en el orden del array. Una promesa de interfaz que no se
+            // cumple es peor que no hacerla: quien la creyó deja de mirar.
+            const items = [...visible]
+              .filter((c) => c.stage === stage.id)
+              .sort(
+                (a, b) =>
+                  (plazos.get(a.id)?.cuenta.dias ?? SIN_PLAZO) -
+                  (plazos.get(b.id)?.cuenta.dias ?? SIN_PLAZO),
+              );
             const value = items.reduce((a, c) => a + c.valueCents, 0);
             const isOver = over === stage.id;
 
@@ -173,22 +191,7 @@ export function Pipeline() {
                             <span className="data text-ink-400 text-[10.5px] font-semibold">
                               {c.reference}
                             </span>
-                            {c.slaDays !== null && (
-                              <span
-                                className={cn(
-                                  "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
-                                  c.slaDays < 0
-                                    ? "bg-signal-risk-soft text-signal-risk"
-                                    : c.slaDays <= 2
-                                      ? "bg-signal-warn-soft text-signal-warn"
-                                      : "bg-ink-50 text-ink-400",
-                                )}
-                              >
-                                {c.slaDays < 0
-                                  ? `${Math.abs(c.slaDays)}d vencido`
-                                  : `${c.slaDays}d`}
-                              </span>
-                            )}
+                            {plazos.has(c.id) && <CuentaPlazo plazo={plazos.get(c.id)} />}
                           </div>
 
                           <p className="text-ink-900 text-[13.5px] leading-tight font-semibold">

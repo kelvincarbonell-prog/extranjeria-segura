@@ -1,19 +1,27 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_PIPELINE, PIPELINE_STAGES } from "@/content/demo";
+import { DEMO_PIPELINE, DEMO_EXPEDIENTES, PIPELINE_STAGES } from "@/content/demo";
 import { Card, Badge, DemoTag } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
+import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
+import { plazoPrincipal } from "@/lib/vigilancia";
 import { eur, formatDateES, cn } from "@/lib/utils";
 
 export const metadata = { title: "Expedientes" };
 
 const STAGE_LABEL = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.id, s.label]));
 
+/** Un expediente sin plazo vivo va al final, no al principio con un cero. */
+const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
+
 export default function ExpedientesPage() {
-  const rows = [...DEMO_PIPELINE].sort((a, b) => {
-    const as = a.slaDays ?? 999;
-    const bs = b.slaDays ?? 999;
-    return as - bs;
-  });
+  // El plazo se deriva de los hechos en cada render. Antes se leía de un campo
+  // guardado que dejaba de ser cierto al día siguiente de escribirlo.
+  const plazos = plazoPrincipal(DEMO_EXPEDIENTES);
+
+  const rows = [...DEMO_PIPELINE].sort(
+    (a, b) =>
+      (plazos.get(a.id)?.cuenta.dias ?? SIN_PLAZO) - (plazos.get(b.id)?.cuenta.dias ?? SIN_PLAZO),
+  );
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-5">
@@ -77,22 +85,7 @@ export default function ExpedientesPage() {
                     {c.owner}
                   </td>
                   <td className="px-4 py-3.5">
-                    {c.slaDays === null ? (
-                      <span className="text-ink-400 text-[12.5px]">—</span>
-                    ) : (
-                      <span
-                        className={cn(
-                          "data rounded-full px-2 py-0.5 text-[11.5px] font-semibold",
-                          c.slaDays < 0
-                            ? "bg-signal-risk-soft text-signal-risk"
-                            : c.slaDays <= 2
-                              ? "bg-signal-warn-soft text-signal-warn"
-                              : "bg-ink-50 text-ink-500",
-                        )}
-                      >
-                        {c.slaDays < 0 ? `${Math.abs(c.slaDays)} d vencido` : `${c.slaDays} d`}
-                      </span>
-                    )}
+                    <CuentaPlazo plazo={plazos.get(c.id)} />
                   </td>
                   <td className="text-ink-800 data px-4 py-3.5 text-[13px] font-semibold">
                     {c.valueCents > 0 ? eur(c.valueCents) : "—"}
