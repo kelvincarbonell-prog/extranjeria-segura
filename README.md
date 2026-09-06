@@ -38,23 +38,51 @@ Detalle en [`supabase/README.md`](supabase/README.md).
 
 ## Despliegue
 
-Es automático y no requiere ningún paso manual.
+**Entrega continua: todo lo que entra en `main` sale publicado.** No hay ningún
+paso manual, ninguna aprobación y ningún botón que pulsar.
+
+```
+commit → push a main → Vercel construye → producción
+```
 
 | Rama | Qué ocurre | Dónde aparece |
 | --- | --- | --- |
 | `main` | Vercel construye y publica en producción | El dominio del proyecto |
 | Cualquier otra | Vercel construye y publica un preview | Comentario de Vercel en el PR |
 
-Delante del despliegue hay una puerta: `.github/workflows/ci.yml` ejecuta
-`typecheck`, `lint` y `build` en cada PR y en cada push a `main`. El build es la
-comprobación que más cosas atrapa, porque genera las 177 páginas estáticas: un
-error en el contenido de un trámite o en una combinación de SEO programático
-falla ahí y no en producción.
+### Por qué esto es seguro sin puerta de aprobación
 
-> **Para que la puerta cierre de verdad**, hay que activar la protección de rama
-> en GitHub: *Settings → Branches → Add rule → `main`*, marcando **Require
-> status checks to pass before merging** y seleccionando el check `verificar`.
-> Sin eso, CI informa pero no impide fusionar.
+Los despliegues de Vercel son atómicos: **una construcción que falla no
+sustituye a la anterior**. Si un commit rompe la compilación, Vercel aborta y el
+dominio sigue sirviendo la última versión buena. No existe el estado «la web
+está caída porque alguien subió un error de sintaxis».
+
+Y como `next build` ejecuta la comprobación de tipos, un error de TypeScript
+tampoco llega a publicarse: tumba la construcción y el sitio anterior se queda.
+
+### Qué añade el CI
+
+`.github/workflows/ci.yml` corre en cada push a `main` y en cada PR:
+
+| Comprobación | ¿La hace también Vercel? |
+| --- | --- |
+| `typecheck` | Sí, dentro de `next build` |
+| `build` (las 177 páginas) | Sí |
+| `lint` | **No** — Next.js dejó de ejecutar ESLint en el build |
+
+Es decir, el CI aporta el lint y un aviso más rápido y legible que el log de
+Vercel. No bloquea el despliegue, y con este modelo no debe hacerlo: informa.
+
+### Si algún día quieres una puerta
+
+Cuando el proyecto tenga tráfico real y prefieras revisar antes de publicar,
+basta con activar la protección de rama sin tocar código:
+
+> *Settings → Branches → Add rule → `main`* → **Require status checks to pass
+> before merging** → seleccionar `Tipos, lint y build`.
+>
+> Con **Allow auto-merge** activado además, los PR se fusionan solos en cuanto
+> el CI pasa: sigue siendo automático, pero con red debajo.
 
 ### Variables de entorno
 
