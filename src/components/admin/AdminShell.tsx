@@ -13,10 +13,11 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/admin", label: "Panel", glyph: "door", exact: true },
   { href: "/admin/plazos", label: "Plazos", glyph: "clock" },
+  { href: "/admin/recordatorios", label: "Avisos", glyph: "help" },
   { href: "/admin/pipeline", label: "Pipeline", glyph: "path" },
   { href: "/admin/expedientes", label: "Expedientes", glyph: "doc" },
   { href: "/admin/contenido", label: "Verificación", glyph: "stamp" },
-  { href: "/admin/equipo", label: "Equipo y roles", glyph: "family" },
+  { href: "/admin/equipo", label: "Equipo", glyph: "family" },
 ];
 
 /**
