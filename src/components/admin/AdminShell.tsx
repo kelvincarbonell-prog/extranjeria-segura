@@ -14,6 +14,7 @@ const NAV = [
   { href: "/admin", label: "Panel", glyph: "door", exact: true },
   { href: "/admin/pipeline", label: "Pipeline", glyph: "path" },
   { href: "/admin/expedientes", label: "Expedientes", glyph: "doc" },
+  { href: "/admin/contenido", label: "Verificación", glyph: "stamp" },
   { href: "/admin/equipo", label: "Equipo y roles", glyph: "family" },
 ];
 
