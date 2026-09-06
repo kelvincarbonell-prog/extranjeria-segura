@@ -90,6 +90,13 @@ jobs:
         # cobertura y que NO aparece marcado de valoraciones.
         run: npm run audit:jsonld
 
+      - name: Auditoría de los bloques «Lo esencial»
+        # La regla del bloque: cada punto se lee fuera de contexto y lleva una
+        # cifra o un artículo. Es fácil de enunciar y fácil de incumplir seis
+        # meses después, cuando alguien añade «tramitamos tu expediente con la
+        # máxima diligencia». Esto la hace comprobable.
+        run: npm run audit:contenido
+
       - name: Auditoría del embudo
         # Verifica que la instrumentación registra el recorrido y que en el
         # registro no aparece ninguna respuesta del usuario.

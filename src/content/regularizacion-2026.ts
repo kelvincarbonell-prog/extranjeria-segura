@@ -169,6 +169,16 @@ export const HECHOS: Record<string, Dato> = {
     verificado: true,
   },
 
+  desistimiento: {
+    valor:
+      "Si un requerimiento de subsanación no se contesta en el plazo concedido, la Administración puede tener al interesado por desistido de su petición y archivar el expediente sin resolver sobre el fondo.",
+    fuente: FUENTES["ley-39-2015"],
+    articulo: "a68",
+    // Referencia añadida a partir de fuente pública; pendiente de contrastar
+    // el artículo contra el texto consolidado antes de darla por verificada.
+    verificado: false,
+  },
+
   sinTasaConcesion: {
     valor:
       "No hay datos oficiales de concesiones y denegaciones. Cualquier porcentaje de éxito que circule sobre este procedimiento no procede de una fuente oficial.",
@@ -230,8 +240,8 @@ export const ESTADOS: Estado[] = [
     loEsencial: [
       "El plazo de subsanación se cierra el 30 de septiembre de 2026.",
       "Alcanza a quien presentó dentro del plazo del 16 de abril al 30 de junio de 2026.",
-      "Se puede aportar documentación por iniciativa propia, sin esperar a que la Administración la pida.",
-      "Un requerimiento sin contestar en plazo permite tener por desistida la solicitud: el expediente se cierra sin entrar en el fondo.",
+      "Hasta el 30 de septiembre se puede aportar documentación por iniciativa propia, sin esperar a que la Administración la pida.",
+      "Un requerimiento sin contestar en el plazo concedido permite tener por desistida la solicitud y archivar el expediente sin entrar en el fondo (art. 68, Ley 39/2015).",
       "El plazo de resolución sigue siendo de tres meses y el silencio es negativo.",
     ],
     comoSaberQueEsTuCaso: [
@@ -289,7 +299,13 @@ export const ESTADOS: Estado[] = [
         a: "Desde el día siguiente al de la notificación, no desde la fecha que figura firmada en el documento. Los plazos por días hábiles excluyen sábados, domingos y festivos (Ley 39/2015).",
       },
     ],
-    datos: [HECHOS.subsanacion, HECHOS.plazoSolicitud, HECHOS.computoPlazos, HECHOS.plazoResolucion],
+    datos: [
+      HECHOS.subsanacion,
+      HECHOS.plazoSolicitud,
+      HECHOS.desistimiento,
+      HECHOS.computoPlazos,
+      HECHOS.plazoResolucion,
+    ],
   },
 
   {
@@ -301,11 +317,11 @@ export const ESTADOS: Estado[] = [
     meta: "Han pasado tres meses y no hay resolución. Qué significa el silencio negativo, cuándo se produce exactamente y qué recursos caben, con los plazos de cada uno.",
     loEsencial: [
       "El plazo de resolución es de tres meses desde la presentación de la solicitud.",
-      "Transcurrido sin notificación, el silencio es negativo: la solicitud se entiende desestimada.",
+      "Transcurridos esos tres meses sin notificación, el silencio es negativo y la solicitud se entiende desestimada (art. 24, Ley 39/2015).",
       "Los tres meses se cuentan de fecha a fecha, desde el día siguiente a la presentación (art. 30, Ley 39/2015).",
       "Frente al silencio, la reposición no tiene plazo de cierre (art. 124, Ley 39/2015).",
       "Frente al silencio, el contencioso-administrativo tiene seis meses (art. 46, Ley 29/1998).",
-      "La Administración sigue obligada a resolver expresamente aunque el silencio ya se haya producido.",
+      "La Administración sigue obligada a dictar resolución expresa aunque el silencio ya se haya producido, y esa resolución reabre los plazos de un mes y dos meses desde su notificación.",
     ],
     comoSaberQueEsTuCaso: [
       "Presentaste en plazo y han pasado más de tres meses desde la presentación.",
@@ -374,9 +390,8 @@ export const ESTADOS: Estado[] = [
     loEsencial: [
       "El recurso de reposición se interpone en un mes desde el día siguiente a la notificación (art. 124, Ley 39/2015).",
       "El recurso contencioso-administrativo, en dos meses desde el día siguiente a la notificación (art. 46, Ley 29/1998).",
-      "La reposición es potestativa: se puede ir directamente al contencioso.",
-      "Interponer reposición suspende el plazo del contencioso hasta que se resuelva o transcurra el plazo para resolverla.",
-      "El recurso se construye contra el motivo concreto de la denegación, no contra la denegación en general.",
+      "La reposición es potestativa: se puede ir directamente al contencioso y agotar sus dos meses.",
+      "Interponer la reposición suspende esos dos meses del contencioso hasta que se resuelva o venza el plazo para resolverla.",
     ],
     comoSaberQueEsTuCaso: [
       "El documento contiene una decisión: «se deniega», «se desestima».",
@@ -606,5 +621,5 @@ export const LO_ESENCIAL_HUB: string[] = [
   "Se presentaron 1.174.978 solicitudes; 609.737 estaban procesadas a 2 de julio de 2026.",
   "El plazo de resolución es de tres meses y el silencio es negativo.",
   "Frente al silencio, la reposición no tiene plazo de cierre; el contencioso, seis meses.",
-  "No hay datos oficiales de concesiones y denegaciones: cualquier tasa de éxito que circule no es oficial.",
+  "A 6 de septiembre de 2026 no hay datos oficiales de concesiones y denegaciones: cualquier tasa de éxito que circule no procede de fuente oficial.",
 ];

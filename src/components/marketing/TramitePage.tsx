@@ -4,6 +4,8 @@ import type { CITIES, NATIONALITIES } from "@/content/geo";
 import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";
 import { BarraAccion } from "./BarraAccion";
 import { IndiceLateral, ProgresoLectura } from "@/components/contenido/IndiceLateral";
+import { LoEsencial } from "@/components/contenido/LoEsencial";
+import { loEsencialTramite } from "@/content/lo-esencial-tramite";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Badge, Card, LegalNote, Divider } from "@/components/ui/primitives";
@@ -128,6 +130,16 @@ export function TramitePage({
               </dl>
             </div>
 
+            {/* «Lo esencial», antes del primer scroll. Cada punto lleva una
+                cifra que la ficha ya publica más abajo —documentos, honorarios,
+                pasos, puntos por verificar— y que hasta ahora había que leerse
+                la página entera para reunir. Es también la unidad que los
+                buscadores generativos extraen literalmente. */}
+            <LoEsencial
+              puntos={loEsencialTramite(t)}
+              actualizado={t.updatedAt}
+              className="mt-9"
+            />
           </div>
         </div>
       </section>

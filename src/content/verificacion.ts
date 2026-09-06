@@ -2,6 +2,7 @@ import { FUENTES, fuentesPendientesDeVerificar, type Fuente } from "./fuentes";
 import { HECHOS, ESTADOS, CONSULTADO } from "./regularizacion-2026";
 import { TRAMITES } from "./tramites";
 import { LEGAL_DOCUMENTS } from "./legal";
+import { tieneDato } from "@/lib/dato";
 
 /**
  * COLA DE VERIFICACIÓN JURÍDICA.
@@ -31,6 +32,7 @@ export type TipoPendiente =
   | "fuente-sin-identificador"
   | "dato-sin-contrastar"
   | "ficha-sin-firmar"
+  | "plazo-sin-cifra"
   | "plantilla-legal-sin-revisar";
 
 export interface Pendiente {
@@ -121,7 +123,24 @@ export function colaVerificacion(): Pendiente[] {
     });
   }
 
-  // ── 4. Plantillas legales sin revisar ────────────────────────────────
+  // ── 4. Plazos escritos en prosa, sin cifra ───────────────────────────
+  // «Tiene su propio plazo» o «según la unidad que lo tramite» es justo el
+  // tipo de frase que la auditoría señala: adjetivos donde debería haber
+  // números. No se pueden inventar, así que se listan.
+  for (const t of TRAMITES) {
+    if (tieneDato(t.timeframe)) continue;
+    cola.push({
+      id: `plazo:${t.slug}`,
+      tipo: "plazo-sin-cifra",
+      que: `Sustituir el plazo de ${t.name} por una cifra: hoy dice «${t.timeframe}»`,
+      donde: `Ficha de ${t.name} · bloque «Lo esencial» y ficha de datos`,
+      ruta: `/tramites/${t.slug}`,
+      contra: "Plazo máximo de resolución en la norma aplicable",
+      prioridad: 2,
+    });
+  }
+
+  // ── 5. Plantillas legales sin revisar ────────────────────────────────
   for (const d of LEGAL_DOCUMENTS) {
     if (d.reviewed) continue;
     cola.push({
@@ -155,6 +174,7 @@ export function resumenVerificacion(): ResumenVerificacion {
     "fuente-sin-identificador": 0,
     "dato-sin-contrastar": 0,
     "ficha-sin-firmar": 0,
+    "plazo-sin-cifra": 0,
     "plantilla-legal-sin-revisar": 0,
   } as Record<TipoPendiente, number>;
   const porPrioridad = { 1: 0, 2: 0, 3: 0 } as Record<1 | 2 | 3, number>;
@@ -177,6 +197,7 @@ export const ETIQUETAS_TIPO: Record<TipoPendiente, string> = {
   "fuente-sin-identificador": "Norma sin enlace al consolidado",
   "dato-sin-contrastar": "Cifra o plazo por contrastar",
   "ficha-sin-firmar": "Ficha pendiente de firma",
+  "plazo-sin-cifra": "Plazo sin cifra",
   "plantilla-legal-sin-revisar": "Texto legal sin aprobar",
 };
 

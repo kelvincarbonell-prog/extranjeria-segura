@@ -1,4 +1,4 @@
-import { formatDateES } from "@/lib/utils";
+import { cn, formatDateES } from "@/lib/utils";
 
 /**
  * «LO ESENCIAL EN 30 SEGUNDOS» (A4).
@@ -19,16 +19,21 @@ export function LoEsencial({
   puntos,
   actualizado,
   titulo = "Lo esencial en 30 segundos",
+  className,
 }: {
   puntos: string[];
   /** Fecha ISO de última revisión del bloque. */
   actualizado?: string;
   titulo?: string;
+  className?: string;
 }) {
   return (
     <aside
       aria-label={titulo}
-      className="border-brand-200/70 bg-brand-50/50 relative overflow-hidden rounded-lg border p-5 sm:p-6"
+      className={cn(
+        "border-brand-200/70 bg-brand-50/50 relative overflow-hidden rounded-lg border p-5 sm:p-6",
+        className,
+      )}
     >
       <div className="mb-3.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-ink-900 font-display text-[15px] font-bold tracking-[-0.01em]">
