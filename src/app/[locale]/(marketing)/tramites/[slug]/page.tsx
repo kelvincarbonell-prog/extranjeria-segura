@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { TRAMITES, getTramite } from "@/content/tramites";
 import { CATEGORY_MAP } from "@/content/taxonomy";
@@ -15,23 +17,19 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: Locale }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const t = getTramite(slug);
   if (!t) return {};
-  return {
+  return pageMetadata({
+    locale,
+    path: `/tramites/${t.slug}`,
     title: t.name,
     description: t.metaDescription,
-    alternates: { canonical: `/tramites/${t.slug}` },
-    openGraph: {
-      title: `${t.name} · ${site.name}`,
-      description: t.metaDescription,
-      url: `/tramites/${t.slug}`,
-      type: "article",
-      modifiedTime: t.updatedAt,
-    },
-  };
+    type: "article",
+    modifiedTime: t.updatedAt,
+  });
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

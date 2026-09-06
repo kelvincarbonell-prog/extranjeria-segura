@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { site } from "@/content/site";
 import { SectionHeading, Card, LegalNote, Badge } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
 import { Reveal } from "@/components/motion/primitives";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-  description: "Cómo ponerte en contacto con Extranjería Segura y qué esperar de cada canal.",
-  alternates: { canonical: "/contacto" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/contacto",
+    title: "Contacto",
+    description: "Cómo ponerte en contacto con Extranjería Segura y qué esperar de cada canal.",
+  });
+}
 
 const ROUTES = [
   {

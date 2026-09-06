@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { CALCULATORS, CALCULATOR_MAP } from "@/content/calculators";
 import { getTramite } from "@/content/tramites";
 import { CalculatorRenderer } from "@/components/calculators/Calculators";
@@ -17,16 +19,17 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: Locale }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const c = CALCULATOR_MAP[slug];
   if (!c) return {};
-  return {
+  return pageMetadata({
+    locale,
+    path: `/calculadoras/${c.slug}`,
     title: c.name,
     description: c.description.slice(0, 158),
-    alternates: { canonical: `/calculadoras/${c.slug}` },
-  };
+  });
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

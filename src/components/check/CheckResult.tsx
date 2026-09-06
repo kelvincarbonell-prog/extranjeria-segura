@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { motion, useReducedMotion } from "motion/react";
 import { type CheckResult, FIT_LABEL, FIT_TONE } from "@/content/check-engine";
 import type { Answers } from "@/content/check-questions";

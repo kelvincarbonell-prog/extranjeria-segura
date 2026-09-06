@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { Hero } from "@/components/marketing/Hero";
 import { TrustStrip } from "@/components/marketing/TrustStrip";
 import { NeedsFinder } from "@/components/marketing/NeedsFinder";
@@ -13,11 +15,20 @@ import { SocialProof } from "@/components/marketing/SocialProof";
 import { FaqSection } from "@/components/marketing/FaqSection";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = {
-  title: `${site.name} — ${site.claim}`,
-  description: site.description,
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/",
+    title: `${site.name} — ${site.claim}`,
+    description: site.description,
+    absoluteTitle: true,
+  });
+}
 
 export default function HomePage() {
   return (

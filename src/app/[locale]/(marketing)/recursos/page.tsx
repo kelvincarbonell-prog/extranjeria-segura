@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
+import { Link } from "@/components/ui/Link";
 import { CALCULATORS } from "@/content/calculators";
 import { TRAMITES } from "@/content/tramites";
 import { CATEGORIES } from "@/content/taxonomy";
@@ -10,12 +12,19 @@ import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
 import { formatDateES } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Centro de conocimiento",
-  description:
-    "Guías, calculadoras y actualizaciones normativas de extranjería en España. Contenido revisado, con fuentes oficiales y fecha de última revisión en cada página.",
-  alternates: { canonical: "/recursos" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/recursos",
+    title: "Centro de conocimiento",
+    description: "Guías, calculadoras y actualizaciones normativas de extranjería en España. Contenido revisado, con fuentes oficiales y fecha de última revisión en cada página.",
+  });
+}
 
 /**
  * Knowledge centre.

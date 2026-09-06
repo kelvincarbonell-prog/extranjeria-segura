@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { LiveDemo } from "@/components/marketing/LiveDemo";
 import { CheckTeaser } from "@/components/marketing/CheckTeaser";
@@ -7,12 +9,19 @@ import { Reveal } from "@/components/motion/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
-  title: "Cómo funciona",
-  description:
-    "Cómo gestionamos tu expediente de extranjería: diagnóstico, consulta con especialista, documentación revisada, presentación telemática y seguimiento hasta la resolución.",
-  alternates: { canonical: "/como-funciona" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/como-funciona",
+    title: "Cómo funciona",
+    description: "Cómo gestionamos tu expediente de extranjería: diagnóstico, consulta con especialista, documentación revisada, presentación telemática y seguimiento hasta la resolución.",
+  });
+}
 
 const PRINCIPLES = [
   {

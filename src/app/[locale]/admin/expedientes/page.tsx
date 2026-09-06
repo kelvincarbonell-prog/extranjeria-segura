@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { DEMO_PIPELINE, PIPELINE_STAGES } from "@/content/demo";
 import { Card, Badge, DemoTag } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";

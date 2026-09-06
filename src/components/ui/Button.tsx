@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Magnetic } from "@/components/motion/primitives";

@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { site } from "@/content/site";
 import { SectionHeading, Card, LegalNote, Badge } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
 import { Button } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
 
-export const metadata: Metadata = {
-  title: "Sobre nosotros",
-  description:
-    "Qué es Extranjería Segura, por qué existe y hacia dónde va: la plataforma para empezar y gestionar tu vida en España.",
-  alternates: { canonical: "/empresa" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/empresa",
+    title: "Sobre nosotros",
+    description: "Qué es Extranjería Segura, por qué existe y hacia dónde va: la plataforma para empezar y gestionar tu vida en España.",
+  });
+}
 
 const FUTURE = [
   { glyph: "stamp", label: "Firma electrónica" },

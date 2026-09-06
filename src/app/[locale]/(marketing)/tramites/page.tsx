@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { TRAMITES } from "@/content/tramites";
 import { CATEGORIES } from "@/content/taxonomy";
 import { TramiteExplorer } from "@/components/marketing/TramiteExplorer";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
 
-export const metadata: Metadata = {
-  title: "Todos los trámites de extranjería",
-  description:
-    "Catálogo completo de trámites de extranjería en España: arraigo, nacionalidad, nómada digital, reagrupación familiar, renovaciones, recursos y más. Requisitos, documentación, plazos y honorarios.",
-  alternates: { canonical: "/tramites" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/tramites",
+    title: "Todos los trámites de extranjería",
+    description: "Catálogo completo de trámites de extranjería en España: arraigo, nacionalidad, nómada digital, reagrupación familiar, renovaciones, recursos y más. Requisitos, documentación, plazos y honorarios.",
+  });
+}
 
 export default function TramitesPage() {
   return (

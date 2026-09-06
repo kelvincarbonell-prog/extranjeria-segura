@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { SocialProof } from "@/components/marketing/SocialProof";
 import { SectionHeading } from "@/components/ui/primitives";
 
-export const metadata: Metadata = {
-  title: "Opiniones",
-  description:
-    "Nuestra política de reseñas: solo publicamos opiniones verificables, con su fuente, el trámite y el país de origen. Incluidas las críticas.",
-  alternates: { canonical: "/opiniones" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/opiniones",
+    title: "Opiniones",
+    description: "Nuestra política de reseñas: solo publicamos opiniones verificables, con su fuente, el trámite y el país de origen. Incluidas las críticas.",
+  });
+}
 
 export default function OpinionesPage() {
   return (

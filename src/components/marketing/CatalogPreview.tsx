@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { CATEGORIES } from "@/content/taxonomy";
 import { TRAMITES } from "@/content/tramites";
 import { Glyph } from "@/components/brand/Glyph";

@@ -45,6 +45,18 @@ export function useLocale(): LocaleContextValue {
   return ctx;
 }
 
+/**
+ * Igual que `useLocale`, pero devuelve `null` en lugar de lanzar.
+ *
+ * Next renderiza algunas superficies —la página de error global, por ejemplo—
+ * fuera del árbol de la aplicación, y por tanto fuera del proveedor. Un enlace
+ * que reventara ahí convertiría un error recuperable en una pantalla en
+ * blanco. En esos casos se cae al español y se sigue navegando.
+ */
+export function useOptionalLocale(): LocaleContextValue | null {
+  return React.useContext(LocaleContext);
+}
+
 /** Construye una ruta en el idioma actual. */
 export function useHref() {
   const { locale } = useLocale();

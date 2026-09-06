@@ -1,51 +1,61 @@
 "use client";
 
 import * as React from "react";
+// Deliberadamente `next/link` y no el envoltorio de `@/components/ui/Link`:
+// este es el único sitio del producto donde un enlace debe salir del idioma
+// actual. El envoltorio prefijaría con el idioma vigente y el selector no
+// dejaría cambiar nunca de lengua.
+import NextLink from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { locales, type LocaleCode } from "@/content/site";
 import {
-  subscribeLocale,
-  getLocaleSnapshot,
-  getLocaleServerSnapshot,
-  setLocale,
-} from "@/lib/locale-store";
+  LOCALE_META,
+  LOCALE_ORDER,
+  hasReviewedContent,
+  href,
+  stripLocale,
+  type Locale,
+} from "@/i18n/config";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 
 /**
- * Locale control.
+ * Selector de idioma.
  *
- * The platform is architected for eight locales. Locales whose legal content
- * has not been reviewed are shown as "próximamente" rather than served as
- * machine translation — mistranslated immigration requirements are a real
- * harm, not a cosmetic one.
+ * Son enlaces, no botones. El idioma es una URL —`/ar/tramites` existe y se
+ * puede compartir, marcar y rastrear—, así que cambiar de idioma es navegar.
+ * Con `<a>` reales el usuario puede abrir otra lengua en una pestaña nueva y
+ * un rastreador puede seguir el enlace; con un `onClick` que escribiera en
+ * `localStorage`, ninguna de las dos cosas funcionaría.
+ *
+ * Se conserva la ruta actual al cambiar: quien está leyendo la ficha de
+ * arraigo social y pasa a francés sigue en esa ficha, no vuelve a la portada.
  */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
+  const { locale, t } = useLocale();
+  const pathname = usePathname() ?? "/";
 
-  // Locale is external state (localStorage + <html lang>), so it is read
-  // through a store rather than restored inside an effect: the first client
-  // render already has the right value and there is no flash of Spanish.
-  const current = React.useSyncExternalStore(
-    subscribeLocale,
-    getLocaleSnapshot,
-    getLocaleServerSnapshot,
-  );
+  // La ruta sin prefijo de idioma es la que se reconstruye en cada idioma.
+  const { path } = stripLocale(pathname);
 
   React.useEffect(() => {
-    const onClick = (e: MouseEvent) => {
+    const onPointer = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
   }, []);
 
-  const pick = (code: LocaleCode) => {
-    setOpen(false);
-    setLocale(code);
-  };
-
-  const active = locales.find((l) => l.code === current) ?? locales[0];
+  const active = LOCALE_META[locale];
 
   return (
     <div ref={ref} className={cn("relative", className)}>
@@ -53,8 +63,8 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-label={`Idioma: ${active.native}. Cambiar idioma`}
+        aria-haspopup="true"
+        aria-label={`${t.common.languageLabel}: ${active.native}. ${t.common.changeLanguage}`}
         className="text-ink-600 hover:text-ink-900 hover:bg-ink-900/[.05] inline-flex items-center gap-1.5 rounded-[10px] px-2.5 py-2 text-[13.5px] font-medium transition-colors"
       >
         <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden>
@@ -66,47 +76,55 @@ export function LanguageSwitcher({ className }: { className?: string }) {
             strokeWidth="1.4"
           />
         </svg>
-        <span className="uppercase">{active.code}</span>
+        <span className="uppercase">{locale}</span>
       </button>
 
       <AnimatePresence>
         {open && (
-          <motion.ul
-            role="listbox"
+          <motion.div
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.97 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-surface absolute right-0 z-50 mt-2 w-56 origin-top-right overflow-hidden rounded-md p-1.5 shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08),0_18px_44px_-14px_rgb(10_13_22_/_0.28)]"
+            className="bg-surface absolute end-0 z-50 mt-2 w-72 origin-top overflow-hidden rounded-md p-1.5 shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08),0_18px_44px_-14px_rgb(10_13_22_/_0.28)]"
           >
-            {locales.map((l) => (
-              <li key={l.code}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={l.code === current}
-                  disabled={!l.ready}
-                  onClick={() => pick(l.code)}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-3 rounded-[9px] px-2.5 py-2 text-left text-[13.5px] transition-colors",
-                    l.code === current
-                      ? "bg-brand-50 text-brand-700 font-semibold"
-                      : l.ready
-                        ? "text-ink-700 hover:bg-ink-50"
-                        : "text-ink-300 cursor-not-allowed",
-                  )}
-                >
-                  <span>{l.native}</span>
-                  {!l.ready && (
-                    <span className="text-ink-300 text-[10px] font-semibold tracking-wide uppercase">
-                      Próximamente
-                    </span>
-                  )}
-                  {l.code === current && <span aria-hidden>✓</span>}
-                </button>
-              </li>
-            ))}
-          </motion.ul>
+            <ul>
+              {LOCALE_ORDER.map((code: Locale) => {
+                const meta = LOCALE_META[code];
+                const isActive = code === locale;
+                return (
+                  <li key={code}>
+                    <NextLink
+                      href={href(path, code)}
+                      hrefLang={meta.bcp47}
+                      lang={meta.bcp47}
+                      dir={meta.dir}
+                      onClick={() => setOpen(false)}
+                      aria-current={isActive ? "true" : undefined}
+                      className={cn(
+                        "flex w-full items-center justify-between gap-3 rounded-[9px] px-2.5 py-2 text-start text-[13.5px] transition-colors",
+                        isActive
+                          ? "bg-brand-50 text-brand-700 font-semibold"
+                          : "text-ink-700 hover:bg-ink-50",
+                      )}
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate">{meta.native}</span>
+                        {/* El aviso es honesto y específico: la interfaz está
+                            traducida, el contenido jurídico todavía no. */}
+                        {!hasReviewedContent(code) && (
+                          <span className="text-ink-400 mt-0.5 block text-[11px] leading-snug">
+                            Interfaz traducida · contenido jurídico en español
+                          </span>
+                        )}
+                      </span>
+                      {isActive && <span aria-hidden>✓</span>}
+                    </NextLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

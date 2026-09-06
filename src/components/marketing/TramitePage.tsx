@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import type { Category, Tramite } from "@/content/taxonomy";
 import type { CITIES, NATIONALITIES } from "@/content/geo";
 import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";

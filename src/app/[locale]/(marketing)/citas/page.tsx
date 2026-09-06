@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { ENTRY_PLANS } from "@/content/pricing";
 import { SectionHeading, Card, LegalNote, Badge } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
@@ -7,12 +9,19 @@ import { CheckDraw } from "@/components/motion/primitives";
 import { locales, site } from "@/content/site";
 import { eur } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Reservar consulta",
-  description:
-    "Reserva una consulta de 45 minutos con un especialista en extranjería. Revisamos tu caso, confirmamos la estrategia y te damos el plan documental por escrito.",
-  alternates: { canonical: "/citas" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/citas",
+    title: "Reservar consulta",
+    description: "Reserva una consulta de 45 minutos con un especialista en extranjería. Revisamos tu caso, confirmamos la estrategia y te damos el plan documental por escrito.",
+  });
+}
 
 const consulta = ENTRY_PLANS.find((p) => p.id === "consulta")!;
 

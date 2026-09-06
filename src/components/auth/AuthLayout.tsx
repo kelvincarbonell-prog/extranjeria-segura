@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
 import { CheckDraw } from "@/components/motion/primitives";

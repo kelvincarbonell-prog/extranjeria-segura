@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { DEMO_CASE, DEMO_DOCUMENTS, DEMO_NOTIFICATIONS } from "@/content/demo";
 import { getTramite } from "@/content/tramites";
 import { Card, Badge, Progress, KeyValue, Avatar, LegalNote } from "@/components/ui/primitives";

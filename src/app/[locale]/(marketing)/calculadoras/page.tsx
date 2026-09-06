@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
+import { Link } from "@/components/ui/Link";
 import { CALCULATORS } from "@/content/calculators";
 import { Glyph } from "@/components/brand/Glyph";
 import { SectionHeading, LegalNote, Badge } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
 
-export const metadata: Metadata = {
-  title: "Calculadoras de extranjería",
-  description:
-    "Herramientas gratuitas: calculadora Schengen 90/180, tiempo para la nacionalidad española, medios económicos exigibles y ventana de renovación. Sin registro.",
-  alternates: { canonical: "/calculadoras" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/calculadoras",
+    title: "Calculadoras de extranjería",
+    description: "Herramientas gratuitas: calculadora Schengen 90/180, tiempo para la nacionalidad española, medios económicos exigibles y ventana de renovación. Sin registro.",
+  });
+}
 
 export default function CalculadorasPage() {
   return (

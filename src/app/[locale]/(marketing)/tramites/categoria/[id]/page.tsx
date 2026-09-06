@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { CATEGORIES, CATEGORY_MAP, type CategoryId } from "@/content/taxonomy";
 import { TRAMITES } from "@/content/tramites";
 import { TramiteCard } from "@/components/marketing/TramiteExplorer";
@@ -18,16 +20,17 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: Locale }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const c = CATEGORY_MAP[id as CategoryId];
   if (!c) return {};
-  return {
+  return pageMetadata({
+    locale,
+    path: `/tramites/categoria/${c.id}`,
     title: `Trámites de ${c.label}`,
     description: `${c.blurb} Requisitos, documentación, plazos y honorarios de cada trámite. Diagnóstico gratuito y gestión 100% online.`,
-    alternates: { canonical: `/tramites/categoria/${c.id}` },
-  };
+  });
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

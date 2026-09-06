@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import {
   allLandings,
   resolveLanding,
@@ -10,7 +12,7 @@ import {
   landingTitle,
   landingDescription,
 } from "@/content/seo-landings";
-import { OFFICIAL_SOURCES, reviewedBy, site } from "@/content/site";
+import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Card, Badge, LegalNote } from "@/components/ui/primitives";
@@ -24,26 +26,39 @@ export function generateStaticParams() {
   return allLandings().map((l) => ({ landing: l.slug }));
 }
 
+/**
+ * Umbral de diferenciación.
+ *
+ * Una página programática solo merece estar en el índice si dice algo que no
+ * dice la ficha general: qué administración emite el informe en esa comunidad,
+ * cómo se apostillan los antecedentes en ese país, qué plazo se observa en esa
+ * oficina. Sin eso es la misma página con el topónimo cambiado, y Google
+ * colapsa el conjunto y se lleva por delante al dominio entero.
+ *
+ * Se comprueba en código en lugar de confiar en que nadie publique una
+ * plantilla vacía: si un día se añade una ciudad sin notas propias, esa página
+ * nace en `noindex` sola.
+ */
+const MIN_LOCAL_NOTES = 2;
+
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ landing: string }>;
+  params: Promise<{ landing: string; locale: Locale }>;
 }): Promise<Metadata> {
-  const { landing } = await params;
+  const { landing, locale } = await params;
   const l = resolveLanding(landing);
   if (!l) return {};
-  return {
+  const localNotes = l.city?.notes ?? l.nationality?.notes ?? [];
+  return pageMetadata({
+    locale,
+    path: `/${l.slug}`,
     title: landingTitle(l),
     description: landingDescription(l),
-    alternates: { canonical: `/${l.slug}` },
-    openGraph: {
-      title: `${landingTitle(l)} · ${site.name}`,
-      description: landingDescription(l),
-      url: `/${l.slug}`,
-      type: "article",
-      modifiedTime: l.tramite.updatedAt,
-    },
-  };
+    type: "article",
+    modifiedTime: l.tramite.updatedAt,
+    noindex: localNotes.length < MIN_LOCAL_NOTES,
+  });
 }
 
 export default async function Page({ params }: { params: Promise<{ landing: string }> }) {

@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { SecuritySection } from "@/components/marketing/SecuritySection";
 import { SectionHeading, Card, LegalNote } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
 import { ROLES } from "@/content/roles";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
-  title: "Seguridad",
-  description:
-    "Cómo protegemos tu pasaporte, tu NIE y tu documentación migratoria: almacenamiento privado, enlaces firmados, aislamiento por fila, roles con mínimo privilegio y registro de auditoría.",
-  alternates: { canonical: "/seguridad" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/seguridad",
+    title: "Seguridad",
+    description: "Cómo protegemos tu pasaporte, tu NIE y tu documentación migratoria: almacenamiento privado, enlaces firmados, aislamiento por fila, roles con mínimo privilegio y registro de auditoría.",
+  });
+}
 
 export default function SeguridadPage() {
   return (

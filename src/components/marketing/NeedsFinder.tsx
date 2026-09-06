@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { AnimatePresence, motion, LayoutGroup } from "motion/react";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";

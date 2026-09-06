@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { LEGAL_DOCUMENTS, LEGAL_MAP } from "@/content/legal";
 import { site } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
@@ -16,18 +18,19 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: Locale }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const doc = LEGAL_MAP[slug];
   if (!doc) return {};
-  return {
+  return pageMetadata({
+    locale,
+    path: `/legal/${doc.slug}`,
     title: doc.title,
     description: doc.description,
-    alternates: { canonical: `/legal/${doc.slug}` },
-    // Unreviewed templates must not be indexed as if they were legal texts.
-    robots: doc.reviewed ? { index: true, follow: true } : { index: false, follow: true },
-  };
+    // Una plantilla sin revisar no debe indexarse como si fuera un texto legal.
+    noindex: !doc.reviewed,
+  });
 }
 
 /** Highlights [[PLACEHOLDER]] tokens so no unfilled field slips into production. */

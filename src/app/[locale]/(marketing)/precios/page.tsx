@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/config";
 import { ENTRY_PLANS, MANAGED_PLANS, THIRD_PARTY_COSTS, PAYMENT_TERMS } from "@/content/pricing";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
@@ -6,12 +8,19 @@ import { SectionHeading, Card, Badge, LegalNote, Divider } from "@/components/ui
 import { Reveal, CheckDraw } from "@/components/motion/primitives";
 import { eur, cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Precios",
-  description:
-    "Precios de Extranjería Segura: diagnóstico gratuito, consulta desde 39 €, revisión documental 79 € y gestión integral desde 299 €. Con lo que no está incluido, junto al precio.",
-  alternates: { canonical: "/precios" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/precios",
+    title: "Precios",
+    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta desde 39 €, revisión documental 79 € y gestión integral desde 299 €. Con lo que no está incluido, junto al precio.",
+  });
+}
 
 export default function PreciosPage() {
   return (

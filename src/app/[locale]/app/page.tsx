@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { DEMO_CASE, DEMO_DOCUMENTS, DEMO_NOTIFICATIONS, DEMO_APPOINTMENTS, DOC_STATE_META } from "@/content/demo";
 import { Card, Badge, Progress, Avatar, KeyValue } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { motion, AnimatePresence } from "motion/react";
 import { DEMO_NOTIFICATIONS, type DemoNotification } from "@/content/demo";
 import { Card, Badge, LegalNote } from "@/components/ui/primitives";

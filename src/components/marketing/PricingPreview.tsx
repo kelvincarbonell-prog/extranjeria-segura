@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { ENTRY_PLANS, MANAGED_PLANS } from "@/content/pricing";
 import { Glyph } from "@/components/brand/Glyph";
 import { SectionHeading, Badge } from "@/components/ui/primitives";
