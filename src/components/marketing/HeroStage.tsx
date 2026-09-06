@@ -161,7 +161,7 @@ export function HeroStage() {
             <div className="bg-surface px-5 py-4">
               <p className="text-ink-400 text-[11px] font-medium">Documentación</p>
               <p className="text-ink-900 data mt-1 flex items-baseline gap-1.5 text-[15px] font-semibold">
-                7/7
+                <span className="numeros">7/7</span>
                 <span className="text-signal-ok text-[11.5px] font-medium">correctos</span>
               </p>
             </div>

@@ -349,6 +349,26 @@ html:lang(ar) .text-display-lg {
    For small inline links: WCAG 2.2 AA (2.5.8) wants 24×24 CSS px minimum,
    and a thumb wants more. Negative margin absorbs the added padding so the
    surrounding rhythm is untouched. */
+/**
+ * Expresión numérica que no debe reordenarse.
+ *
+ * En árabe, «3 / 7» se renderiza como «7 / 3»: el algoritmo bidi de Unicode
+ * trata la barra como neutra y la envuelve en la dirección del párrafo, así
+ * que invierte los números que la rodean. El usuario lee que va por la
+ * pregunta 7 de 3.
+ *
+ * Aísla la expresión en su propia dirección. `isolate` en vez de `embed`
+ * porque además impide que el contenido de dentro afecte al orden de lo que
+ * viene después.
+ *
+ * Se aplica a contadores, proporciones y rangos —«3 / 7», «7/7», «90/180»—,
+ * no a fechas ni a cantidades sueltas: un número solo no tiene el problema.
+ */
+@utility numeros {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 @utility tap {
   padding-block: 0.375rem;
   margin-block: -0.375rem;

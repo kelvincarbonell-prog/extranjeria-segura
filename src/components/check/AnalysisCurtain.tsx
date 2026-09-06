@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { IsotipoAnimado } from "@/components/brand/IsotipoAnimado";
 import { CheckDraw } from "@/components/motion/primitives";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 /**
  * THE MOMENT.
@@ -17,14 +18,9 @@ import { CheckDraw } from "@/components/motion/primitives";
  * static frame and a short delay — no particles, no drift, no flashing.
  */
 
-const STAGES = [
-  "Leyendo tus respuestas",
-  "Comparando con las vías disponibles",
-  "Revisando qué habría que verificar",
-  "Preparando tu resultado",
-];
-
 export function AnalysisCurtain({ onDone }: { onDone: () => void }) {
+  const { t } = useLocale();
+  const STAGES = t.analysis.stages;
   const reduce = useReducedMotion();
   const [stage, setStage] = React.useState(0);
   const [revealing, setRevealing] = React.useState(false);
@@ -104,7 +100,7 @@ export function AnalysisCurtain({ onDone }: { onDone: () => void }) {
               </div>
 
               <h1 className="font-display text-[28px] font-extrabold tracking-[-0.035em] text-white sm:text-[34px]">
-                Analizando tu situación
+                {t.analysis.title}
                 <AnimatedDots reduce={reduce} />
               </h1>
 

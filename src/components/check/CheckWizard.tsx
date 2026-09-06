@@ -22,6 +22,10 @@ import {
 } from "@/lib/check-store";
 import { decodificarRespuestas } from "@/lib/check-resume";
 import { registrar } from "@/lib/embudo";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { Enfasis } from "@/i18n/Enfasis";
+import { traduccionPreguntas, resolverPregunta } from "@/i18n/preguntas";
+import { fmt } from "@/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 
 type Phase = "asking" | "analysing" | "result";
@@ -74,6 +78,7 @@ export function CheckWizard() {
 }
 
 function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
+  const { t, locale } = useLocale();
   const reduce = useReducedMotion();
 
   const [answers, setAnswers] = React.useState<Answers>(initialAnswers);
@@ -104,7 +109,17 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
   }, [index]);
 
   const active = React.useMemo(() => activeQuestions(answers), [answers]);
-  const question: Question | undefined = active[Math.min(index, active.length - 1)];
+  const cruda: Question | undefined = active[Math.min(index, active.length - 1)];
+
+  // El grafo de preguntas es lógica y vive en español; aquí solo se le aplican
+  // los textos del idioma. Lo que no esté traducido cae al español y se marca
+  // como español, para que dentro de una página en árabe no lo reordene el
+  // algoritmo bidi.
+  const traduccion = React.useMemo(() => traduccionPreguntas(locale), [locale]);
+  const question = React.useMemo(
+    () => (cruda ? resolverPregunta(cruda, traduccion, locale) : undefined),
+    [cruda, traduccion, locale],
+  );
   const total = active.length;
   const step = Math.min(index + 1, total);
   const progress = (index / total) * 100;
@@ -200,7 +215,11 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
             <Logo size="sm" className="hidden sm:inline-flex" />
 
             <div className="flex flex-1 items-center justify-center gap-3 px-2 sm:px-8">
-              <span className="data text-ink-400 hidden shrink-0 text-[12px] font-medium sm:inline">
+              {/* `numeros` aísla la dirección: en árabe, «3 / 7» se renderiza
+                  «7 / 3» porque la barra es un carácter neutro y el algoritmo
+                  bidi lo envuelve en la dirección del párrafo. El usuario leía
+                  que iba por la pregunta 7 de 3. */}
+              <span className="data numeros text-ink-400 hidden shrink-0 text-[12px] font-medium sm:inline">
                 {step} / {total}
               </span>
               <div className="bg-ink-100 h-1.5 w-full max-w-md overflow-hidden rounded-full">
@@ -212,7 +231,7 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
               </div>
             </div>
 
-            <IconButton label="Salir del diagnóstico" onClick={() => history.back()}>
+            <IconButton label={t.check.exit} onClick={() => history.back()}>
               <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden>
                 <path
                   d="M5 5l10 10M15 5L5 15"
@@ -235,7 +254,7 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
 
         <div className="container-page w-full">
           <div ref={liveRef} aria-live="polite" className="sr-only">
-            Pregunta {step} de {total}: {question.title}
+            {fmt(t.check.questionOf, { current: step, total })}: {question.title}
           </div>
 
           <AnimatePresence mode="wait" custom={direction}>
@@ -249,21 +268,34 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
               className="mx-auto max-w-2xl"
             >
               <p className="text-ink-400 data mb-4 text-[12.5px] font-medium sm:hidden">
-                Pregunta {step} de {total}
+                {fmt(t.check.questionOf, { current: step, total })}
               </p>
 
-              <h1 className="text-ink-900 font-display text-[30px] leading-[1.08] font-extrabold tracking-[-0.035em] sm:text-[38px] md:text-[44px]">
+              {/* `lang`/`dir` en el fragmento, no en la página: un texto
+                  español sin marcar dentro de una página en árabe lo reordena
+                  el algoritmo bidi y los signos de interrogación acaban en el
+                  extremo contrario. Además le dice al lector de pantalla que
+                  cambie de voz. */}
+              <h1
+                lang={question.enEspanol ? "es" : undefined}
+                dir={question.enEspanol ? "ltr" : undefined}
+                className="text-ink-900 font-display text-[30px] leading-[1.08] font-extrabold tracking-[-0.035em] sm:text-[38px] md:text-[44px]"
+              >
                 {question.title}
               </h1>
               {question.help && (
-                <p className="text-ink-500 mt-4 max-w-lg text-[15.5px] leading-relaxed">
+                <p
+                  lang={question.enEspanol ? "es" : undefined}
+                  dir={question.enEspanol ? "ltr" : undefined}
+                  className="text-ink-500 mt-4 max-w-lg text-[15.5px] leading-relaxed"
+                >
                   {question.help}
                 </p>
               )}
               {question.sensitive && (
                 <p className="text-ink-400 mt-3 inline-flex items-center gap-1.5 text-[12.5px]">
                   <Glyph name="lock" className="size-3.5" />
-                  Esta respuesta es confidencial y solo se usa para orientarte
+                  {t.check.confidential}
                 </p>
               )}
 
@@ -318,7 +350,11 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                         </span>
                       )}
 
-                      <span className="min-w-0 flex-1">
+                      <span
+                        className="min-w-0 flex-1"
+                        lang={opt.enEspanol ? "es" : undefined}
+                        dir={opt.enEspanol ? "ltr" : undefined}
+                      >
                         <span
                           className={cn(
                             "block text-[15px] leading-snug font-semibold tracking-[-0.012em]",
@@ -360,12 +396,12 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                     </svg>
                   }
                 >
-                  Atrás
+                  {t.common.back}
                 </Button>
 
                 {answered && (
                   <Button size="md" onClick={() => goNext(answers)} arrow>
-                    Continuar
+                    {t.common.continue}
                   </Button>
                 )}
               </div>
@@ -381,11 +417,7 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
       <footer className="border-ink-100 border-t py-5">
         <div className="container-page">
           <LegalNote className="mx-auto max-w-2xl">
-            El resultado es una <strong className="text-ink-600">orientación preliminar</strong>{" "}
-            generada automáticamente a partir de tus respuestas. No es asesoramiento jurídico ni
-            confirma que cumplas los requisitos de ninguna vía. La{" "}
-            <strong className="text-ink-600">validación profesional</strong> requiere que un
-            especialista revise tu documentación real.
+            <Enfasis texto={t.check.footerNote} />
           </LegalNote>
         </div>
       </footer>
