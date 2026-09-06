@@ -119,6 +119,8 @@ export const es = {
   check: {
     name: "Immigration Check",
     eyebrow: "La joya de la plataforma",
+    /** Titular de la sección: la intención en palabras del usuario, no la marca. */
+    headline: "Comprueba en 3 minutos qué vía de residencia encaja contigo.",
     lede: "Responde unas preguntas y descubre qué opciones pueden encajar con tu situación. Ocho preguntas condicionales: solo te preguntamos lo que hace falta para tu caso.",
     start: "Empezar el diagnóstico",
     howWeAnalyse: "Ver cómo lo analizamos",

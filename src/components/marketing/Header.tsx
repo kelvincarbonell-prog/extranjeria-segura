@@ -12,10 +12,12 @@ import { CATEGORIES } from "@/content/taxonomy";
 import { TRAMITES } from "@/content/tramites";
 import { primaryNav } from "@/content/site";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useLocale } from "@/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const pathname = usePathname();
+  const { t } = useLocale();
   const { scrollY } = useScroll();
   const [condensed, setCondensed] = React.useState(false);
   const [mega, setMega] = React.useState(false);
@@ -98,7 +100,7 @@ export function Header() {
             </div>
 
             {/* ---------- Desktop nav ---------- */}
-            <nav aria-label="Principal" className="hidden min-w-0 justify-center lg:flex">
+            <nav aria-label={t.nav.home} className="hidden min-w-0 justify-center lg:flex">
               <ul className="flex items-center gap-1">
                 {primaryNav.map((item) => {
                   const active = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -115,7 +117,7 @@ export function Header() {
                             active || mega ? "text-ink-900 bg-ink-900/[.05]" : "text-ink-600 hover:text-ink-900",
                           )}
                         >
-                          {item.label}
+                          {t.nav[item.key]}
                           <motion.span animate={{ rotate: mega ? 180 : 0 }} transition={{ duration: 0.25 }}>
                             <Chevron />
                           </motion.span>
@@ -132,7 +134,7 @@ export function Header() {
                           active ? "text-ink-900 bg-ink-900/[.05]" : "text-ink-600 hover:text-ink-900",
                         )}
                       >
-                        {item.label}
+                        {t.nav[item.key]}
                       </Link>
                     </li>
                   );
@@ -149,16 +151,16 @@ export function Header() {
                 href="/entrar"
                 className="text-ink-600 hover:text-ink-900 hover:bg-ink-900/[.05] hidden rounded-[10px] px-3 py-2 text-[14px] font-medium transition-colors sm:inline-block"
               >
-                Acceder
+                {t.nav.signIn}
               </Link>
               <Button href="/diagnostico" size="sm" className="hidden sm:inline-flex" arrow>
-                Comprobar mi situación
+                {t.nav.cta}
               </Button>
               <Button href="/diagnostico" size="sm" className="sm:hidden">
-                Empezar
+                {t.nav.ctaShort}
               </Button>
               <IconButton
-                label={mobile ? "Cerrar menú" : "Abrir menú"}
+                label={mobile ? t.nav.closeMenu : t.nav.openMenu}
                 onClick={() => setMobile((v) => !v)}
                 className="lg:hidden"
                 size={40}
@@ -210,7 +212,7 @@ export function Header() {
                       href={item.href}
                       className="text-ink-900 border-ink-100 flex items-center justify-between border-b py-4 text-[22px] font-semibold tracking-[-0.02em]"
                     >
-                      {item.label}
+                      {t.nav[item.key]}
                       <span className="text-ink-300">
                         <Chevron className="-rotate-90" />
                       </span>
@@ -244,10 +246,10 @@ export function Header() {
                 className="mt-8 flex flex-col gap-2.5"
               >
                 <Button href="/diagnostico" size="lg" block arrow>
-                  Comprobar mi situación
+                  {t.nav.cta}
                 </Button>
                 <Button href="/entrar" variant="secondary" size="lg" block>
-                  Acceder a mi expediente
+                  {t.app.nav.case}
                 </Button>
                 <div className="pt-3">
                   <LanguageSwitcher />
@@ -264,6 +266,8 @@ export function Header() {
 /* ------------------------------------------------------------------ */
 
 function MegaMenu() {
+  const { t } = useLocale();
+
   const popular = [
     "arraigo-sociolaboral",
     "nacionalidad-por-residencia",
@@ -271,7 +275,7 @@ function MegaMenu() {
     "reagrupacion-familiar",
     "renovacion-residencia-trabajo",
   ]
-    .map((s) => TRAMITES.find((t) => t.slug === s))
+    .map((slug) => TRAMITES.find((tr) => tr.slug === slug))
     .filter(Boolean);
 
   return (
@@ -279,7 +283,7 @@ function MegaMenu() {
       <div className="grid grid-cols-[1fr_300px]">
         <div className="p-6">
           <p className="text-ink-400 mb-4 text-[11px] font-bold tracking-[0.12em] uppercase">
-            Por categoría
+            {t.nav.byCategory}
           </p>
           <ul className="grid grid-cols-3 gap-1">
             {CATEGORIES.map((c) => (
@@ -307,7 +311,7 @@ function MegaMenu() {
 
         <div className="bg-canvas-deep border-ink-100 border-l p-6">
           <p className="text-ink-400 mb-4 text-[11px] font-bold tracking-[0.12em] uppercase">
-            Más solicitados
+            {t.nav.mostRequested}
           </p>
           <ul className="flex flex-col gap-0.5">
             {popular.map((t) => (
@@ -325,10 +329,10 @@ function MegaMenu() {
 
           <div className="border-ink-200 mt-5 border-t pt-5">
             <p className="text-ink-500 text-[13px] leading-snug">
-              ¿No sabes cuál es el tuyo?
+              {t.nav.dontKnow}
             </p>
             <Button href="/diagnostico" size="sm" variant="subtle" className="mt-3 w-full" arrow>
-              Hacer el diagnóstico
+              {t.nav.doTheCheck}
             </Button>
           </div>
         </div>

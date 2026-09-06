@@ -114,6 +114,8 @@ export const zh: Dictionary = {
   check: {
     name: "Immigration Check",
     eyebrow: "平台的核心",
+    /** Titular de la sección: la intención en palabras del usuario, no la marca. */
+    headline: "3分钟了解哪条居留路径适合你。",
     lede: "回答几个问题，了解哪些方案可能适合你的情况。八个条件式问题：只问你的案件真正需要的内容。",
     start: "开始评估",
     howWeAnalyse: "了解我们如何分析",

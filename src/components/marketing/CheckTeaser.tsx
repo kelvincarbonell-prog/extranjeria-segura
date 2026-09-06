@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge, LegalNote } from "@/components/ui/primitives";
 import { Reveal, CheckDraw } from "@/components/motion/primitives";
 import { Glyph } from "@/components/brand/Glyph";
+import { useLocale } from "@/i18n/LocaleProvider";
 
 /**
  * Immigration Check™ — the section that sells the wizard.
@@ -37,6 +38,7 @@ const PREVIEW = [
 ];
 
 export function CheckTeaser() {
+  const { t } = useLocale();
   const reduce = useReducedMotion();
   const [i, setI] = React.useState(0);
   const [picked, setPicked] = React.useState(false);
@@ -71,10 +73,10 @@ export function CheckTeaser() {
                   entender qué es, y muchos no llegan. */}
               <span className="eyebrow mb-5">
                 <span aria-hidden className="bg-brand-600 h-px w-5 rounded-full" />
-                Immigration Check
+                {t.check.name}
               </span>
               <h2 className="text-display-md md:text-display-lg text-ink-900 text-balance">
-                Comprueba en 3 minutos qué vía de residencia encaja contigo.
+                {t.check.headline}
               </h2>
               <p className="text-ink-500 mt-5 max-w-lg text-[17px] leading-[1.6] md:text-lg">
                 Ocho preguntas condicionales: solo te preguntamos lo que hace falta para tu caso.
@@ -120,10 +122,10 @@ export function CheckTeaser() {
             <Reveal delay={0.16}>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Button href="/diagnostico" size="lg" arrow magnetic>
-                  Empezar el diagnóstico
+                  {t.check.start}
                 </Button>
                 <Button href="/como-funciona" size="lg" variant="ghost">
-                  Ver cómo lo analizamos
+                  {t.check.howWeAnalyse}
                 </Button>
               </div>
 

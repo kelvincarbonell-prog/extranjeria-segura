@@ -114,6 +114,8 @@ export const ru: Dictionary = {
   check: {
     name: "Immigration Check",
     eyebrow: "Ядро платформы",
+    /** Titular de la sección: la intención en palabras del usuario, no la marca. */
+    headline: "Узнайте за 3 минуты, какой путь к резидентству вам подходит.",
     lede: "Ответьте на несколько вопросов и узнайте, какие варианты могут подойти вашей ситуации. Восемь условных вопросов: спрашиваем только то, что нужно для вашего случая.",
     start: "Начать проверку",
     howWeAnalyse: "Как мы это анализируем",

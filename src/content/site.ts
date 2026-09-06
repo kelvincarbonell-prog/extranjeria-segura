@@ -65,12 +65,19 @@ export function reviewedBy() {
 /* ------------------------------------------------------------------ *
  * Navigation
  * ------------------------------------------------------------------ */
+/**
+ * Navegación principal.
+ *
+ * `key` apunta a la entrada del diccionario, no al texto. El texto vivía aquí
+ * en español y por eso el encabezado seguía en español en las ocho lenguas:
+ * la traducción existía y nadie la estaba usando.
+ */
 export const primaryNav = [
-  { label: "Cómo funciona", href: "/como-funciona" },
-  { label: "Trámites", href: "/tramites", mega: true },
-  { label: "Precios", href: "/precios" },
-  { label: "Opiniones", href: "/opiniones" },
-  { label: "Recursos", href: "/recursos" },
+  { key: "howItWorks", href: "/como-funciona" },
+  { key: "tramites", href: "/tramites", mega: true },
+  { key: "pricing", href: "/precios" },
+  { key: "reviews", href: "/opiniones" },
+  { key: "resources", href: "/recursos" },
 ] as const;
 
 export const footerNav = {
@@ -94,7 +101,7 @@ export const footerNav = {
     { label: "Calculadoras", href: "/calculadoras" },
     { label: "Calculadora Schengen 90/180", href: "/calculadoras/schengen-90-180" },
     { label: "Tiempo para la nacionalidad", href: "/calculadoras/tiempo-nacionalidad" },
-    { label: "Actualizaciones normativas", href: "/recursos?categoria=normativa" },
+    { label: "Actualizaciones normativas", href: "/recursos#actualizaciones" },
   ],
   Empresa: [
     { label: "Sobre nosotros", href: "/empresa" },

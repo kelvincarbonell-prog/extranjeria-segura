@@ -120,6 +120,8 @@ export const ar: Dictionary = {
   check: {
     name: "Immigration Check",
     eyebrow: "جوهر المنصّة",
+    /** Titular de la sección: la intención en palabras del usuario, no la marca. */
+    headline: "اعرف في 3 دقائق أي طريق إقامة يناسبك.",
     lede: "أجب عن بضعة أسئلة واكتشف الخيارات التي قد تناسب وضعك. ثمانية أسئلة مشروطة: لا نسألك إلا عمّا تتطلبه حالتك.",
     start: "ابدأ التقييم",
     howWeAnalyse: "شاهد كيف نحلّل حالتك",

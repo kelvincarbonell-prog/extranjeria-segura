@@ -2,10 +2,11 @@ import { Link } from "@/components/ui/Link";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { footerNav, site } from "@/content/site";
+import type { Dictionary } from "@/i18n/dictionaries/es";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Glyph } from "@/components/brand/Glyph";
 
-export function Footer() {
+export function Footer({ t }: { t: Dictionary }) {
   const year = new Date().getFullYear();
 
   return (
@@ -36,16 +37,15 @@ export function Footer() {
           <div className="relative flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl">
               <h2 className="text-display-md md:text-display-lg text-white">
-                ¿No sabes qué trámite necesitas?
+                {t.footer.ctaTitle}
               </h2>
               <p className="mt-4 text-[17px] leading-relaxed text-white/60">
-                Responde unas preguntas y te diremos qué vías pueden encajar contigo, qué
-                documentación hace falta y qué habría que verificar. Sin registro y sin coste.
+                {t.footer.ctaBody}
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <Button href="/diagnostico" size="lg" variant="inverse" arrow magnetic>
-                Haz el diagnóstico gratuito
+                {t.footer.ctaButton}
               </Button>
               <Button
                 href="/tramites"
@@ -66,24 +66,31 @@ export function Footer() {
           <div>
             <Logo size="md" />
             <p className="text-ink-500 mt-5 max-w-xs text-[14px] leading-relaxed">
-              Gestionamos tu extranjería de principio a fin. Tú sabes en todo momento dónde está tu
-              expediente, qué falta y quién te está ayudando.
+              {t.footer.tagline}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
-              <TrustChip glyph="lock" label="Datos cifrados" />
-              <TrustChip glyph="shield" label="RGPD" />
-              <TrustChip glyph="doc" label="Expediente trazable" />
+              <TrustChip glyph="lock" label={t.footer.trust.encrypted} />
+              <TrustChip glyph="shield" label={t.footer.trust.gdpr} />
+              <TrustChip glyph="doc" label={t.footer.trust.traceable} />
             </div>
           </div>
 
-          {Object.entries(footerNav).map(([group, links]) => (
-            <nav key={group} aria-label={group}>
+          {(
+            [
+              ["Servicios", t.footer.groups.services],
+              ["Trámites", t.footer.groups.tramites],
+              ["Recursos", t.footer.groups.resources],
+              ["Empresa", t.footer.groups.company],
+              ["Legal", t.footer.groups.legal],
+            ] as const
+          ).map(([group, etiqueta]) => (
+            <nav key={group} aria-label={etiqueta}>
               <h3 className="text-ink-900 mb-4 text-[12px] font-bold tracking-[0.1em] uppercase">
-                {group}
+                {etiqueta}
               </h3>
               <ul className="flex flex-col gap-2.5">
-                {links.map((l) => (
+                {footerNav[group].map((l) => (
                   <li key={l.href + l.label}>
                     <Link
                       href={l.href}
@@ -105,11 +112,10 @@ export function Footer() {
           <div className="text-ink-400 flex flex-col gap-1 text-[12.5px]">
             <p>
               © {year} {site.legalName ?? site.name}
-              {site.nif ? ` · ${site.nif}` : ""} · Todos los derechos reservados.
+              {site.nif ? ` · ${site.nif}` : ""} · {t.footer.rights}
             </p>
             <p className="max-w-2xl leading-relaxed">
-              La información publicada en este sitio tiene carácter orientativo y no constituye
-              asesoramiento jurídico. Cada expediente requiere el análisis de un profesional.
+              {t.footer.disclaimer}
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -118,7 +124,7 @@ export function Footer() {
               href="/legal/cookies"
               className="text-ink-400 hover:text-ink-900 tap inline-block text-[12.5px] transition-colors"
             >
-              Preferencias de cookies
+              {t.footer.cookiePrefs}
             </Link>
           </div>
         </div>

@@ -4,14 +4,11 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { CheckDraw, TextReveal } from "@/components/motion/primitives";
 import { HeroStage } from "./HeroStage";
-
-const PROMISES = [
-  "Primera orientación gratuita",
-  "Gestión 100% online",
-  "Seguimiento en tiempo real",
-];
+import { useLocale } from "@/i18n/LocaleProvider";
 
 export function Hero() {
+  const { t } = useLocale();
+
   return (
     <section className="relative isolate overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24 lg:pt-40">
       {/* Engineering grid — texture, not decoration. Faded to nothing at the edges. */}
@@ -38,18 +35,18 @@ export function Hero() {
               <span className="bg-brand-600 relative flex size-1.5 rounded-full">
                 <span className="bg-brand-600 absolute inline-flex size-full animate-[pulse-ring_2.6s_cubic-bezier(0.25,1,0.5,1)_infinite] rounded-full" />
               </span>
-              Extranjería · 100% online
+              {t.hero.eyebrow}
             </motion.p>
 
             <TextReveal
               as="h1"
-              text="Tu vida en España."
+              text={t.hero.titleA}
               className="text-display-lg sm:text-display-xl lg:text-display-2xl text-ink-900"
               delay={0.08}
             />
             <TextReveal
               as="h2"
-              text="Nosotros resolvemos los papeles."
+              text={t.hero.titleB}
               className="text-display-lg sm:text-display-xl lg:text-display-2xl text-ink-400 mt-1"
               delay={0.26}
             />
@@ -60,8 +57,7 @@ export function Hero() {
               transition={{ delay: 0.62, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="text-ink-500 mt-7 max-w-xl text-[17px] leading-[1.6] md:text-[18.5px]"
             >
-              Descubre en menos de 3 minutos qué permiso necesitas, qué documentación debes
-              presentar y cómo podemos gestionarlo por ti de principio a fin.
+              {t.hero.subtitle}
             </motion.p>
 
             <motion.div
@@ -71,10 +67,10 @@ export function Hero() {
               className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <Button href="/diagnostico" size="xl" arrow magnetic>
-                Comprobar mi situación
+                {t.hero.ctaPrimary}
               </Button>
               <Button href="/tramites" size="xl" variant="secondary">
-                Ya sé qué trámite necesito
+                {t.hero.ctaSecondary}
               </Button>
             </motion.div>
 
@@ -84,7 +80,7 @@ export function Hero() {
               transition={{ delay: 0.9, duration: 0.6 }}
               className="mt-9 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2"
             >
-              {PROMISES.map((p, i) => (
+              {t.hero.promises.map((p, i) => (
                 <li key={p} className="text-ink-600 flex items-center gap-2 text-[14px]">
                   <span className="bg-signal-ok-soft text-signal-ok flex size-[18px] shrink-0 items-center justify-center rounded-full">
                     <CheckDraw size={11} strokeWidth={3} delay={1.05 + i * 0.14} />

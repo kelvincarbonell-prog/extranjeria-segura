@@ -114,6 +114,8 @@ export const pt: Dictionary = {
   check: {
     name: "Immigration Check",
     eyebrow: "O coração da plataforma",
+    /** Titular de la sección: la intención en palabras del usuario, no la marca. */
+    headline: "Descubra em 3 minutos qual via de residência combina com você.",
     lede: "Responda algumas perguntas e descubra quais opções podem encaixar na sua situação. Oito perguntas condicionais: só perguntamos o que o seu caso exige.",
     start: "Começar o diagnóstico",
     howWeAnalyse: "Ver como analisamos",

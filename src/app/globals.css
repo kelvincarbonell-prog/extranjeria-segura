@@ -138,6 +138,54 @@
 @keyframes sheen { 0% { transform: translateX(-120%) } 60%,100% { transform: translateX(220%) } }
 
 /* ============================================================
+   TIPOGRAFÍA POR SISTEMA DE ESCRITURA
+
+   Va SIN capa a propósito. En Tailwind v4 las utilidades viven en
+   `@layer utilities`, que gana a `@layer base` por orden de capa y no por
+   especificidad: un selector más específico dentro de `base` sigue perdiendo.
+   El CSS sin capa gana a todas, que es lo que hace falta aquí para corregir
+   una utilidad de tracking aplicada elemento a elemento.
+
+   La escala de display lleva tracking negativo —hasta -0.045em— porque en
+   latín, a cuerpos grandes, apretar las letras hace que un titular se lea
+   como una sola pieza.
+
+   En árabe eso no es un ajuste, es un error tipográfico. El árabe es una
+   escritura cursiva: las letras se unen por la línea base y el espaciado
+   negativo empuja los glifos unos sobre otros hasta romper las uniones. Se vio
+   capturando /ar: el titular se solapaba consigo mismo.
+
+   En chino tampoco procede: cada glifo ocupa una caja fija y el tracking
+   negativo solo apiña una retícula ya calculada.
+
+   Se anula por idioma y no por dirección, porque son cosas distintas: el
+   hebreo es RTL y no tiene el problema del árabe; el chino no es RTL y sí lo
+   tiene.
+   ============================================================ */
+
+html:lang(ar) h1,
+html:lang(ar) h2,
+html:lang(ar) h3,
+html:lang(ar) .font-display,
+html:lang(zh) h1,
+html:lang(zh) h2,
+html:lang(zh) h3,
+html:lang(zh) .font-display {
+  letter-spacing: normal;
+}
+
+/* El árabe necesita más interlineado que el latín al mismo cuerpo: los trazos
+   ascendentes y descendentes son más largos y los diacríticos viven fuera de
+   la altura de x. Con 0,94 de la escala de display, se tocaban. */
+html:lang(ar) h1,
+html:lang(ar) h2,
+html:lang(ar) .text-display-2xl,
+html:lang(ar) .text-display-xl,
+html:lang(ar) .text-display-lg {
+  line-height: 1.32;
+}
+
+/* ============================================================
    BASE
    ============================================================ */
 

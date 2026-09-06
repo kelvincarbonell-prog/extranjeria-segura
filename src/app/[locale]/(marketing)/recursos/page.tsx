@@ -245,7 +245,9 @@ export default function RecursosPage() {
       </section>
 
       {/* ---------------- Actualizaciones datadas ---------------- */}
-      <section className="pb-16">
+      {/* El id lo enlaza el pie: sin él, «Actualizaciones normativas» dejaba
+          al visitante al principio de la página. */}
+      <section id="actualizaciones" className="scroll-mt-28 pb-16">
         <div className="container-page">
           <div className="mb-6">
             <h2 className="text-ink-900 font-display text-[22px] font-extrabold tracking-[-0.03em]">
