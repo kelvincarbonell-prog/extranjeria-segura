@@ -17,6 +17,7 @@ import { AvisoRevision } from "@/components/contenido/AvisoRevision";
 import { Button } from "@/components/ui/Button";
 import { Card, Badge } from "@/components/ui/primitives";
 import { TramiteFaq } from "@/components/marketing/TramiteFaq";
+import { BarraAccion } from "@/components/marketing/BarraAccion";
 import { site } from "@/content/site";
 
 export const dynamicParams = false;
@@ -358,6 +359,17 @@ export default async function EstadoPage({
           </aside>
         </div>
       </section>
+
+      <BarraAccion
+        href={e.servicio.href}
+        etiqueta={e.urgente ? "Que lo miren hoy" : e.servicio.etiqueta}
+        nota={
+          e.urgente
+            ? "Subes el documento y te decimos qué plazo tienes"
+            : "Diagnóstico gratuito · sin registro"
+        }
+        secundario={{ href: "/diagnostico", etiqueta: "Diagnóstico" }}
+      />
 
       <script
         type="application/ld+json"

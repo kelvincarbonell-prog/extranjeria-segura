@@ -8,6 +8,7 @@ import type { Answers } from "@/content/check-questions";
 import { TRAMITE_MAP } from "@/content/tramites";
 import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
+import { SiguientePaso } from "./SiguientePaso";
 import { Button } from "@/components/ui/Button";
 import { Badge, LegalNote, Card } from "@/components/ui/primitives";
 import { CheckDraw, Reveal } from "@/components/motion/primitives";
@@ -114,41 +115,7 @@ export function CheckResultView({
         {/* ---------------- Next steps ---------------- */}
         <Reveal delay={0.4}>
           <div className="mx-auto mt-10 max-w-3xl">
-            <div className="bg-ink-950 relative isolate overflow-hidden rounded-xl p-6 md:p-8">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-60"
-                style={{
-                  background:
-                    "radial-gradient(560px 280px at 15% 0%, rgba(65,89,250,.38), transparent 62%)",
-                }}
-              />
-              <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-md">
-                  <h2 className="font-display text-[21px] leading-tight font-extrabold tracking-[-0.03em] text-white">
-                    El siguiente paso es que alguien lo mire de verdad.
-                  </h2>
-                  <p className="mt-2.5 text-[14px] leading-relaxed text-white/55">
-                    45 minutos con un especialista que revisa tu documentación, confirma la
-                    estrategia y te entrega el plan documental por escrito. Si contratas la gestión,
-                    se te descuenta.
-                  </p>
-                </div>
-                <div className="flex shrink-0 flex-col gap-2.5">
-                  <Button href="/citas" size="lg" variant="inverse" arrow>
-                    Revisar mi caso con un especialista
-                  </Button>
-                  <Button
-                    href="/crear-cuenta"
-                    size="lg"
-                    variant="ghost"
-                    className="border border-white/15 bg-white/[.06] text-white hover:bg-white/[.12]"
-                  >
-                    Guardar mi resultado
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <SiguientePaso urgente={result.urgent} hayVia={result.pathways.length > 0} />
           </div>
         </Reveal>
 

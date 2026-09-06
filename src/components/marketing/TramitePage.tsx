@@ -2,6 +2,7 @@ import { Link } from "@/components/ui/Link";
 import type { Category, Tramite } from "@/content/taxonomy";
 import type { CITIES, NATIONALITIES } from "@/content/geo";
 import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";
+import { BarraAccion } from "./BarraAccion";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Badge, Card, LegalNote, Divider } from "@/components/ui/primitives";
@@ -537,6 +538,15 @@ export function TramitePage({
           </Reveal>
         )}
       </div>
+
+      {/* La ficha mide dos mil palabras y el CTA vive arriba. En móvil no hay
+          raíl lateral que lo sostenga, así que la acción baja con el lector. */}
+      <BarraAccion
+        href="/diagnostico"
+        etiqueta="Comprobar si encajo"
+        nota="Gratis · sin registro · no pedimos documentos todavía"
+        secundario={{ href: "/citas", etiqueta: "Consulta" }}
+      />
     </>
   );
 }

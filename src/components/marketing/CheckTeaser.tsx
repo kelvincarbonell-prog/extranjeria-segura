@@ -64,17 +64,22 @@ export function CheckTeaser() {
           {/* ---- Copy ---- */}
           <div>
             <Reveal>
+              {/* La marca baja a la línea superior y el titular pasa a ser la
+                  intención en las palabras del usuario. «Immigration Check» no
+                  se busca; «qué residencia me corresponde», sí. Un encabezado
+                  que solo dice la marca obliga a leer el párrafo siguiente para
+                  entender qué es, y muchos no llegan. */}
               <span className="eyebrow mb-5">
                 <span aria-hidden className="bg-brand-600 h-px w-5 rounded-full" />
-                La joya de la plataforma
-              </span>
-              <h2 className="text-display-md md:text-display-lg text-ink-900">
                 Immigration Check
-                <span className="text-brand-600 align-super text-[0.4em]">™</span>
+              </span>
+              <h2 className="text-display-md md:text-display-lg text-ink-900 text-balance">
+                Comprueba en 3 minutos qué vía de residencia encaja contigo.
               </h2>
               <p className="text-ink-500 mt-5 max-w-lg text-[17px] leading-[1.6] md:text-lg">
-                Responde unas preguntas y descubre qué opciones pueden encajar con tu situación.
                 Ocho preguntas condicionales: solo te preguntamos lo que hace falta para tu caso.
+                Al final sabes qué vías pueden encajar, qué documentación piden y qué habría que
+                verificar.
               </p>
             </Reveal>
 
@@ -121,6 +126,30 @@ export function CheckTeaser() {
                   Ver cómo lo analizamos
                 </Button>
               </div>
+
+              {/* Microcopy de fricción. Este público llega con desconfianza
+                  institucional previa: cada frase que reduce el miedo a
+                  exponerse convierte más que cualquier argumento de venta. */}
+              <ul className="text-ink-400 mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-[12.5px]">
+                {[
+                  "Sin registro",
+                  "No pedimos documentos todavía",
+                  "Tus respuestas no salen de tu navegador",
+                ].map((m) => (
+                  <li key={m} className="flex items-center gap-1.5">
+                    <svg viewBox="0 0 14 14" width="12" height="12" fill="none" aria-hidden>
+                      <path
+                        d="m3 7.4 2.6 2.6L11 4.6"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {m}
+                  </li>
+                ))}
+              </ul>
 
               <LegalNote className="mt-6 max-w-lg">
                 El diagnóstico es una <strong className="text-ink-600">orientación preliminar</strong>{" "}

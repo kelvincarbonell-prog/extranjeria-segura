@@ -12,6 +12,7 @@ import { LegalNote } from "@/components/ui/primitives";
 import { CheckDraw } from "@/components/motion/primitives";
 import { CheckResultView } from "./CheckResult";
 import { AnalysisCurtain } from "./AnalysisCurtain";
+import { GuardarProgreso } from "./GuardarProgreso";
 import {
   subscribeAnswers,
   getAnswersSnapshot,
@@ -19,6 +20,7 @@ import {
   saveAnswers,
   clearAnswers,
 } from "@/lib/check-store";
+import { decodificarRespuestas } from "@/lib/check-resume";
 import { cn } from "@/lib/utils";
 
 type Phase = "asking" | "analysing" | "result";
@@ -48,13 +50,24 @@ export function CheckWizard() {
     );
   }
 
+  // Un enlace de reanudación trae las respuestas en el fragmento de la URL.
+  // Se lee aquí, en el mismo renderizado que las persistidas, para que el
+  // cuestionario aparezca ya en la pregunta correcta: restaurarlo dentro de un
+  // efecto enseñaría la pregunta 1 y saltaría después a la 5.
+  //
+  // Gana sobre lo guardado en la sesión: quien abre un enlace de reanudación
+  // está pidiendo explícitamente ese progreso, no el de la pestaña.
+  const delEnlace =
+    typeof window !== "undefined" ? decodificarRespuestas(window.location.hash) : null;
+
   // A ?objetivo= deep link (from the intent router or a trámite page) seeds the
   // first answer without discarding a questionnaire already in progress.
   const objetivo = params.get("objetivo");
+  const base: Answers = delEnlace ?? persisted;
   const initial: Answers =
     objetivo && QUESTIONS[0].options.some((o) => o.value === objetivo)
-      ? { ...persisted, objetivo }
-      : persisted;
+      ? { ...base, objetivo }
+      : base;
 
   return <Wizard initialAnswers={initial} />;
 }
@@ -343,6 +356,10 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                   </Button>
                 )}
               </div>
+
+              {/* El abandono se concentra entre la 3ª y la 5ª pregunta: el
+                  punto de guardado va justo antes de la caída, no después. */}
+              {step >= 3 && step < total && <GuardarProgreso answers={answers} />}
             </motion.div>
           </AnimatePresence>
         </div>
