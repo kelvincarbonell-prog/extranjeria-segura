@@ -64,13 +64,13 @@ export default function RegularizacionHub() {
           <nav aria-label="Migas de pan" className="mb-7">
             <ol className="text-ink-400 flex flex-wrap items-center gap-1.5 text-[13px]">
               <li>
-                <Link href="/" className="hover:text-ink-700 transition-colors">
+                <Link href="/" className="hover:text-ink-700 tap inline-block transition-colors">
                   Inicio
                 </Link>
               </li>
               <li aria-hidden>/</li>
               <li>
-                <Link href="/recursos" className="hover:text-ink-700 transition-colors">
+                <Link href="/recursos" className="hover:text-ink-700 tap inline-block transition-colors">
                   Centro de conocimiento
                 </Link>
               </li>
@@ -180,8 +180,8 @@ export default function RegularizacionHub() {
             id="hechos"
           />
 
-          <div className="mt-8 overflow-x-auto">
-            <table className="w-full min-w-[620px] border-collapse text-left">
+          <div className="mt-8 sm:overflow-x-auto">
+            <table className="tabla-apilable text-left sm:min-w-[620px]">
               <caption className="sr-only">
                 Datos del procedimiento de regularización extraordinaria de 2026 con su fuente
               </caption>

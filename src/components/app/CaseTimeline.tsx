@@ -42,14 +42,14 @@ export function CaseTimeline({ steps }: { steps: readonly Step[] }) {
               <span
                 className={cn(
                   "text-[14.5px]",
-                  s.state === "todo" ? "text-ink-300" : "text-ink-800 font-medium",
+                  s.state === "todo" ? "text-ink-400" : "text-ink-800 font-medium",
                   s.state === "active" && "text-ink-900 font-semibold",
                 )}
               >
                 {s.label}
               </span>
               {s.date && (
-                <span className="data text-ink-300 shrink-0 text-[11.5px]">
+                <span className="data text-ink-400 shrink-0 text-[11.5px]">
                   {formatDateES(s.date, "short")}
                 </span>
               )}
@@ -75,14 +75,14 @@ export function CaseTimeline({ steps }: { steps: readonly Step[] }) {
             <span
               className={cn(
                 "mt-2.5 flex min-h-[28px] max-w-[92px] items-start justify-center text-[11.5px] leading-tight",
-                s.state === "todo" ? "text-ink-300" : "text-ink-700 font-medium",
+                s.state === "todo" ? "text-ink-400" : "text-ink-700 font-medium",
                 s.state === "active" && "text-ink-900 font-semibold",
               )}
             >
               {s.label}
             </span>
             {s.date && (
-              <span className="data text-ink-300 mt-1 text-[10.5px]">
+              <span className="data text-ink-400 mt-1 text-[10.5px]">
                 {formatDateES(s.date, "short")}
               </span>
             )}

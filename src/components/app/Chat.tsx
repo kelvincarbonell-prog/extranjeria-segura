@@ -179,7 +179,7 @@ export function Chat() {
             }}
             rows={1}
             placeholder="Escribe tu mensaje…"
-            className="bg-surface text-ink-900 placeholder:text-ink-300 max-h-32 min-h-[46px] flex-1 resize-none rounded-sm px-4 py-3 text-[14.5px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
+            className="bg-surface text-ink-900 placeholder:text-ink-400 max-h-32 min-h-[46px] flex-1 resize-none rounded-sm px-4 py-3 text-[14.5px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
           />
           <Button type="submit" size="md" disabled={!draft.trim()}>
             Enviar
@@ -243,7 +243,7 @@ function Bubble({ message: m, reduce }: { message: DemoMessage; reduce: boolean 
         <p
           className={cn(
             "data mt-1.5 text-[10.5px]",
-            mine ? "text-white/50" : "text-ink-300",
+            mine ? "text-white/60" : "text-ink-400",
           )}
         >
           {new Intl.DateTimeFormat("es-ES", { hour: "2-digit", minute: "2-digit" }).format(

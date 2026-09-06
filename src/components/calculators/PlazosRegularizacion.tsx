@@ -258,7 +258,7 @@ function Resultado({ r }: { r: ResultadoCalculo }) {
                 className={cn(
                   "font-display text-[30px] leading-none font-extrabold tabular-nums",
                   v.cuenta.estado === "vencido"
-                    ? "text-ink-300"
+                    ? "text-ink-400"
                     : v.cuenta.critico
                       ? "text-signal-risk"
                       : "text-ink-900",

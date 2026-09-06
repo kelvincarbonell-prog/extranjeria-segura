@@ -123,11 +123,11 @@ export function NotificationCentre() {
                             {n.body}
                           </span>
                         )}
-                        <span className="text-ink-300 mt-1 block text-[11.5px]">
+                        <span className="text-ink-400 mt-1 block text-[11.5px]">
                           {KIND_LABEL[n.kind]}
                         </span>
                       </span>
-                      <span className="data text-ink-300 shrink-0 text-[11.5px]">
+                      <span className="data text-ink-400 shrink-0 text-[11.5px]">
                         {relativeES(n.at)}
                       </span>
                     </Link>

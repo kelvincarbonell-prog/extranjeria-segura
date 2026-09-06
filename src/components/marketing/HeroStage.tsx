@@ -145,7 +145,7 @@ export function HeroStage() {
                   <span
                     className={cn(
                       "text-[13px] leading-[18px]",
-                      step.state === "todo" ? "text-ink-300" : "text-ink-700 font-medium",
+                      step.state === "todo" ? "text-ink-400" : "text-ink-700 font-medium",
                       step.state === "active" && "text-ink-900 font-semibold",
                     )}
                   >

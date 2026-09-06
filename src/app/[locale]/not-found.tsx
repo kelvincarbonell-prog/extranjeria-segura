@@ -18,7 +18,7 @@ export default function NotFound() {
 
       <main id="contenido" className="container-page flex flex-1 items-center py-12">
         <div className="mx-auto w-full max-w-2xl text-center">
-          <span className="data text-ink-300 text-[13px] font-semibold tracking-[0.14em]">404</span>
+          <span className="data text-ink-400 text-[13px] font-semibold tracking-[0.14em]">404</span>
 
           <h1 className="text-display-md md:text-display-lg text-ink-900 mt-4">
             Esta página no existe.

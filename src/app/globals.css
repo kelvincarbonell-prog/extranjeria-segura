@@ -17,8 +17,24 @@
   --color-ink-700: #232838;
   --color-ink-600: #3B4256;
   --color-ink-500: #5A6377;
-  --color-ink-400: #808999;
-  --color-ink-300: #A9B0BD;
+  /* ink-400 e ink-300 se oscurecieron respecto al primer sistema. El motivo es
+     medible, no de gusto: con los valores anteriores (#808999 y #A9B0BD) el
+     contraste sobre `canvas-deep` era de 3,23:1 y 2,00:1, y los dos se usan
+     para texto pequeño —fechas, etiquetas, marcadores de posición, texto
+     secundario de tarjeta— en 262 sitios del producto. El mínimo AA para texto
+     normal es 4,5:1. Era un fallo sistémico, y la forma de arreglar 262 sitios
+     es arreglar el token, no los 262 sitios.
+
+     ink-400 pasa a 4,52:1 sobre el fondo más exigente de los tres: cumple AA
+     para texto en cualquier superficie del sistema.
+
+     ink-300 se queda deliberadamente por debajo de 4,5 pero llega a 3,01:1,
+     que es el mínimo de la 1.4.11 para elementos de interfaz y objetos
+     gráficos. Subirlo hasta 4,5 lo habría fundido con ink-400 y habría
+     destruido la rampa. Es un tono para bordes, iconos decorativos y estados
+     inactivos; el texto pequeño que lo usaba se ha movido a ink-400. */
+  --color-ink-400: #69717E;
+  --color-ink-300: #898E99;
   --color-ink-200: #D2D7E0;
   --color-ink-100: #E7EAF0;
   --color-ink-50:  #F2F4F8;
@@ -37,7 +53,11 @@
   --color-brand-950: #0C1244;
 
   /* ---- Signal colours. Used only for state, never for decoration. ---- */
-  --color-signal-ok:      #0B8A5F;
+  /* 4,18:1 sobre `canvas-deep` con el verde anterior (#0B8A5F). Se usa para
+     «Validado» y «Correcto» en el expediente: un estado que el cliente lee de
+     un vistazo para saber que ya no tiene que hacer nada. Oscurecido hasta
+     4,54:1. */
+  --color-signal-ok:      #0A8058;
   --color-signal-ok-soft: #E8F7F1;
   --color-signal-warn:      #9A5B00;
   --color-signal-warn-soft: #FDF3E4;
@@ -287,6 +307,60 @@
   @media (pointer: coarse) {
     padding-block: 0.5rem;
     margin-block: -0.5rem;
+  }
+}
+
+/**
+ * Tabla que se apila en móvil.
+ *
+ * Las tablas de plazos son de dos columnas —la afirmación y la norma que la
+ * respalda— y en una pantalla de 390 px la segunda quedaba cortada por el
+ * borde. Estaba dentro de un contenedor con desplazamiento horizontal, así
+ * que técnicamente funcionaba; en la práctica se leía como una página rota,
+ * porque nada indica que aquello se pueda arrastrar.
+ *
+ * Aquí se cambia solo la presentación: el DOM sigue siendo una `<table>` con
+ * su `<caption>`, sus `<th scope>` y su estructura intacta. Eso importa por
+ * dos motivos que van en la misma dirección: un lector de pantalla la sigue
+ * anunciando como tabla con sus relaciones de encabezado, y los motores
+ * generativos —que extraen las tablas enteras— siguen viéndola como tabla.
+ * Reemplazarla por `<div>`s en móvil habría perdido las dos cosas.
+ */
+@utility tabla-apilable {
+  width: 100%;
+  border-collapse: collapse;
+
+  @media (width < 40rem) {
+    & thead {
+      /* No se oculta con `display: none`, que lo saca del árbol de
+         accesibilidad: se saca de la vista conservándolo para quien navega
+         con lector de pantalla. */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    & tr {
+      display: block;
+      padding-block: 0.875rem;
+    }
+
+    & th[scope="row"],
+    & td {
+      display: block;
+      width: auto;
+      padding-inline: 0;
+      padding-block: 0.125rem;
+    }
+
+    & th[scope="row"] {
+      padding-bottom: 0.375rem;
+    }
   }
 }
 

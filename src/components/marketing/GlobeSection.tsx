@@ -63,7 +63,7 @@ export function GlobeSection() {
                   {locales.map((l) => (
                     <li
                       key={l.code}
-                      className={`text-[14px] ${l.ready ? "text-ink-700 font-medium" : "text-ink-300"}`}
+                      className={`text-[14px] ${l.ready ? "text-ink-700 font-medium" : "text-ink-400"}`}
                       dir={l.dir}
                     >
                       {l.native}

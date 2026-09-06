@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "audit:movil": "node scripts/audit-movil.mjs",
-    "test": "node --import tsx --test \"src/**/*.test.ts\""
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
+    "audit:contraste": "node scripts/audit-contraste.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",

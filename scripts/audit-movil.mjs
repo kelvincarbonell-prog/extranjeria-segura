@@ -20,9 +20,11 @@
 
 import { chromium } from "playwright";
 
-const B = "http://localhost:3000";
+const B = process.env.BASE ?? "http://localhost:3000";
 const PAGES = [
   "/", "/diagnostico", "/tramites", "/tramites/arraigo-sociolaboral",
+  "/regularizacion-2026", "/regularizacion-2026/subsanacion",
+  "/regularizacion-2026/silencio-administrativo", "/calculadoras/plazos-regularizacion",
   "/tramites/categoria/arraigo", "/precios", "/recursos", "/calculadoras",
   "/calculadoras/schengen-90-180", "/como-funciona", "/opiniones", "/seguridad",
   "/contacto", "/empresa", "/citas", "/legal/privacidad",

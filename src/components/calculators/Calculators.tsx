@@ -105,7 +105,7 @@ export function SchengenCalculator() {
           </p>
           <p className="text-ink-900 font-display data mt-2 text-[42px] leading-none font-extrabold tracking-[-0.045em]">
             {result.used}
-            <span className="text-ink-300 text-[22px]">/90</span>
+            <span className="text-ink-400 text-[22px]">/90</span>
           </p>
           <Progress
             value={pct}
@@ -368,7 +368,7 @@ export function MeansCalculator() {
           </p>
           <p className="text-ink-900 font-display data mt-2 text-[34px] leading-none font-extrabold tracking-[-0.045em]">
             {eur(result.monthlyCents)}
-            <span className="text-ink-300 text-[16px] font-medium"> /mes</span>
+            <span className="text-ink-400 text-[16px] font-medium"> /mes</span>
           </p>
           <p className="text-ink-500 mt-3 text-[13.5px]">
             Equivalente anual:{" "}

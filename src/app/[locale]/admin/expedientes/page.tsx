@@ -78,7 +78,7 @@ export default function ExpedientesPage() {
                   </td>
                   <td className="px-4 py-3.5">
                     {c.slaDays === null ? (
-                      <span className="text-ink-300 text-[12.5px]">—</span>
+                      <span className="text-ink-400 text-[12.5px]">—</span>
                     ) : (
                       <span
                         className={cn(

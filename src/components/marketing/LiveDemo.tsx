@@ -200,13 +200,13 @@ function ExpedientePanel() {
                 <span
                   className={cn(
                     "text-[14px]",
-                    s.state === "todo" ? "text-ink-300" : "text-ink-800 font-medium",
+                    s.state === "todo" ? "text-ink-400" : "text-ink-800 font-medium",
                     s.state === "active" && "text-ink-900 font-semibold",
                   )}
                 >
                   {s.label}
                 </span>
-                {s.date && <span className="data text-ink-300 shrink-0 text-[11.5px]">{s.date}</span>}
+                {s.date && <span className="data text-ink-400 shrink-0 text-[11.5px]">{s.date}</span>}
               </span>
             </li>
           ))}
@@ -351,7 +351,7 @@ function MensajesPanel() {
       </div>
 
       <div className="border-ink-100 bg-canvas-deep border-t p-3">
-        <div className="bg-surface text-ink-300 ring-ink-900/[.06] flex items-center gap-3 rounded-sm px-4 py-3 text-[13.5px] ring-1 ring-inset">
+        <div className="bg-surface text-ink-400 ring-ink-900/[.06] flex items-center gap-3 rounded-sm px-4 py-3 text-[13.5px] ring-1 ring-inset">
           Escribe un mensaje…
         </div>
       </div>
@@ -388,7 +388,7 @@ function NotificacionesPanel() {
               <span className="text-ink-500 mt-0.5 block text-[12.5px] leading-snug">{n.body}</span>
             )}
           </span>
-          <span className="data text-ink-300 shrink-0 text-[11.5px]">{relativeES(n.at)}</span>
+          <span className="data text-ink-400 shrink-0 text-[11.5px]">{relativeES(n.at)}</span>
         </li>
       ))}
     </ul>

@@ -172,7 +172,7 @@ function StepVisual({ index, reduce }: { index: number; reduce: boolean | null }
         {["¿Dónde te encuentras ahora?", "¿Cuánto tiempo llevas en España?", "¿Cuál es tu situación laboral?"].map(
           (q, i) => (
             <div key={q} className={cn(common, "flex items-center gap-3")}>
-              <span className="data text-ink-300 text-[11px]">0{i + 1}</span>
+              <span className="data text-ink-400 text-[11px]">0{i + 1}</span>
               <span className="text-ink-700 flex-1 text-[13.5px] font-medium">{q}</span>
               {i === 0 && (
                 <span className="bg-brand-600 rounded-full px-2.5 py-1 text-[11px] font-semibold text-white">

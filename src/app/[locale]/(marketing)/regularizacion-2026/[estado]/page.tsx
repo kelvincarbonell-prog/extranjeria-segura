@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, Badge } from "@/components/ui/primitives";
 import { TramiteFaq } from "@/components/marketing/TramiteFaq";
 import { BarraAccion } from "@/components/marketing/BarraAccion";
+import { IndiceLateral, ProgresoLectura } from "@/components/contenido/IndiceLateral";
 import { site } from "@/content/site";
 
 export const dynamicParams = false;
@@ -66,6 +67,15 @@ export default async function EstadoPage({
   if (!e) notFound();
 
   const otros = ESTADOS.filter((x) => x.id !== e.id);
+
+  const secciones = [
+    { id: "reconocer", etiqueta: "¿Cómo sé que es mi caso?" },
+    { id: "que-hacer", etiqueta: "Qué puedo hacer" },
+    ...(e.datos.length > 0 ? [{ id: "plazos", etiqueta: "Qué plazos se aplican" }] : []),
+    { id: "errores", etiqueta: "Errores que cuestan el expediente" },
+    { id: "faq", etiqueta: "Preguntas frecuentes" },
+    { id: "fuentes", etiqueta: "Fuentes" },
+  ];
   const fuentes = e.datos.map((d) => ({
     fuente: d.fuente,
     articulo: d.articulo,
@@ -74,6 +84,11 @@ export default async function EstadoPage({
 
   return (
     <>
+      {/* En móvil no hay raíl lateral: la única señal de cuánto queda es esta. */}
+      <div className="fixed inset-x-0 top-16 z-30 lg:hidden">
+        <ProgresoLectura />
+      </div>
+
       <section className="relative pt-32 pb-10 md:pt-40">
         <div
           aria-hidden
@@ -83,13 +98,13 @@ export default async function EstadoPage({
           <nav aria-label="Migas de pan" className="mb-7">
             <ol className="text-ink-400 flex flex-wrap items-center gap-1.5 text-[13px]">
               <li>
-                <Link href="/" className="hover:text-ink-700 transition-colors">
+                <Link href="/" className="hover:text-ink-700 tap inline-block transition-colors">
                   Inicio
                 </Link>
               </li>
               <li aria-hidden>/</li>
               <li>
-                <Link href="/regularizacion-2026" className="hover:text-ink-700 transition-colors">
+                <Link href="/regularizacion-2026" className="hover:text-ink-700 tap inline-block transition-colors">
                   Regularización 2026
                 </Link>
               </li>
@@ -191,8 +206,8 @@ export default async function EstadoPage({
                 <h2 id="plazos" className="text-display-sm text-ink-950">
                   ¿Qué plazos se aplican a mi caso?
                 </h2>
-                <div className="mt-6 overflow-x-auto">
-                  <table className="w-full min-w-[560px] border-collapse text-left">
+                <div className="mt-6 sm:overflow-x-auto">
+                  <table className="tabla-apilable text-left sm:min-w-[560px]">
                     <caption className="sr-only">
                       Plazos aplicables y norma que los establece
                     </caption>
@@ -311,32 +326,7 @@ export default async function EstadoPage({
           {/* ── Raíl lateral ─────────────────────────────────────────── */}
           <aside className="hidden lg:block">
             <div className="sticky top-28 flex flex-col gap-7">
-              <div>
-                <p className="text-ink-400 mb-3 text-[11px] font-bold tracking-[0.11em] uppercase">
-                  En esta página
-                </p>
-                <ul className="space-y-2 text-[13.5px]">
-                  {[
-                    ["reconocer", "¿Cómo sé que es mi caso?"],
-                    ["que-hacer", "Qué puedo hacer"],
-                    ...(e.datos.length > 0
-                      ? ([["plazos", "Qué plazos se aplican"]] as [string, string][])
-                      : []),
-                    ["errores", "Errores que cuestan el expediente"],
-                    ["faq", "Preguntas frecuentes"],
-                    ["fuentes", "Fuentes"],
-                  ].map(([id, label]) => (
-                    <li key={id as string}>
-                      <a
-                        href={`#${id}`}
-                        className="text-ink-500 hover:text-ink-900 transition-colors"
-                      >
-                        {label as string}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <IndiceLateral secciones={secciones} />
 
               <div className="border-ink-900/10 border-t pt-6">
                 <p className="text-ink-400 mb-3 text-[11px] font-bold tracking-[0.11em] uppercase">

@@ -57,7 +57,7 @@ export function TramiteExplorer({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Busca por trámite, situación u objetivo — «arraigo», «renovar», «traer a mi mujer»…"
               aria-label="Buscar trámites"
-              className="bg-surface text-ink-900 placeholder:text-ink-300 h-14 w-full rounded-lg pr-4 pl-12 text-[15px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] transition-shadow outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
+              className="bg-surface text-ink-900 placeholder:text-ink-400 h-14 w-full rounded-lg pr-4 pl-12 text-[15px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] transition-shadow outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
             />
           </div>
 
@@ -175,7 +175,7 @@ export function TramiteCard({
           <Glyph name={cat?.glyph ?? "doc"} className="size-[19px]" />
         </span>
         {cat && (
-          <span className="text-ink-300 text-[11px] font-semibold tracking-[0.08em] uppercase">
+          <span className="text-ink-400 text-[11px] font-semibold tracking-[0.08em] uppercase">
             {cat.short}
           </span>
         )}
@@ -197,7 +197,7 @@ export function TramiteCard({
             "Presupuesto a medida"
           )}
         </span>
-        <span className="data text-ink-300 text-[11.5px]">{t.documents.length} docs</span>
+        <span className="data text-ink-400 text-[11.5px]">{t.documents.length} docs</span>
       </div>
 
       {t.pendingLegalReview && (

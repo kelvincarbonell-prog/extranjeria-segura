@@ -3,6 +3,7 @@ import type { Category, Tramite } from "@/content/taxonomy";
 import type { CITIES, NATIONALITIES } from "@/content/geo";
 import { OFFICIAL_SOURCES, reviewedBy } from "@/content/site";
 import { BarraAccion } from "./BarraAccion";
+import { IndiceLateral, ProgresoLectura } from "@/components/contenido/IndiceLateral";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Badge, Card, LegalNote, Divider } from "@/components/ui/primitives";
@@ -40,6 +41,12 @@ export function TramitePage({
 }) {
   return (
     <>
+      {/* En móvil no hay raíl lateral: la única señal de cuánto queda de una
+          ficha de dos mil palabras es esta barra. */}
+      <div className="fixed inset-x-0 top-16 z-30 lg:hidden">
+        <ProgresoLectura />
+      </div>
+
       {/* ================= HERO ================= */}
       <section className="relative pt-32 pb-14 md:pt-40">
         <div
@@ -153,7 +160,7 @@ export function TramitePage({
               <ol className="border-ink-100 flex flex-col border-t">
                 {t.requirements.map((r, i) => (
                   <li key={r} className="border-ink-100 flex gap-4 border-b py-4">
-                    <span className="data text-ink-300 shrink-0 pt-0.5 text-[12px] font-semibold">
+                    <span className="data text-ink-400 shrink-0 pt-0.5 text-[12px] font-semibold">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="text-ink-700 text-[15px] leading-relaxed">{r}</span>
@@ -458,35 +465,21 @@ export function TramitePage({
               </div>
 
               <div>
-              <p className="text-ink-400 mb-4 text-[11px] font-bold tracking-[0.11em] uppercase">
-                En esta página
-              </p>
-              <nav aria-label="Índice">
-                <ul className="border-ink-100 flex flex-col gap-0.5 border-l">
-                  {[
-                    ["que-es", "Qué es"],
-                    ["para-quien", "Para quién es"],
-                    ["requisitos", "Requisitos"],
-                    ["documentacion", "Documentación"],
-                    ["proceso", "Proceso"],
-                    ["precio", "Precio"],
-                    ["faq", "Preguntas frecuentes"],
-                    ...(cities.length || nationalities.length
-                      ? [["tu-caso", "Para tu caso"] as [string, string]]
-                      : []),
-                    ["fuentes", "Fuentes oficiales"],
-                  ].map(([id, label]) => (
-                    <li key={id}>
-                      <a
-                        href={`#${id}`}
-                        className="text-ink-500 hover:text-ink-900 -ml-px block border-l-2 border-transparent py-1.5 pl-4 text-[13.5px] transition-colors hover:border-brand-600"
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+              <IndiceLateral
+                secciones={[
+                  { id: "que-es", etiqueta: "Qué es" },
+                  { id: "para-quien", etiqueta: "Para quién es" },
+                  { id: "requisitos", etiqueta: "Requisitos" },
+                  { id: "documentacion", etiqueta: "Documentación" },
+                  { id: "proceso", etiqueta: "Proceso" },
+                  { id: "precio", etiqueta: "Precio" },
+                  { id: "faq", etiqueta: "Preguntas frecuentes" },
+                  ...(cities.length || nationalities.length
+                    ? [{ id: "tu-caso", etiqueta: "Para tu caso" }]
+                    : []),
+                  { id: "fuentes", etiqueta: "Fuentes oficiales" },
+                ]}
+              />
 
               <div className="bg-ink-950 mt-8 rounded-lg p-5 text-white">
                 <p className="font-display text-[15px] leading-snug font-bold">

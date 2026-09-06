@@ -236,7 +236,7 @@ export default async function Page({ params }: { params: Promise<{ landing: stri
             <ol className="border-ink-100 flex flex-col border-t">
               {t.requirements.map((r, i) => (
                 <li key={r} className="border-ink-100 flex gap-4 border-b py-4">
-                  <span className="data text-ink-300 shrink-0 pt-0.5 text-[12px] font-semibold">
+                  <span className="data text-ink-400 shrink-0 pt-0.5 text-[12px] font-semibold">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="text-ink-700 text-[15px] leading-relaxed">{r}</span>

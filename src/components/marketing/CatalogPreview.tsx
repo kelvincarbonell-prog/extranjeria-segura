@@ -42,7 +42,7 @@ export function CatalogPreview() {
                     <span className="bg-ink-50 text-ink-700 group-hover:bg-ink-950 flex size-11 items-center justify-center rounded-[13px] transition-colors duration-400 group-hover:text-white">
                       <Glyph name={c.glyph} className="size-5" />
                     </span>
-                    <span className="data text-ink-300 text-[11.5px] font-semibold">
+                    <span className="data text-ink-400 text-[11.5px] font-semibold">
                       {String(count).padStart(2, "0")}
                     </span>
                   </div>

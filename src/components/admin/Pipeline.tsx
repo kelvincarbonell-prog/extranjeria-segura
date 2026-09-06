@@ -70,7 +70,7 @@ export function Pipeline() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar por cliente, referencia o trámite…"
             aria-label="Buscar expedientes"
-            className="bg-surface text-ink-900 placeholder:text-ink-300 h-10 w-full rounded-sm pr-3.5 pl-10 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
+            className="bg-surface text-ink-900 placeholder:text-ink-400 h-10 w-full rounded-sm pr-3.5 pl-10 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none focus:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]"
           />
         </div>
 
@@ -128,7 +128,7 @@ export function Pipeline() {
                   </span>
                 </header>
                 {value > 0 && (
-                  <p className="text-ink-300 data mb-2 px-1.5 text-[11px]">{eur(value)}</p>
+                  <p className="text-ink-400 data mb-2 px-1.5 text-[11px]">{eur(value)}</p>
                 )}
 
                 <ul className="flex flex-1 flex-col gap-2">
@@ -224,7 +224,7 @@ export function Pipeline() {
                   </AnimatePresence>
 
                   {items.length === 0 && (
-                    <li className="text-ink-300 border-ink-200 rounded-sm border border-dashed px-3 py-6 text-center text-[12px]">
+                    <li className="text-ink-400 border-ink-200 rounded-sm border border-dashed px-3 py-6 text-center text-[12px]">
                       Sin expedientes
                     </li>
                   )}

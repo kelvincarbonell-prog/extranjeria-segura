@@ -321,7 +321,7 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                         )}
                       </span>
 
-                      <kbd className="text-ink-300 bg-ink-50 hidden size-5 shrink-0 items-center justify-center rounded-[5px] text-[10.5px] font-semibold sm:flex">
+                      <kbd className="text-ink-400 bg-ink-50 hidden size-5 shrink-0 items-center justify-center rounded-[5px] text-[10.5px] font-semibold sm:flex">
                         {i + 1}
                       </kbd>
                     </motion.button>

@@ -119,7 +119,7 @@ export default function ExpedientePage() {
                   <p className="text-ink-900 text-[14px] font-medium">{n.title}</p>
                   {n.body && <p className="text-ink-500 mt-0.5 text-[12.5px]">{n.body}</p>}
                 </div>
-                <span className="data text-ink-300 shrink-0 text-[11.5px]">
+                <span className="data text-ink-400 shrink-0 text-[11.5px]">
                   {relativeES(n.at)}
                 </span>
               </li>

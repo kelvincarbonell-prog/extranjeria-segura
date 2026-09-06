@@ -149,7 +149,7 @@ export function DocumentManager() {
             Hacer una foto
           </Button>
         </div>
-        <p className="text-ink-300 mt-4 text-[11.5px]">
+        <p className="text-ink-400 mt-4 text-[11.5px]">
           Almacenamiento privado. Cada archivo se sirve con un enlace firmado que caduca.
         </p>
       </div>
