@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { lanzarNavegador } from "./navegador.mjs";
 import { mkdirSync } from "node:fs";
 
 /**
@@ -14,11 +14,7 @@ const BASE = process.env.BASE ?? "http://localhost:3130";
 const OUT = process.env.OUT ?? "/tmp/logo";
 mkdirSync(OUT, { recursive: true });
 
-// El entorno trae Chromium preinstalado con un número de build distinto al
-// que espera esta versión de Playwright. Se apunta al ejecutable real en
-// lugar de descargar otro.
-const EJECUTABLE = process.env.CHROMIUM ?? "/opt/pw-browsers/chromium";
-const browser = await chromium.launch({ executablePath: EJECUTABLE });
+const browser = await lanzarNavegador();
 const page = await browser.newPage({ viewport: { width: 1100, height: 420 }, deviceScaleFactor: 2 });
 
 // Se monta sobre la home real para heredar fuentes, tokens y CSS del sitio.

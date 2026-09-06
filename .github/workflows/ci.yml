@@ -1,8 +1,8 @@
 name: CI
 
 # Vercel despliega `main` a producción automáticamente en cada push. Este
-# workflow es la puerta que hay delante: si tipos, lint o build fallan, el
-# check queda en rojo antes de fusionar.
+# workflow es la puerta que hay delante: si tipos, lint, pruebas, build o las
+# auditorías fallan, el check queda en rojo antes de fusionar.
 #
 # Para que sea una puerta de verdad y no un semáforo decorativo, hay que
 # activar la protección de rama en GitHub:
@@ -25,9 +25,9 @@ concurrency:
 
 jobs:
   verificar:
-    name: Tipos, lint y build
+    name: Tipos, lint, pruebas y auditorías
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Descargar el repositorio
@@ -51,8 +51,46 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Pruebas
+        # Cómputo de plazos administrativos y codificación del enlace de
+        # reanudación. Es la parte del producto donde un error de un día cuesta
+        # un expediente, así que se prueba antes de compilar nada.
+        run: npm test
+
+      - name: Contraste de los tokens de color
+        # No necesita navegador ni servidor: lee globals.css y calcula. Va
+        # antes del build porque es la comprobación más barata que existe y
+        # atrapa una regresión de accesibilidad en dos segundos.
+        run: npm run audit:contraste
+
       - name: Build de producción
-        # Es la comprobación que más cosas atrapa: genera las 177 páginas
-        # estáticas, así que un error en el contenido de un trámite o en una
-        # combinación de SEO programático falla aquí y no en producción.
+        # Es la comprobación que más cosas atrapa: genera las páginas
+        # estáticas de los ocho idiomas, así que un error en el contenido de un
+        # trámite o en una combinación de SEO programático falla aquí y no en
+        # producción.
         run: npm run build
+
+      - name: Instalar Chromium para las auditorías de navegador
+        run: npx playwright install --with-deps chromium
+
+      - name: Levantar el servidor de producción
+        # `npm start` sirve exactamente el mismo build que va a producción, no
+        # el de desarrollo. Medir el de desarrollo no diría nada útil.
+        # Cada auditoría espera por su cuenta a que el servidor responda
+        # (`esperarServidor`), así que no hace falta añadir una dependencia
+        # solo para esto.
+        run: npm start -- --port 3000 &
+
+      - name: Auditoría móvil
+        # Desbordamiento horizontal y zonas táctiles a 360 y 390 px.
+        run: npm run audit:movil
+
+      - name: Auditoría de datos estructurados
+        # Comprueba que el JSON-LD es válido, que cada tipo de página emite su
+        # cobertura y que NO aparece marcado de valoraciones.
+        run: npm run audit:jsonld
+
+      - name: Auditoría del embudo
+        # Verifica que la instrumentación registra el recorrido y que en el
+        # registro no aparece ninguna respuesta del usuario.
+        run: npm run audit:embudo

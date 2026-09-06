@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { lanzarNavegador } from "./navegador.mjs";
 import { mkdirSync } from "node:fs";
 
 /** Capturas de revisión. Escritorio y móvil, sobre el build de producción. */
@@ -16,9 +16,7 @@ const RUTAS = [
   ["/opiniones", "opiniones"],
 ];
 
-const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM ?? "/opt/pw-browsers/chromium",
-});
+const browser = await lanzarNavegador();
 
 const escritorio = await browser.newPage({
   viewport: { width: 1360, height: 900 },

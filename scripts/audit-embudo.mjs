@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { lanzarNavegador, esperarServidor } from "./navegador.mjs";
 
 /**
  * Comprueba que la instrumentación del embudo registra de verdad, y —igual de
@@ -12,9 +12,8 @@ import { chromium } from "playwright";
 
 const BASE = process.env.BASE ?? "http://localhost:3000";
 
-const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM ?? "/opt/pw-browsers/chromium",
-});
+await esperarServidor(BASE);
+const browser = await lanzarNavegador();
 const page = await browser.newPage({ viewport: { width: 420, height: 900 } });
 
 await page.goto(`${BASE}/diagnostico`, { waitUntil: "networkidle" });

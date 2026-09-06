@@ -14,7 +14,11 @@
  *     nadie las añada por comodidad dentro de seis meses.
  */
 
+import { esperarServidor } from "./navegador.mjs";
+
 const BASE = process.env.BASE ?? "http://localhost:3000";
+
+await esperarServidor(BASE);
 
 /** Tipos que deben aparecer en cada ruta. */
 const ESPERADO = {

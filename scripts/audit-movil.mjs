@@ -18,7 +18,7 @@
  * de modo que puede añadirse al CI cuando interese.
  */
 
-import { chromium } from "playwright";
+import { lanzarNavegador, esperarServidor } from "./navegador.mjs";
 
 const B = process.env.BASE ?? "http://localhost:3000";
 const PAGES = [
@@ -38,7 +38,8 @@ const PAGES = [
 // in zoomed display mode). If it works there it works everywhere above.
 const WIDTHS = [360, 390];
 
-const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+await esperarServidor(B);
+const browser = await lanzarNavegador();
 const problems = [];
 
 for (const width of WIDTHS) {
