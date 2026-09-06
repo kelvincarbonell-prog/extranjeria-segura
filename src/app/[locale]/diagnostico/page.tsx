@@ -21,14 +21,21 @@ export async function generateMetadata({
 
 export default function DiagnosticoPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-dvh items-center justify-center">
-          <span className="skeleton h-2 w-40" />
-        </div>
-      }
-    >
-      <CheckWizard />
-    </Suspense>
+    // El destino del enlace «saltar al contenido» va aquí y no dentro del
+    // asistente. El asistente lee sus respuestas de `sessionStorage`, que el
+    // servidor no ve, así que en el HTML servido todavía está la puerta de
+    // carga: un id declarado dentro solo existiría después de hidratar, y
+    // quien navega con teclado pulsa el enlace antes de eso.
+    <div id="contenido">
+      <Suspense
+        fallback={
+          <div className="flex min-h-dvh items-center justify-center">
+            <span className="skeleton h-2 w-40" />
+          </div>
+        }
+      >
+        <CheckWizard />
+      </Suspense>
+    </div>
   );
 }

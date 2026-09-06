@@ -9,7 +9,7 @@ import { site, reviewedBy, OFFICIAL_SOURCES } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
 import { SectionHeading, Card, Badge, LegalNote } from "@/components/ui/primitives";
 import { Plazo } from "@/components/contenido/Plazo";
-import { FECHAS } from "@/content/regularizacion-2026";
+import { FECHAS, ESTADOS, CONSULTADO } from "@/content/regularizacion-2026";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
 import { formatDateES } from "@/lib/utils";
@@ -37,6 +37,49 @@ export async function generateMetadata({
  * any future article must meet. An empty blog with three lorem posts is worse
  * than no blog.
  */
+
+/**
+ * Entradas datadas del centro de conocimiento (A8).
+ *
+ * Se generan del contenido real —el hub de regularización y sus siete páginas
+ * de estado— en lugar de escribirse a mano. Una sección de actualidad que hay
+ * que acordarse de actualizar es una sección que en tres meses dirá que lo
+ * último que pasó fue hace tres meses.
+ *
+ * La entrada de la norma habilitante va primero y no enlaza a un artículo
+ * suelto sino al hub: es donde está el contexto completo, y crear una página
+ * de blog que repita lo que ya dice el hub sería contenido duplicado escrito
+ * por nosotros mismos.
+ */
+const ACTUALIZACIONES: {
+  fecha: string;
+  titulo: string;
+  resumen: string;
+  ruta: string;
+  etiqueta?: string;
+}[] = [
+  {
+    fecha: CONSULTADO,
+    titulo: "Regularización extraordinaria 2026: guía por estado de expediente",
+    resumen:
+      "Siete páginas, una por situación real: requerimiento, silencio, denegación, inadmisión, no presentada y concedida. Con los plazos de cada vía y la norma que los establece.",
+    ruta: "/regularizacion-2026",
+    etiqueta: "Plazo abierto",
+  },
+  {
+    fecha: CONSULTADO,
+    titulo: "Nueva calculadora de plazos de la regularización",
+    resumen:
+      "Introduces la fecha de presentación y devuelve cuándo se produce el silencio, qué recurso cabe y hasta qué día. Se ejecuta en el navegador.",
+    ruta: "/calculadoras/plazos-regularizacion",
+  },
+  ...ESTADOS.filter((e) => e.urgente).map((e) => ({
+    fecha: CONSULTADO,
+    titulo: e.titulo,
+    resumen: e.loEsencial[0],
+    ruta: `/regularizacion-2026/${e.id}`,
+  })),
+];
 
 const STANDARD = [
   {
@@ -201,6 +244,52 @@ export default function RecursosPage() {
         </div>
       </section>
 
+      {/* ---------------- Actualizaciones datadas ---------------- */}
+      <section className="pb-16">
+        <div className="container-page">
+          <div className="mb-6">
+            <h2 className="text-ink-900 font-display text-[22px] font-extrabold tracking-[-0.03em]">
+              Actualizaciones
+            </h2>
+            <p className="text-ink-500 mt-1 text-[14px]">
+              Lo que ha cambiado y cuándo. Cada entrada lleva su fecha de revisión y enlaza al
+              contenido completo.
+            </p>
+          </div>
+
+          <ul className="border-ink-100 border-t">
+            {ACTUALIZACIONES.map((a) => (
+              <li key={a.ruta} className="border-ink-100 border-b">
+                <Link
+                  href={a.ruta}
+                  className="group flex flex-col gap-1.5 py-4 sm:flex-row sm:items-baseline sm:gap-6"
+                >
+                  <time
+                    dateTime={a.fecha}
+                    className="data text-ink-400 shrink-0 text-[12.5px] sm:w-28"
+                  >
+                    {formatDateES(a.fecha, "short")}
+                  </time>
+                  <span className="min-w-0 flex-1">
+                    <span className="text-ink-900 group-hover:text-brand-700 block text-[15.5px] font-semibold tracking-[-0.015em] transition-colors">
+                      {a.titulo}
+                    </span>
+                    <span className="text-ink-500 mt-0.5 block text-[13.5px] leading-relaxed">
+                      {a.resumen}
+                    </span>
+                  </span>
+                  {a.etiqueta && (
+                    <Badge tone={a.etiqueta === "Plazo abierto" ? "warn" : "neutral"} className="shrink-0 self-start">
+                      {a.etiqueta}
+                    </Badge>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ---------------- Calculators ---------------- */}
       <section className="bg-canvas-deep py-16 md:py-20">
         <div className="container-page">
@@ -242,7 +331,9 @@ export default function RecursosPage() {
       </section>
 
       {/* ---------------- Editorial standard ---------------- */}
-      <section className="py-16 md:py-20">
+      {/* El id no es decorativo: lo enlazan la sección de opiniones y
+          llms.txt, y sin él los dos apuntaban al principio de la página. */}
+      <section id="criterio" className="scroll-mt-28 py-16 md:py-20">
         <div className="container-page">
           <Reveal>
             <SectionHeading

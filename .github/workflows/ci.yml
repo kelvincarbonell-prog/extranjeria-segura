@@ -90,6 +90,11 @@ jobs:
         # cobertura y que NO aparece marcado de valoraciones.
         run: npm run audit:jsonld
 
+      - name: Auditoría de enlaces internos
+        # 404 y anclas huérfanas. Un ancla rota no da error: da una página
+        # correcta en el sitio equivocado, así que solo se ve pulsándola.
+        run: npm run audit:enlaces
+
       - name: Auditoría de los bloques «Lo esencial»
         # La regla del bloque: cada punto se lee fuera de contexto y lleva una
         # cifra o un artículo. Es fácil de enunciar y fácil de incumplir seis

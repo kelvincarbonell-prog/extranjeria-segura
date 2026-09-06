@@ -13,7 +13,8 @@
     "audit:contraste": "node scripts/audit-contraste.mjs",
     "audit:jsonld": "node scripts/audit-jsonld.mjs",
     "audit:embudo": "node scripts/audit-embudo.mjs",
-    "audit:contenido": "node --import tsx scripts/audit-contenido.mjs"
+    "audit:contenido": "node --import tsx scripts/audit-contenido.mjs",
+    "audit:enlaces": "node scripts/audit-enlaces.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
