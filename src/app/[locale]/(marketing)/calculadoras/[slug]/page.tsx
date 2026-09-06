@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import { jsonLd, herramienta, migas } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { Link } from "@/components/ui/Link";
@@ -32,8 +33,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string; locale: Locale }>;
+}) {
+  const { slug, locale } = await params;
   const c = CALCULATOR_MAP[slug];
   if (!c) notFound();
 
@@ -116,6 +121,29 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </nav>
         </div>
       </section>
+
+      {/* La herramienta es gratuita y no pide registro: aquí el price: 0 del
+          marcado dice literalmente la verdad, que es raro en este campo. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            herramienta({
+              nombre: c.name,
+              descripcion: c.description,
+              ruta: `/calculadoras/${c.slug}`,
+              locale,
+            }),
+            migas(
+              [
+                { nombre: "Calculadoras", ruta: "/calculadoras" },
+                { nombre: c.name, ruta: `/calculadoras/${c.slug}` },
+              ],
+              locale,
+            ),
+          ),
+        }}
+      />
     </>
   );
 }

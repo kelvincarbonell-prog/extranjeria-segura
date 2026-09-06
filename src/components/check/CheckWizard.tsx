@@ -21,6 +21,7 @@ import {
   clearAnswers,
 } from "@/lib/check-store";
 import { decodificarRespuestas } from "@/lib/check-resume";
+import { registrar } from "@/lib/embudo";
 import { cn } from "@/lib/utils";
 
 type Phase = "asking" | "analysing" | "result";
@@ -90,6 +91,17 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
   React.useEffect(() => {
     saveAnswers(answers);
   }, [answers]);
+
+  // Instrumentación del embudo. Se registra el número de pregunta alcanzado,
+  // nunca la respuesta: saber que la 4 pierde gente no exige saber qué
+  // contestó nadie. Todo se queda en el dispositivo.
+  React.useEffect(() => {
+    registrar("check:inicio");
+  }, []);
+
+  React.useEffect(() => {
+    registrar("check:pregunta", index + 1);
+  }, [index]);
 
   const active = React.useMemo(() => activeQuestions(answers), [answers]);
   const question: Question | undefined = active[Math.min(index, active.length - 1)];
@@ -166,6 +178,7 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
         onDone={() => {
           setResult(evaluate(answers));
           setPhase("result");
+          registrar("check:resultado");
         }}
       />
     );

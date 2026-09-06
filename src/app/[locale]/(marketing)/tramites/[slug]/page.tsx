@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import { jsonLd, servicio, comoHacerlo, faq, articulo, migas } from "@/lib/jsonld";
+import { OFFICIAL_SOURCES } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { TRAMITES, getTramite } from "@/content/tramites";
 import { CATEGORY_MAP } from "@/content/taxonomy";
-import { site } from "@/content/site";
 import { CITIES, NATIONALITIES } from "@/content/geo";
 import { TramitePage } from "@/components/marketing/TramitePage";
 
@@ -32,8 +33,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string; locale: Locale }>;
+}) {
+  const { slug, locale } = await params;
   const t = getTramite(slug);
   if (!t) notFound();
 
@@ -56,51 +61,43 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         nationalities={nationalities}
       />
 
+      {/* Cobertura completa para una ficha: el servicio con su precio, el
+          proceso paso a paso, las preguntas frecuentes, la guía en sí y la
+          ruta de migas. Sin AggregateRating: ver la nota en lib/jsonld.ts. */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@graph": [
-              {
-                "@type": "Service",
-                name: t.name,
-                description: t.metaDescription,
-                serviceType: category.label,
-                areaServed: { "@type": "Country", name: "España" },
-                provider: { "@type": "ProfessionalService", name: site.name, url: site.url },
-                ...(t.feeFromCents !== null && {
-                  offers: {
-                    "@type": "Offer",
-                    price: (t.feeFromCents / 100).toFixed(2),
-                    priceCurrency: "EUR",
-                    description: "Honorarios profesionales desde. No incluye tasas administrativas.",
-                  },
-                }),
-              },
-              {
-                "@type": "FAQPage",
-                mainEntity: t.faqs.map((f) => ({
-                  "@type": "Question",
-                  name: f.q,
-                  acceptedAnswer: { "@type": "Answer", text: f.a },
-                })),
-              },
-              {
-                "@type": "BreadcrumbList",
-                itemListElement: [
-                  { "@type": "ListItem", position: 1, name: "Trámites", item: `${site.url}/tramites` },
-                  {
-                    "@type": "ListItem",
-                    position: 2,
-                    name: category.label,
-                    item: `${site.url}/tramites/categoria/${category.id}`,
-                  },
-                  { "@type": "ListItem", position: 3, name: t.name },
-                ],
-              },
-            ],
-          }),
+          __html: jsonLd(
+            servicio({
+              nombre: t.name,
+              descripcion: t.metaDescription,
+              precioCentimos: t.feeFromCents,
+              ruta: `/tramites/${t.slug}`,
+              locale,
+            }),
+            comoHacerlo({
+              nombre: `Cómo tramitar ${t.name.toLowerCase()}`,
+              descripcion: t.metaDescription,
+              pasos: t.process.map((paso) => ({ nombre: paso.title, texto: paso.detail })),
+            }),
+            faq(t.faqs),
+            articulo({
+              titulo: t.name,
+              descripcion: t.metaDescription,
+              ruta: `/tramites/${t.slug}`,
+              modificado: t.updatedAt,
+              locale,
+              fuentes: (t.sources ?? []).map((k) => OFFICIAL_SOURCES[k]?.label ?? k),
+            }),
+            migas(
+              [
+                { nombre: "Trámites", ruta: "/tramites" },
+                { nombre: category.label, ruta: `/tramites/categoria/${category.id}` },
+                { nombre: t.name, ruta: `/tramites/${t.slug}` },
+              ],
+              locale,
+            ),
+          ),
         }}
       />
     </>

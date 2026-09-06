@@ -3,6 +3,7 @@
 import { Link } from "@/components/ui/Link";
 import { Button } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
+import { registrar } from "@/lib/embudo";
 
 /**
  * SIGUIENTE PASO, RAMIFICADO (A10).
@@ -116,7 +117,15 @@ function Marco({
 
         {/* Una sola acción primaria. El apoyo es un enlace, no un botón. */}
         <div className="flex shrink-0 flex-col items-start gap-3 md:items-end">
-          <Button href={accion.href} size="lg" variant="inverse" arrow>
+          {/* El clic se registra con la rama, que es lo que dice si la
+              ramificación acierta con la intención. */}
+          <Button
+            href={accion.href}
+            size="lg"
+            variant="inverse"
+            arrow
+            onClick={() => registrar("check:cta", tono)}
+          >
             {accion.etiqueta}
           </Button>
           <Link

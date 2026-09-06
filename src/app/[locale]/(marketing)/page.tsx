@@ -14,6 +14,7 @@ import { SecuritySection } from "@/components/marketing/SecuritySection";
 import { PricingPreview } from "@/components/marketing/PricingPreview";
 import { SocialProof } from "@/components/marketing/SocialProof";
 import { FaqSection } from "@/components/marketing/FaqSection";
+import { jsonLd, organizacion } from "@/lib/jsonld";
 import { site } from "@/content/site";
 
 export async function generateMetadata({
@@ -31,7 +32,12 @@ export async function generateMetadata({
   });
 }
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
   return (
     <>
       <Hero />
@@ -48,21 +54,9 @@ export default function HomePage() {
       <SocialProof />
       <FaqSection />
 
-      {/* Structured data: an Organization that makes no claim we cannot evidence. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ProfessionalService",
-            name: site.name,
-            description: site.description,
-            url: site.url,
-            areaServed: { "@type": "Country", name: "España" },
-            serviceType: "Servicios jurídicos y de gestión en extranjería",
-            availableLanguage: ["es", "en"],
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(organizacion(locale)) }}
       />
     </>
   );

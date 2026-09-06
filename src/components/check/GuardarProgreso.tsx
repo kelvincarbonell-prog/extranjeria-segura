@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Answers } from "@/content/check-questions";
 import { enlaceReanudacion } from "@/lib/check-resume";
+import { registrar } from "@/lib/embudo";
 
 /**
  * PUNTO DE GUARDADO DEL DIAGNÓSTICO (A9).
@@ -29,6 +30,7 @@ export function GuardarProgreso({ answers }: { answers: Answers }) {
     const url = enlaceReanudacion(answers, window.location.origin);
     try {
       await navigator.clipboard.writeText(url);
+      registrar("check:guardado");
       setEstado("copiado");
       window.setTimeout(() => setEstado("reposo"), 2600);
     } catch {

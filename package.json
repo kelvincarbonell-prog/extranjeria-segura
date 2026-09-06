@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "audit:movil": "node scripts/audit-movil.mjs",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
-    "audit:contraste": "node scripts/audit-contraste.mjs"
+    "audit:contraste": "node scripts/audit-contraste.mjs",
+    "audit:jsonld": "node scripts/audit-jsonld.mjs",
+    "audit:embudo": "node scripts/audit-embudo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",

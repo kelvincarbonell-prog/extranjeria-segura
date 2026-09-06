@@ -19,7 +19,7 @@ import { Card, Badge } from "@/components/ui/primitives";
 import { TramiteFaq } from "@/components/marketing/TramiteFaq";
 import { BarraAccion } from "@/components/marketing/BarraAccion";
 import { IndiceLateral, ProgresoLectura } from "@/components/contenido/IndiceLateral";
-import { site } from "@/content/site";
+import { jsonLd, articulo, faq, migas } from "@/lib/jsonld";
 
 export const dynamicParams = false;
 
@@ -60,9 +60,9 @@ export async function generateMetadata({
 export default async function EstadoPage({
   params,
 }: {
-  params: Promise<{ estado: string }>;
+  params: Promise<{ estado: string; locale: Locale }>;
 }) {
-  const { estado } = await params;
+  const { estado, locale } = await params;
   const e = findEstado(estado);
   if (!e) notFound();
 
@@ -364,27 +364,25 @@ export default async function EstadoPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            {
-              "@context": "https://schema.org",
-              "@type": "Article",
-              headline: e.titulo,
-              description: e.meta,
-              dateModified: CONSULTADO,
-              inLanguage: "es-ES",
-              isAccessibleForFree: true,
-              publisher: { "@type": "Organization", name: site.name, url: site.url },
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: e.faqs.map((f) => ({
-                "@type": "Question",
-                name: f.q,
-                acceptedAnswer: { "@type": "Answer", text: f.a },
-              })),
-            },
-          ]),
+          __html: jsonLd(
+            articulo({
+              titulo: e.titulo,
+              descripcion: e.meta,
+              ruta: `/regularizacion-2026/${e.id}`,
+              modificado: CONSULTADO,
+              locale,
+              fuentes: [...new Set(fuentes.map((f) => f.fuente.norma))],
+            }),
+            faq(e.faqs),
+            migas(
+              [
+                { nombre: "Centro de conocimiento", ruta: "/recursos" },
+                { nombre: "Regularización 2026", ruta: "/regularizacion-2026" },
+                { nombre: e.comoLoVives, ruta: `/regularizacion-2026/${e.id}` },
+              ],
+              locale,
+            ),
+          ),
         }}
       />
     </>

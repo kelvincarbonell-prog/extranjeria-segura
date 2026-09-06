@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import { jsonLd, catalogoServicios, migas } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/config";
 import { ENTRY_PLANS, MANAGED_PLANS, THIRD_PARTY_COSTS, PAYMENT_TERMS } from "@/content/pricing";
 import { Glyph } from "@/components/brand/Glyph";
@@ -22,7 +23,12 @@ export async function generateMetadata({
   });
 }
 
-export default function PreciosPage() {
+export default async function PreciosPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
   return (
     <>
       <section className="relative pt-32 pb-12 md:pt-40">
@@ -317,6 +323,26 @@ export default function PreciosPage() {
           </LegalNote>
         </div>
       </section>
+
+      {/* El catálogo declara el precio solo donde hay un importe cerrado. Un
+          servicio presupuestado caso a caso va sin precio, no con un «desde»
+          que el marcado leería como precio final. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            catalogoServicios(
+              [...ENTRY_PLANS, ...MANAGED_PLANS].map((plan) => ({
+                nombre: plan.name,
+                descripcion: plan.tagline,
+                precioCentimos: plan.priceNote === "desde" ? null : plan.priceCents,
+              })),
+              locale,
+            ),
+            migas([{ nombre: "Precios", ruta: "/precios" }], locale),
+          ),
+        }}
+      />
     </>
   );
 }

@@ -17,7 +17,7 @@ import { AvisoRevision } from "@/components/contenido/AvisoRevision";
 import { Button } from "@/components/ui/Button";
 import { Card, Badge, SectionHeading } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
-import { site } from "@/content/site";
+import { jsonLd, articulo, migas } from "@/lib/jsonld";
 
 export async function generateMetadata({
   params,
@@ -44,7 +44,12 @@ export async function generateMetadata({
  * busca «no me han contestado». El selector de estado es la unidad de valor de
  * la página, y va antes que cualquier explicación.
  */
-export default function RegularizacionHub() {
+export default async function RegularizacionHub({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
   const fuentes = [
     ...Object.values(HECHOS).map((d) => ({
       fuente: d.fuente,
@@ -262,16 +267,24 @@ export default function RegularizacionHub() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            headline: "Regularización extraordinaria 2026: en qué punto está tu expediente",
-            dateModified: CONSULTADO,
-            inLanguage: "es-ES",
-            isAccessibleForFree: true,
-            publisher: { "@type": "Organization", name: site.name, url: site.url },
-            about: { "@type": "Thing", name: "Regularización extraordinaria de extranjería 2026" },
-          }),
+          __html: jsonLd(
+            articulo({
+              titulo: "Regularización extraordinaria 2026: en qué punto está tu expediente",
+              descripcion:
+                "Subsanación hasta el 30 de septiembre, silencio a los tres meses y plazos de recurso.",
+              ruta: "/regularizacion-2026",
+              modificado: CONSULTADO,
+              locale,
+              fuentes: [...new Set(fuentes.map((f) => f.fuente.norma))],
+            }),
+            migas(
+              [
+                { nombre: "Centro de conocimiento", ruta: "/recursos" },
+                { nombre: "Regularización 2026", ruta: "/regularizacion-2026" },
+              ],
+              locale,
+            ),
+          ),
         }}
       />
     </>
