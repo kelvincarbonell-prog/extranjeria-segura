@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Isotipo } from "@/components/brand/Isotipo";
+import { IsotipoAnimado } from "@/components/brand/IsotipoAnimado";
 import { CheckDraw } from "@/components/motion/primitives";
 
 /**
@@ -97,7 +97,10 @@ export function AnalysisCurtain({ onDone }: { onDone: () => void }) {
                       }}
                     />
                   ))}
-                <Isotipo className="size-14" variant="inverse" id="curtain" />
+                {/* El gesto de la marca —el camino abriéndose paso y
+                    rompiendo el arco— es literalmente lo que está pasando en
+                    esta pantalla. Aquí el logo no decora: narra. */}
+                <IsotipoAnimado size={56} variante="inverse" id="curtain" />
               </div>
 
               <h1 className="font-display text-[28px] font-extrabold tracking-[-0.035em] text-white sm:text-[34px]">

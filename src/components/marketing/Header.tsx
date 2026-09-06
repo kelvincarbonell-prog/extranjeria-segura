@@ -4,7 +4,8 @@ import * as React from "react";
 import { Link } from "@/components/ui/Link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import { Logo } from "@/components/brand/Logo";
+import { Wordmark } from "@/components/brand/Logo";
+import { IsotipoAnimado } from "@/components/brand/IsotipoAnimado";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button, IconButton } from "@/components/ui/Button";
 import { CATEGORIES } from "@/content/taxonomy";
@@ -80,9 +81,20 @@ export function Header() {
           >
             {/* Both lockups live in ONE grid cell — as separate children they
                 consumed two columns and pushed the actions onto a second row. */}
+            {/* El isotipo del encabezado es el animado y repite el gesto al
+                pasar el puntero. A este tamaño no hay profundidad —se
+                desactiva sola por debajo de 40 px— así que lo único que se ve
+                es el camino tallándose, que es la parte que significa algo. */}
             <div className="flex items-center">
-              <Logo size="sm" className="md:hidden" />
-              <Logo size="md" className="hidden md:inline-flex" />
+              <Link
+                href="/"
+                aria-label="Extranjería Segura — inicio"
+                className="inline-flex items-center gap-2 rounded-md outline-offset-4 transition-opacity hover:opacity-90 md:gap-2.5"
+              >
+                <IsotipoAnimado size={30} repetirEnHover className="md:hidden" />
+                <IsotipoAnimado size={36} repetirEnHover className="hidden md:block" />
+                <Wordmark className="text-[15px] md:text-[17px]" />
+              </Link>
             </div>
 
             {/* ---------- Desktop nav ---------- */}
