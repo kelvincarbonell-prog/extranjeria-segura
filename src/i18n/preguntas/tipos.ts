@@ -19,6 +19,11 @@ import type { Locale } from "@/i18n/config";
  *
  * ─── EL RESPALDO ES VISIBLE, NO SILENCIOSO ──────────────────────────────
  *
+ * Hoy están los ocho idiomas y el respaldo no llega a usarse en producción
+ * —lo verifica `preguntas.test.ts`—, pero se queda: una pregunta nueva en el
+ * grafo la ataja la comprobación de tipos, y un idioma nuevo en `LOCALES` lo
+ * ataja el test, pero entre que se añade uno y se traduce hay un rato.
+ *
  * Un idioma sin traducir cae al español, y el texto español se marca como
  * español (`lang="es"`, `dir="ltr"`). No es cosmético: dentro de una página
  * en árabe, una frase española sin marcar se reordena por el algoritmo bidi y
