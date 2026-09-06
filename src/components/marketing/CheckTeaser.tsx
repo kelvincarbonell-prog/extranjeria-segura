@@ -58,7 +58,7 @@ export function CheckTeaser() {
   const progress = ((step.n - 1) / 8) * 100;
 
   return (
-    <section id="immigration-check" className="relative py-20 md:py-28">
+    <section id="immigration-check" className="relative overflow-hidden py-20 md:py-28">
       <div className="container-page">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* ---- Copy ---- */}

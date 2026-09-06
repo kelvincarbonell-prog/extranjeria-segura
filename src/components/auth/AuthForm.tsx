@@ -114,7 +114,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="text-ink-400 hover:text-ink-700 text-[12.5px] font-medium transition-colors"
+                className="text-ink-400 hover:text-ink-700 tap inline-block text-[12.5px] font-medium transition-colors"
               >
                 {showPassword ? "Ocultar" : "Mostrar"}
               </button>
@@ -149,7 +149,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           <div className="flex justify-end">
             <Link
               href="/recuperar"
-              className="text-ink-500 hover:text-ink-900 text-[13px] transition-colors"
+              className="text-ink-500 hover:text-ink-900 tap inline-block text-[13px] transition-colors"
             >
               He olvidado mi contraseña
             </Link>
@@ -165,15 +165,15 @@ export function AuthForm({ mode }: { mode: Mode }) {
               onChange={(v) => setValues((s) => ({ ...s, terms: v }))}
             >
               He leído y acepto el{" "}
-              <Link href="/legal/aviso-legal" className="text-brand-600 underline underline-offset-2">
+              <Link href="/legal/aviso-legal" className="text-brand-600 tap inline-block underline underline-offset-2">
                 aviso legal
               </Link>
               , las{" "}
-              <Link href="/legal/condiciones" className="text-brand-600 underline underline-offset-2">
+              <Link href="/legal/condiciones" className="text-brand-600 tap inline-block underline underline-offset-2">
                 condiciones de contratación
               </Link>{" "}
               y la{" "}
-              <Link href="/legal/privacidad" className="text-brand-600 underline underline-offset-2">
+              <Link href="/legal/privacidad" className="text-brand-600 tap inline-block underline underline-offset-2">
                 política de privacidad
               </Link>
               .
@@ -231,14 +231,14 @@ export function AuthForm({ mode }: { mode: Mode }) {
         {mode === "signin" ? (
           <>
             ¿Aún no tienes cuenta?{" "}
-            <Link href="/crear-cuenta" className="text-brand-600 font-semibold hover:underline">
+            <Link href="/crear-cuenta" className="text-brand-600 tap inline-block font-semibold hover:underline">
               Créala aquí
             </Link>
           </>
         ) : (
           <>
             ¿Ya tienes cuenta?{" "}
-            <Link href="/entrar" className="text-brand-600 font-semibold hover:underline">
+            <Link href="/entrar" className="text-brand-600 tap inline-block font-semibold hover:underline">
               Accede
             </Link>
           </>

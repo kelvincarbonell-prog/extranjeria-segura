@@ -262,7 +262,10 @@ function AlertCard({
     <Link
       href={href}
       className={cn(
-        "flex items-start gap-3.5 rounded-lg p-4 ring-1 ring-inset transition-transform duration-300 hover:-translate-y-0.5",
+        // min-w-0 on the grid item and on the text column: without both, the
+        // truncated body sets a min-content floor and the card pushes the
+        // whole page — measured at 603px inside a 360px viewport.
+        "flex min-w-0 items-start gap-3.5 rounded-lg p-4 ring-1 ring-inset transition-transform duration-300 hover:-translate-y-0.5",
         tone === "risk"
           ? "bg-signal-risk-soft ring-signal-risk/20"
           : "bg-signal-warn-soft ring-signal-warn/20",
@@ -278,10 +281,10 @@ function AlertCard({
       >
         <Glyph name={glyph} className="size-[18px]" />
       </span>
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         <span
           className={cn(
-            "block text-[14px] font-semibold",
+            "block truncate text-[14px] font-semibold",
             tone === "risk" ? "text-signal-risk" : "text-signal-warn",
           )}
         >

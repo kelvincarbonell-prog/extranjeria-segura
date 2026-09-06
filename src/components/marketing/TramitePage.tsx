@@ -49,7 +49,7 @@ export function TramitePage({
           <nav aria-label="Migas de pan" className="mb-7">
             <ol className="text-ink-400 flex flex-wrap items-center gap-1.5 text-[13px]">
               <li>
-                <Link href="/tramites" className="hover:text-ink-900 transition-colors">
+                <Link href="/tramites" className="hover:text-ink-900 tap inline-block transition-colors">
                   Trámites
                 </Link>
               </li>
@@ -57,7 +57,7 @@ export function TramitePage({
               <li>
                 <Link
                   href={`/tramites/categoria/${category.id}`}
-                  className="hover:text-ink-900 transition-colors"
+                  className="hover:text-ink-900 tap inline-block transition-colors"
                 >
                   {category.label}
                 </Link>

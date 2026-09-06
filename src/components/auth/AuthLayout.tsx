@@ -34,13 +34,13 @@ export function AuthLayout({
         </main>
 
         <footer className="text-ink-400 mt-auto flex flex-wrap gap-x-5 gap-y-2 text-[12.5px]">
-          <Link href="/legal/privacidad" className="hover:text-ink-700 transition-colors">
+          <Link href="/legal/privacidad" className="hover:text-ink-700 tap inline-block transition-colors">
             Privacidad
           </Link>
-          <Link href="/legal/aviso-legal" className="hover:text-ink-700 transition-colors">
+          <Link href="/legal/aviso-legal" className="hover:text-ink-700 tap inline-block transition-colors">
             Aviso legal
           </Link>
-          <Link href="/seguridad" className="hover:text-ink-700 transition-colors">
+          <Link href="/seguridad" className="hover:text-ink-700 tap inline-block transition-colors">
             Seguridad
           </Link>
         </footer>

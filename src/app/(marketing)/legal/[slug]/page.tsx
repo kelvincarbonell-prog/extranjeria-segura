@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <nav aria-label="Migas de pan" className="mb-7">
           <ol className="text-ink-400 flex items-center gap-1.5 text-[13px]">
             <li>
-              <Link href="/" className="hover:text-ink-900 transition-colors">
+              <Link href="/" className="hover:text-ink-900 tap inline-block transition-colors">
                 Inicio
               </Link>
             </li>

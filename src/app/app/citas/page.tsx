@@ -102,7 +102,7 @@ export default function CitasPage() {
             Elige el tipo de consulta, el idioma y el momento que mejor te venga.
           </p>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 [&>label]:min-w-0">
             <Field label="Tipo de consulta">
               <select className="field">
                 <option>Seguimiento de mi expediente</option>
@@ -184,7 +184,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="text-ink-600 text-[12.5px] font-medium">{label}</span>
       <span
         className={cn(
-          "[&_.field]:bg-surface [&_.field]:text-ink-900 [&_.field]:h-11 [&_.field]:w-full",
+          "[&_.field]:bg-surface [&_.field]:text-ink-900 [&_.field]:h-11 [&_.field]:w-full [&_.field]:min-w-0",
           "[&_.field]:rounded-sm [&_.field]:px-3.5 [&_.field]:text-[14px] [&_.field]:outline-none",
           "[&_.field]:shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)]",
           "[&_.field:focus]:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.5)]",

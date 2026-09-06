@@ -34,7 +34,7 @@ export default function ExpedientePage() {
             {tramite && (
               <Link
                 href={`/tramites/${tramite.slug}`}
-                className="text-brand-600 hover:text-brand-800 text-[13px] font-semibold transition-colors"
+                className="text-brand-600 hover:text-brand-800 tap inline-block text-[13px] font-semibold transition-colors"
               >
                 Ver requisitos del trámite →
               </Link>

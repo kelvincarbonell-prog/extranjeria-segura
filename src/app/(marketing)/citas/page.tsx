@@ -51,10 +51,10 @@ export default function CitasPage() {
                 Elige el tipo de consulta, el idioma y el momento.
               </p>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 [&>label]:min-w-0">
                 <label className="flex flex-col gap-1.5">
                   <span className="text-ink-600 text-[12.5px] font-medium">Tipo de consulta</span>
-                  <select className="bg-surface text-ink-900 h-11 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
+                  <select className="bg-surface text-ink-900 h-11 w-full min-w-0 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
                     <option>Primera consulta sobre mi situación</option>
                     <option>Tengo un requerimiento o una denegación</option>
                     <option>Nacionalidad española</option>
@@ -64,7 +64,7 @@ export default function CitasPage() {
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-ink-600 text-[12.5px] font-medium">Idioma</span>
-                  <select className="bg-surface text-ink-900 h-11 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
+                  <select className="bg-surface text-ink-900 h-11 w-full min-w-0 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
                     {locales.filter((l) => l.ready).map((l) => (
                       <option key={l.code}>{l.native}</option>
                     ))}
@@ -73,11 +73,11 @@ export default function CitasPage() {
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-ink-600 text-[12.5px] font-medium">Fecha</span>
-                  <input type="date" className="bg-surface text-ink-900 data h-11 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none" />
+                  <input type="date" className="bg-surface text-ink-900 data h-11 w-full min-w-0 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none" />
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-ink-600 text-[12.5px] font-medium">Hora (CET)</span>
-                  <select className="bg-surface text-ink-900 data h-11 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
+                  <select className="bg-surface text-ink-900 data h-11 w-full min-w-0 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
                     <option>10:00</option>
                     <option>12:00</option>
                     <option>16:00</option>

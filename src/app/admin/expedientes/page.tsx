@@ -58,7 +58,7 @@ export default function ExpedientesPage() {
                   <td className="px-4 py-3.5">
                     <Link
                       href="/admin/pipeline"
-                      className="data text-brand-600 hover:text-brand-800 text-[12.5px] font-semibold"
+                      className="data text-brand-600 hover:text-brand-800 tap inline-block text-[12.5px] font-semibold"
                     >
                       {c.reference}
                     </Link>

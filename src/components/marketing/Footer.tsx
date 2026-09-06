@@ -87,7 +87,7 @@ export function Footer() {
                   <li key={l.href + l.label}>
                     <Link
                       href={l.href}
-                      className="text-ink-500 hover:text-ink-900 text-[13.5px] transition-colors"
+                      className="text-ink-500 hover:text-ink-900 tap inline-block text-[13.5px] transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -116,7 +116,7 @@ export function Footer() {
             <LanguageSwitcher />
             <Link
               href="/legal/cookies"
-              className="text-ink-400 hover:text-ink-900 text-[12.5px] transition-colors"
+              className="text-ink-400 hover:text-ink-900 tap inline-block text-[12.5px] transition-colors"
             >
               Preferencias de cookies
             </Link>

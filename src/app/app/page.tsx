@@ -118,7 +118,7 @@ export default function AppHome() {
               </div>
               <Link
                 href={`/tramites/${DEMO_CASE.tramiteSlug}`}
-                className="text-brand-600 hover:text-brand-800 text-[13px] font-semibold transition-colors"
+                className="text-brand-600 hover:text-brand-800 tap inline-block text-[13px] font-semibold transition-colors"
               >
                 Ver requisitos →
               </Link>
@@ -175,7 +175,7 @@ export default function AppHome() {
                 </p>
                 <Link
                   href="/app/notificaciones"
-                  className="text-brand-600 text-[12px] font-semibold"
+                  className="text-brand-600 tap inline-block text-[12px] font-semibold"
                 >
                   Ver todo
                 </Link>
@@ -209,7 +209,7 @@ export default function AppHome() {
           <Card padding="none" className="overflow-hidden">
             <div className="border-ink-100 flex items-center justify-between border-b px-5 py-4">
               <h2 className="text-ink-900 text-[15px] font-semibold">Documentos que faltan</h2>
-              <Link href="/app/documentos" className="text-brand-600 text-[13px] font-semibold">
+              <Link href="/app/documentos" className="text-brand-600 tap inline-block text-[13px] font-semibold">
                 Gestionar
               </Link>
             </div>

@@ -32,8 +32,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-canvas min-h-dvh">
       <header className="bg-surface border-ink-100 sticky top-0 z-40 border-b">
-        <div className="flex h-14 items-center gap-4 px-4 sm:px-6">
-          <Logo size="sm" href="/admin" />
+        <div className="flex h-14 min-w-0 items-center gap-3 px-4 sm:gap-4 sm:px-6">
+          {/* On a phone the wordmark costs 130px that the role switcher needs. */}
+          <Logo size="sm" href="/admin" showWordmark={false} className="sm:hidden" />
+          <Logo size="sm" href="/admin" className="hidden sm:inline-flex" />
           <span className="bg-ink-950 hidden rounded-full px-2.5 py-1 text-[10.5px] font-bold tracking-[0.08em] text-white uppercase sm:inline">
             Interno
           </span>
@@ -70,7 +72,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex min-w-0 shrink items-center gap-2 sm:gap-3">
             <DemoTag className="hidden sm:inline-flex" />
             <label className="flex items-center gap-2">
               <span className="text-ink-400 hidden text-[12px] sm:inline">Ver como</span>
@@ -78,7 +80,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
                 aria-label="Cambiar el rol con el que se visualiza el panel"
-                className="bg-surface text-ink-800 h-9 rounded-[10px] px-2.5 text-[13px] font-medium shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none"
+                className="bg-surface text-ink-800 h-9 min-w-0 max-w-[140px] rounded-[10px] px-2.5 text-[13px] font-medium shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none sm:max-w-none"
               >
                 {ROLES.filter((r) => r.id !== "cliente").map((r) => (
                   <option key={r.id} value={r.id}>

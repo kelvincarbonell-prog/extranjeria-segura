@@ -113,7 +113,7 @@ export function Onboarding() {
       <header className="border-ink-100 bg-surface border-b">
         <div className="container-page flex h-16 items-center justify-between">
           <Logo size="sm" />
-          <Link href="/app" className="text-ink-500 hover:text-ink-900 text-[13.5px] transition-colors">
+          <Link href="/app" className="text-ink-500 hover:text-ink-900 tap inline-block text-[13.5px] transition-colors">
             Ir a mi expediente →
           </Link>
         </div>

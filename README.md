@@ -20,10 +20,16 @@ panel interno se sirven en **modo demostración**, identificado como tal en cada
 pantalla. Al configurar Supabase, la autenticación real se activa sola.
 
 ```bash
-npm run build      # compilación de producción
-npm run typecheck  # tsc --noEmit
-npm run lint       # eslint
+npm run build        # compilación de producción
+npm run typecheck    # tsc --noEmit
+npm run lint         # eslint
+npm run audit:movil  # desbordamientos y zonas táctiles a 360 y 390 px
 ```
+
+`audit:movil` necesita el servidor levantado. Comprueba, en las 32 rutas y a
+dos anchos, que ningún elemento ensancha el viewport de maquetación y que
+ninguna zona táctil baja de los 24×24 px que exige WCAG 2.2 AA. Sale con
+código 1 si hay desbordamiento, de modo que puede añadirse al CI.
 
 ### Base de datos
 
@@ -199,6 +205,12 @@ El área privada tiene una barra inferior propia con los cinco destinos que
 importan en un teléfono y un botón flotante contextual que cambia con el estado
 del expediente. Ambas versiones comparten el mismo árbol de rutas: nada queda
 inalcanzable en ninguna de las dos.
+
+El móvil se **mide**, no se mira: `npm run audit:movil` recorre las 32 rutas a
+360 y 390 px. Es como se descubrió que `/admin` se servía a 619 px en un
+dispositivo de 360 —un 58 % de zoom, ilegible— por una tarjeta que no podía
+encogerse por debajo de su texto. Ese fallo no aparece en una captura de
+escritorio ni en el inspector del navegador si no se emula el dispositivo.
 
 ### 7. SEO programático sin páginas basura
 

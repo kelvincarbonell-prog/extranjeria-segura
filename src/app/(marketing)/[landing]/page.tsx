@@ -69,13 +69,13 @@ export default async function Page({ params }: { params: Promise<{ landing: stri
           <nav aria-label="Migas de pan" className="mb-7">
             <ol className="text-ink-400 flex flex-wrap items-center gap-1.5 text-[13px]">
               <li>
-                <Link href="/tramites" className="hover:text-ink-900 transition-colors">
+                <Link href="/tramites" className="hover:text-ink-900 tap inline-block transition-colors">
                   Trámites
                 </Link>
               </li>
               <li aria-hidden>/</li>
               <li>
-                <Link href={`/tramites/${t.slug}`} className="hover:text-ink-900 transition-colors">
+                <Link href={`/tramites/${t.slug}`} className="hover:text-ink-900 tap inline-block transition-colors">
                   {t.shortName ?? t.name}
                 </Link>
               </li>
