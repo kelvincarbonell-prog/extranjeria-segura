@@ -24,6 +24,17 @@ export interface CalculatorMeta {
 
 export const CALCULATORS: CalculatorMeta[] = [
   {
+    // Va primera a propósito: es la única de las cinco con una fecha de
+    // caducidad real encima, y la que más gente necesita ahora mismo.
+    slug: "plazos-regularizacion",
+    name: "Calculadora de plazos de la regularización",
+    tagline: "Cuándo vence tu silencio y hasta cuándo puedes recurrir.",
+    description:
+      "Introduce la fecha en que presentaste tu solicitud de regularización extraordinaria y obtén el mapa completo de plazos: cuándo se produce el silencio administrativo, qué vía de recurso cabe y hasta qué día, con la norma citada en cada una. Se calcula en tu navegador: ninguna fecha sale de tu dispositivo.",
+    glyph: "clock",
+    ready: true,
+  },
+  {
     slug: "schengen-90-180",
     name: "Calculadora Schengen 90/180",
     tagline: "Cuántos días de estancia te quedan, contados bien.",

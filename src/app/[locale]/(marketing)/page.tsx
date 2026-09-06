@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import type { Locale } from "@/i18n/config";
 import { Hero } from "@/components/marketing/Hero";
+import { AvisoActualidad } from "@/components/marketing/AvisoActualidad";
 import { TrustStrip } from "@/components/marketing/TrustStrip";
 import { NeedsFinder } from "@/components/marketing/NeedsFinder";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
@@ -34,6 +35,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <AvisoActualidad />
       <TrustStrip />
       <NeedsFinder />
       <CheckTeaser />

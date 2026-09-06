@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "audit:movil": "node scripts/audit-movil.mjs"
+    "audit:movil": "node scripts/audit-movil.mjs",
+    "test": "node --import tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.6",
@@ -31,6 +32,7 @@
     "eslint-config-next": "16.3.4",
     "playwright": "^1.63.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   },
   "description": "Plataforma digital de extranjería — Extranjería Segura"

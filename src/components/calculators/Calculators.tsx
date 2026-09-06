@@ -17,6 +17,7 @@ import { Card, Badge, LegalNote, Progress } from "@/components/ui/primitives";
 import { Button, IconButton } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
 import { eur, formatDateES, cn } from "@/lib/utils";
+import { PlazosRegularizacion } from "./PlazosRegularizacion";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -536,6 +537,8 @@ function DateField({
 
 export function CalculatorRenderer({ slug }: { slug: string }) {
   switch (slug) {
+    case "plazos-regularizacion":
+      return <PlazosRegularizacion />;
     case "schengen-90-180":
       return <SchengenCalculator />;
     case "tiempo-nacionalidad":

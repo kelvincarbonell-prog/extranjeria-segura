@@ -8,6 +8,8 @@ import { CATEGORIES } from "@/content/taxonomy";
 import { site, reviewedBy, OFFICIAL_SOURCES } from "@/content/site";
 import { Glyph } from "@/components/brand/Glyph";
 import { SectionHeading, Card, Badge, LegalNote } from "@/components/ui/primitives";
+import { Plazo } from "@/components/contenido/Plazo";
+import { FECHAS } from "@/content/regularizacion-2026";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
 import { formatDateES } from "@/lib/utils";
@@ -39,8 +41,12 @@ export async function generateMetadata({
 const STANDARD = [
   {
     glyph: "shield",
-    title: "Revisado por un profesional",
-    body: "Ningún contenido jurídico se publica sin que un profesional lo firme. La firma y la fecha aparecen en la propia página.",
+    // Este texto decía «ningún contenido se publica sin que un profesional lo
+    // firme», y hoy no hay ninguna firma nominal en el sitio. Describir como
+    // hecho consumado lo que todavía es un compromiso es exactamente lo que
+    // este apartado dice no hacer.
+    title: "Responsabilidad editorial identificada",
+    body: "Cada página dice quién responde de ella y desde cuándo. Cuando un profesional colegiado firma un contenido a título personal, su nombre y su número aparecen en la propia página.",
   },
   {
     glyph: "doc",
@@ -102,6 +108,46 @@ export default function RecursosPage() {
               </span>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ----- Actualidad: lo que tiene plazo corriendo va primero ----- */}
+      <section className="pb-14">
+        <div className="container-page">
+          <Link href="/regularizacion-2026" className="group block">
+            <Card className="hover:border-brand-300/60 p-6 transition-colors sm:p-7">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge tone="warn" dot>
+                  Plazo abierto
+                </Badge>
+                <Plazo
+                  fecha={FECHAS.finSubsanacion}
+                  etiqueta="para subsanar"
+                  compacto
+                />
+              </div>
+              <h2 className="text-ink-900 group-hover:text-brand-700 font-display mt-4 text-[22px] font-extrabold tracking-[-0.03em] transition-colors">
+                Regularización extraordinaria 2026
+              </h2>
+              <p className="text-ink-600 mt-2 max-w-2xl text-[15px] leading-relaxed">
+                Se presentaron más de un millón de solicitudes y la fase que corre ahora es la de
+                seguimiento. Siete guías, una por estado de expediente, con los plazos de cada vía
+                y la norma que los establece.
+              </p>
+              <span className="text-brand-700 mt-4 inline-flex items-center gap-1 text-[13.5px] font-medium">
+                Ver en qué punto está tu expediente
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden>
+                  <path
+                    d="M6 3.5 10.5 8 6 12.5"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </Card>
+          </Link>
         </div>
       </section>
 
