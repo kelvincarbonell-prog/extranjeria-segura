@@ -164,20 +164,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
               error={errors.terms}
               onChange={(v) => setValues((s) => ({ ...s, terms: v }))}
             >
-              He leído y acepto el{" "}
-              <Link href="/legal/aviso-legal" className="text-brand-600 tap inline-block underline underline-offset-2">
-                aviso legal
-              </Link>
-              , las{" "}
-              <Link href="/legal/condiciones" className="text-brand-600 tap inline-block underline underline-offset-2">
-                condiciones de contratación
-              </Link>{" "}
-              y la{" "}
-              <Link href="/legal/privacidad" className="text-brand-600 tap inline-block underline underline-offset-2">
-                política de privacidad
-              </Link>
-              .
+              He leído y acepto el aviso legal, las condiciones de contratación y la política de
+              privacidad.
             </Checkbox>
+            <DocumentosLegales />
             <Checkbox
               id="marketing"
               checked={values.marketing}
@@ -307,6 +297,85 @@ function Field({
   );
 }
 
+const LEGALES = [
+  { href: "/legal/aviso-legal", texto: "Aviso legal" },
+  { href: "/legal/condiciones", texto: "Condiciones de contratación" },
+  { href: "/legal/privacidad", texto: "Política de privacidad" },
+] as const;
+
+/**
+ * LOS TRES DOCUMENTOS, FUERA DE LA ETIQUETA Y EN PESTAÑA NUEVA.
+ *
+ * Estos enlaces vivían dentro del texto de la casilla de consentimiento, y
+ * eso rompía la pantalla de tres formas distintas a la vez:
+ *
+ * 1. LOS ENLACES ROBABAN EL TOQUE. Llevaban la utilidad `tap`, que en puntero
+ *    grueso añade 8 px de relleno arriba y abajo, e `inline-block`, que
+ *    convierte ese relleno en zona táctil real. Resultado medido en un móvil
+ *    de 390 px: cajas de 37,1 px dentro de líneas de 24 px. «aviso legal»
+ *    ocupaba de 511 a 548 y «condiciones de contratación» de 532 a 569 — se
+ *    solapaban entre sí 16 px y ambos tapaban la línea vecina. Tocar las
+ *    palabras «He leído y acepto el» activaba el enlace de la línea de abajo
+ *    y te sacaba de la pantalla. No era un fallo teórico: es lo que le pasaba
+ *    a cualquiera que intentase marcar la casilla.
+ *
+ *    WCAG 2.5.8 exime expresamente a los enlaces incrustados en un texto
+ *    corrido del mínimo de 24×24 px. `tap` ahí no hacía falta y hacía daño.
+ *
+ * 2. ERAN CONTENIDO INTERACTIVO DENTRO DE UN `<label>`. La especificación de
+ *    HTML lo prohíbe, y los navegadores hacen las dos cosas: navegan y de
+ *    paso marcan la casilla. Nadie da un consentimiento a propósito así.
+ *
+ * 3. LEER LAS CONDICIONES COSTABA EL FORMULARIO. Al navegar se perdían el
+ *    nombre, el correo y la contraseña ya escritos. Eso no es una molestia:
+ *    es lo que enseña a la gente a aceptar sin leer, en el formulario que
+ *    precede a subir un pasaporte.
+ *
+ * Por eso se abren en pestaña nueva y no se «guarda y restaura» el
+ * formulario: guardarlo significaría escribir una contraseña en
+ * `sessionStorage`, que es un fallo de seguridad de verdad a cambio de una
+ * comodidad. La pestaña nueva deja la contraseña donde está, en memoria.
+ */
+function DocumentosLegales() {
+  // Sin `tap` y con relleno propio: estos enlaces se ajustan a dos filas en una
+  // pantalla estrecha, y el margen negativo de `tap` se comía la separación
+  // entre ellas —7 px de solape medidos—. Aquí el alto sale de relleno de
+  // verdad, que sí reserva su espacio.
+  return (
+    <ul className="ml-[30px] flex flex-wrap gap-x-4 gap-y-1.5">
+      {LEGALES.map((d) => (
+        <li key={d.href}>
+          <Link
+            href={d.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-600 hover:text-brand-800 inline-flex items-center gap-1 py-1 text-[12.5px] underline underline-offset-2 transition-colors"
+          >
+            {d.texto}
+            <svg viewBox="0 0 12 12" width="9" height="9" fill="none" aria-hidden="true">
+              <path
+                d="M4 2h6v6M10 2 2.5 9.5"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {/* WCAG 3.2.5: avisar de que se abre fuera. La flecha lo dice para
+                quien ve; esto lo dice para quien escucha. */}
+            <span className="sr-only"> (se abre en una pestaña nueva)</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * `children` debe ser texto, nunca enlaces ni botones: un `<label>` con
+ * contenido interactivo dentro navega y marca la casilla en el mismo toque.
+ * Es lo que rompía el consentimiento de alta —ver `DocumentosLegales`—.
+ */
 function Checkbox({
   id,
   checked,

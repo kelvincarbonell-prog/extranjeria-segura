@@ -144,6 +144,68 @@ for (const width of WIDTHS) {
           }
         }
 
+        // 3. Zonas táctiles que se pisan entre sí.
+        //
+        // El punto 2 vigila lo pequeño. Este vigila lo contrario, que es peor
+        // porque no se ve: dos objetivos cuyas cajas se solapan. El de encima
+        // en el orden de pintado se lleva los toques del otro, y no hay nada
+        // en pantalla que lo insinúe.
+        //
+        // Pasó de verdad en la casilla de consentimiento del alta. Los enlaces
+        // legales iban dentro del texto con la utilidad `tap` —8 px de relleno
+        // vertical en puntero grueso— e `inline-block`, que convierte ese
+        // relleno en zona táctil. Medido a 390 px: cajas de 37,1 px en líneas
+        // de 24. «aviso legal» ocupaba de 511 a 548 y «condiciones de
+        // contratación» de 532 a 569: 16 px de solape. Tocar las palabras
+        // «He leído y acepto» abría las condiciones y sacaba al usuario del
+        // formulario a medio rellenar.
+        //
+        // La comprobación es el solape, no la altura. Un chip o una celda de
+        // tabla también son más altos que su renglón y están perfectamente:
+        // están solos. Lo que rompe una pantalla es que dos objetivos ocupen
+        // el mismo píxel.
+        // Una barra fija —la navegación inferior del móvil— se superpone al
+        // contenido que pasa por debajo, y eso es su trabajo: el contenido se
+        // desplaza y ella no. Comparar una capa con la otra da un solape en
+        // cada página y ninguno es un fallo. Solo se comparan objetivos de la
+        // misma capa.
+        const enCapaFija = (el) => {
+          for (let p = el; p && p !== document.body; p = p.parentElement) {
+            const pos = getComputedStyle(p).position;
+            if (pos === "fixed" || pos === "sticky") return true;
+          }
+          return false;
+        };
+
+        const objetivos = [...document.querySelectorAll('a, button, [role="button"]')]
+          .filter((el) => !el.classList.contains("sr-only") && !el.closest(".sr-only"))
+          .map((el) => ({ el, r: el.getBoundingClientRect(), fija: enCapaFija(el) }))
+          .filter(({ r }) => r.width > 0 && r.height > 0)
+          .filter(({ el }) => getComputedStyle(el).visibility !== "hidden");
+
+        for (let i = 0; i < objetivos.length; i++) {
+          for (let j = i + 1; j < objetivos.length; j++) {
+            const a = objetivos[i];
+            const b = objetivos[j];
+            if (a.fija !== b.fija) continue;
+            // Un objetivo dentro de otro es una decisión, no un accidente.
+            if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
+
+            const solapeX = Math.min(a.r.right, b.r.right) - Math.max(a.r.left, b.r.left);
+            const solapeY = Math.min(a.r.bottom, b.r.bottom) - Math.max(a.r.top, b.r.top);
+            // Un píxel de rozamiento por redondeo no es un problema; que uno
+            // tape la mitad del otro, sí.
+            if (solapeX <= 1 || solapeY <= 1) continue;
+
+            out.overlap.push({
+              a: (a.el.textContent ?? "").trim().slice(0, 30),
+              b: (b.el.textContent ?? "").trim().slice(0, 30),
+              px: `${Math.round(solapeX)}×${Math.round(solapeY)}`,
+              cls: (a.el.className?.toString?.() ?? "").slice(0, 60),
+            });
+          }
+        }
+
         return out;
       }, width);
 
@@ -164,8 +226,23 @@ for (const width of WIDTHS) {
         return true;
       });
 
-      if (report.overflow > 1 || tiny.length) {
-        problems.push({ width, path, overflow: report.overflow, offenders: offenders.slice(0, 5), tiny: tiny.slice(0, 6) });
+      const overSeen = new Set();
+      const overlap = report.overlap.filter((o) => {
+        const k = `${o.a}|${o.b}`;
+        if (overSeen.has(k)) return false;
+        overSeen.add(k);
+        return true;
+      });
+
+      if (report.overflow > 1 || tiny.length || overlap.length) {
+        problems.push({
+          width,
+          path,
+          overflow: report.overflow,
+          offenders: offenders.slice(0, 5),
+          tiny: tiny.slice(0, 6),
+          overlap: overlap.slice(0, 6),
+        });
       }
     } catch (e) {
       problems.push({ width, path, error: String(e).split("\n")[0].slice(0, 120) });
@@ -175,8 +252,6 @@ for (const width of WIDTHS) {
 }
 
 await browser.close();
-
-const overflowing = problems.filter((p) => (p.overflow ?? 0) > 1 || p.error);
 
 if (!problems.length) {
   console.log("Sin problemas detectados en 360 y 390 px.");
@@ -195,10 +270,24 @@ if (!problems.length) {
       console.log(`   ZONAS TÁCTILES POR DEBAJO DE 24×24 (${p.tiny.length}):`);
       for (const t of p.tiny) console.log(`     <${t.tag}> ${t.w}x${t.h}  "${t.label}"`);
     }
+    if (p.overlap.length) {
+      console.log(`   ZONAS TÁCTILES QUE SE PISAN (${p.overlap.length}):`);
+      for (const o of p.overlap) {
+        console.log(`     ${o.px}px de solape:  "${o.a}"  ⟷  "${o.b}"`);
+        console.log(`        ${o.cls}`);
+      }
+    }
   }
 }
 
-if (overflowing.length) {
-  console.log(`\n${overflowing.length} ruta(s) con desbordamiento horizontal.`);
+// Las tres cosas fallan el build. Una zona táctil que invade el renglón vecino
+// se lleva toques que no son suyos: es un fallo funcional, no de estilo.
+const fallos = problems.filter(
+  (p) => (p.overflow ?? 0) > 1 || p.error || p.tiny?.length || p.overlap?.length,
+);
+
+if (fallos.length) {
+  const rutas = new Set(fallos.map((p) => p.path));
+  console.log(`\n${rutas.size} ruta(s) con problemas en móvil.`);
   process.exit(1);
 }

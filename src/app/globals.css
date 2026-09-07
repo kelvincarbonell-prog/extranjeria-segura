@@ -369,12 +369,46 @@ html:lang(ar) .text-display-lg {
   unicode-bidi: isolate;
 }
 
+/**
+ * ZONA TÁCTIL AMPLIADA PARA UN ENLACE DE TEXTO.
+ *
+ * Un enlace de 13,5 px mide unos 20 px de alto: por debajo de los 24×24 que
+ * exige WCAG 2.5.8. Esto se los da sin cambiar el tamaño de la letra.
+ *
+ * ─── POR QUÉ EL MARGEN NEGATIVO ES LA MITAD DEL RELLENO ─────────────────
+ *
+ * Antes el margen anulaba el relleno entero (`padding: .5rem` con
+ * `margin: -.5rem`), y eso significa tomar espacio sin reservarlo: la caja
+ * táctil crecía 8 px por lado hacia fuera, sobre lo que hubiera al lado. Dos
+ * enlaces apilados separados por menos de 16 px se solapaban, y en el solape
+ * gana el que se pinte encima. Medido: los enlaces del pie se pisaban 2 px
+ * unos a otros en todas las páginas del sitio.
+ *
+ * Es justo lo contrario de lo que persigue el criterio que lo motivó: 2.5.8
+ * se cumple con 24×24 *o* con separación suficiente entre objetivos, y un
+ * objetivo que invade a su vecino no cumple ninguna de las dos.
+ *
+ * Con el margen a la mitad, cada enlace reserva 4 px reales por lado y solo
+ * desborda otros 4. Dos enlaces pegados quedan tocándose, nunca encima.
+ *
+ * ─── DÓNDE NO USARLO ────────────────────────────────────────────────────
+ *
+ * Nunca en un enlace incrustado en un texto corrido de varias líneas. Ahí el
+ * espacio entre renglones es de 3 o 4 px y cualquier desbordamiento vertical
+ * invade la línea de al lado: en la casilla de consentimiento del alta, tocar
+ * «He leído y acepto» abría las condiciones de contratación. WCAG 2.5.8 exime
+ * expresamente a los enlaces dentro de un texto corrido del mínimo de tamaño,
+ * así que ahí esta utilidad no hace falta y hace daño.
+ *
+ * Lo comprueba `npm run audit:movil`, que falla si dos zonas táctiles de la
+ * misma capa se solapan.
+ */
 @utility tap {
   padding-block: 0.375rem;
-  margin-block: -0.375rem;
+  margin-block: -0.1875rem;
   @media (pointer: coarse) {
     padding-block: 0.5rem;
-    margin-block: -0.5rem;
+    margin-block: -0.25rem;
   }
 }
 
