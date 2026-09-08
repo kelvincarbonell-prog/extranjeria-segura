@@ -19,7 +19,7 @@ export async function generateMetadata({
     locale,
     path: "/precios",
     title: "Precios",
-    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta desde 39 €, revisión documental 79 € y gestión integral desde 299 €. Con lo que no está incluido, junto al precio.",
+    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta 39 €, revisión documental 79 € y gestión integral desde 359 €. El resto de trámites, presupuesto a medida. Con lo que no está incluido, junto al precio.",
   });
 }
 
@@ -212,6 +212,15 @@ export default async function PreciosPage({
                     )}
                     {p.priceCents !== null ? eur(p.priceCents) : "A medida"}
                   </p>
+                  {/* «A medida» a secas se lee como «no te lo digo». Decir de
+                      qué depende y cuándo llega el número lo convierte en una
+                      respuesta. */}
+                  {p.priceCents === null && (
+                    <p className="text-ink-500 mt-2 text-[12.5px] leading-relaxed">
+                      El importe depende del alcance real de tu caso. Sale del diagnóstico, que es
+                      gratuito, y se cierra por escrito antes de empezar.
+                    </p>
+                  )}
 
                   <Divider className="my-5" />
 

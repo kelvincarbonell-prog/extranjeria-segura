@@ -1,12 +1,30 @@
 /**
- * PRICING.
+ * HONORARIOS.
  *
- * Amounts are in cents and are the single source of truth for the site.
- * When the Stripe integration is enabled these become Stripe Price lookup
- * keys; until then nothing on the site can display a price that is not here.
+ * Los importes van en céntimos y son la única fuente de verdad del sitio.
+ * Cuando se active la integración con Stripe pasan a ser claves de búsqueda
+ * de Price; hasta entonces, nada en el sitio puede mostrar un precio que no
+ * esté aquí.
  *
- * Every plan must declare `excludes`. A price without an exclusions list is
- * a surprise cost waiting to happen, and this product does not do those.
+ * Todo plan declara `excludes`. Un precio sin lista de exclusiones es un
+ * sobrecoste esperando a aparecer, y este producto no hace eso.
+ *
+ * ─── CUATRO LÍNEAS CON PRECIO CERRADO, EL RESTO A MEDIDA ────────────────
+ *
+ * Solo cuatro servicios publican importe: arraigo, nacionalidad, nómada
+ * digital y renovaciones. Son las cuatro vías con volumen suficiente para
+ * que el despacho sepa lo que cuesta tramitarlas de verdad, y donde está
+ * toda la inversión de contenido del sitio.
+ *
+ * Los otros dos —familia y recursos— salen a presupuesto. No es una forma
+ * elegante de esconder el precio: es que el alcance real de una reagrupación
+ * o de un recurso depende de cosas que no se saben antes de leer el
+ * expediente, y publicar un «desde» que luego se dobla es exactamente la
+ * práctica que este producto dice combatir. Antes que un número que va a
+ * cambiar, ninguno.
+ *
+ * Lo mismo vale para las fichas de trámite: solo llevan honorarios las que
+ * caen dentro de estas cuatro líneas. Ver la nota en `tramites.ts`.
  */
 
 export interface Plan {
@@ -95,7 +113,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "arraigo",
     name: "Arraigo",
     tagline: "Gestión integral de cualquier modalidad de arraigo.",
-    priceCents: 44900,
+    priceCents: 53900,
     priceNote: "desde",
     featured: true,
     includes: [
@@ -121,7 +139,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "nacionalidad",
     name: "Nacionalidad española",
     tagline: "Auditoría de residencia, expediente y seguimiento hasta la jura.",
-    priceCents: 39900,
+    priceCents: 47900,
     priceNote: "desde",
     includes: [
       "Auditoría de años de residencia legal y ausencias",
@@ -144,7 +162,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "nomada",
     name: "Nómada digital",
     tagline: "Teletrabajo internacional, para ti y para tu familia.",
-    priceCents: 74900,
+    priceCents: 89900,
     priceNote: "desde",
     includes: [
       "Estrategia: visado consular o autorización desde España",
@@ -168,8 +186,10 @@ export const MANAGED_PLANS: Plan[] = [
     id: "familia",
     name: "Familia",
     tagline: "Reagrupación familiar y régimen comunitario.",
-    priceCents: 39900,
-    priceNote: "desde",
+    // A medida: el alcance depende del régimen aplicable, de cuántos
+    // familiares entran y de si hace falta informe de vivienda. Un «desde»
+    // aquí sería un número que cambia en la primera llamada.
+    priceCents: null,
     includes: [
       "Diagnóstico del vínculo y del régimen aplicable",
       "Gestión del informe de vivienda cuando proceda",
@@ -182,15 +202,14 @@ export const MANAGED_PLANS: Plan[] = [
       "Informe de vivienda si el ayuntamiento lo tarifa",
       "Traducciones juradas y apostillas",
     ],
-    cta: { label: "Comprobar mi encaje", href: "/diagnostico" },
-    stripeLookupKey: "gestion_familia",
+    cta: { label: "Solicitar presupuesto", href: "/diagnostico" },
     glyph: "family",
   },
   {
     id: "renovacion",
     name: "Renovaciones y TIE",
     tagline: "Que una fecha no te devuelva a la casilla de salida.",
-    priceCents: 29900,
+    priceCents: 35900,
     priceNote: "desde",
     includes: [
       "Auditoría de cotizaciones y de tu vida laboral",
@@ -208,8 +227,10 @@ export const MANAGED_PLANS: Plan[] = [
     id: "recursos",
     name: "Recursos y requerimientos",
     tagline: "Cuando la Administración responde y hay poco tiempo.",
-    priceCents: 19900,
-    priceNote: "desde",
+    // A medida: no cuesta lo mismo contestar un requerimiento de dos
+    // documentos que fundamentar una alzada contra una denegación motivada.
+    // El importe sale del análisis de viabilidad, que es gratuito.
+    priceCents: null,
     includes: [
       "Análisis de viabilidad honesto antes de cobrarte el recurso",
       "Lectura urgente de la notificación en 24 h",
@@ -222,7 +243,6 @@ export const MANAGED_PLANS: Plan[] = [
       "Traducciones juradas",
     ],
     cta: { label: "Tengo un requerimiento", href: "/diagnostico?objetivo=requerimiento" },
-    stripeLookupKey: "gestion_recursos",
     glyph: "scales",
   },
 ];
@@ -262,6 +282,7 @@ export const THIRD_PARTY_COSTS = [
 
 export const PAYMENT_TERMS = [
   "Presupuesto cerrado por escrito antes de empezar. Si el alcance cambia, se acuerda contigo antes.",
+  "Publicamos precio en las cuatro vías que tramitamos con volumen suficiente para comprometerlo. En el resto damos presupuesto tras el diagnóstico, en lugar de un «desde» que habría que corregir al alza.",
   "Puedes pagar en una sola vez o fraccionado en dos plazos, sin coste adicional.",
   "El importe de la consulta inicial se descuenta si contratas la gestión.",
   "Si tras el análisis de viabilidad tu caso no tiene recorrido, te lo decimos antes de cobrarte el trámite.",

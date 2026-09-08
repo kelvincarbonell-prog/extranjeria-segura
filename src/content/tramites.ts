@@ -10,6 +10,27 @@ import type { Tramite } from "./taxonomy";
  *
  * Referencia normativa de base: LO 4/2000, RD 1155/2024 (Reglamento de
  * Extranjería), Ley 14/2013 y Código Civil para nacionalidad.
+ *
+ * ─── QUÉ FICHA PUBLICA HONORARIOS Y CUÁL NO ─────────────────────────────
+ *
+ * Las 25 vías siguen aquí con su ficha completa: quien busca «tarjeta de
+ * familiar de comunitario» encuentra requisitos, documentos y plazos igual
+ * que antes. Lo que cambia es el precio.
+ *
+ * Solo llevan `feeFromCents` las fichas que caen dentro de una de las cuatro
+ * líneas de servicio con precio cerrado —arraigo, nómadas, nacionalidad y
+ * renovaciones, ver `pricing.ts`—. Son once. Las catorce restantes van con
+ * `feeFromCents: null`, que la interfaz muestra como «Presupuesto a medida».
+ *
+ * El motivo no es comercial sino de honestidad operativa: el despacho solo
+ * puede comprometer un importe en las vías que tramita con volumen suficiente
+ * para saber lo que cuestan. Publicar «desde 749 €» en un trámite que todavía
+ * no se ha hecho veinte veces es prometer un número que se va a corregir en
+ * la primera llamada, y un precio que se corrige al alza destruye más
+ * confianza de la que ganó al publicarse.
+ *
+ * Una ficha sin honorarios no es una ficha incompleta: es una ficha que no
+ * miente sobre lo que no sabe.
  */
 
 const REVIEW = "2026-09-05";
@@ -61,7 +82,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación telemática", detail: "Presentamos el expediente y te damos el justificante y el número.", actor: "extranjeria-segura", duration: "24 h" },
       { title: "Resolución", detail: "Seguimos el expediente y respondemos a cualquier requerimiento.", actor: "administracion", duration: "Según oficina" },
     ],
-    feeFromCents: 44900,
+    feeFromCents: 53900,
     timeframe: "Los plazos de resolución varían según la Oficina de Extranjería. Te damos una estimación concreta para tu provincia en el diagnóstico.",
     adminFeesNote:
       "Las tasas administrativas (modelo 790) no están incluidas y se abonan directamente a la Administración. Tampoco se incluyen traducciones juradas, apostillas ni desplazamientos.",
@@ -120,7 +141,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación telemática y entrega del justificante.", actor: "extranjeria-segura" },
       { title: "Resolución y TIE", detail: "Seguimiento hasta la resolución y cita de huellas.", actor: "administracion" },
     ],
-    feeFromCents: 44900,
+    feeFromCents: 53900,
     timeframe: "El informe de arraigo tiene su propio plazo, que se suma al del expediente principal. Te damos la estimación de tu comunidad autónoma.",
     adminFeesNote: "No incluye tasas, informe de arraigo si la CCAA lo tarifa, traducciones ni apostillas.",
     faqs: [
@@ -172,7 +193,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación telemática.", actor: "extranjeria-segura" },
       { title: "Seguimiento formativo", detail: "Te recordamos las obligaciones de aprovechamiento del curso.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 44900,
+    feeFromCents: 53900,
     timeframe: "Plazo de resolución variable por oficina. La formación tiene sus propios hitos que debes cumplir.",
     adminFeesNote: "No incluye tasas, matrícula del curso, traducciones ni apostillas.",
     faqs: [
@@ -220,7 +241,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación", detail: "Reunimos la prueba del vínculo.", actor: "cliente" },
       { title: "Presentación", detail: "Presentación telemática y seguimiento.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 39900,
+    feeFromCents: 47900,
     timeframe: "Suele resolverse en plazos más cortos que otras vías de arraigo, pero depende de la oficina.",
     adminFeesNote: "No incluye tasas, traducciones ni apostillas.",
     faqs: [
@@ -265,7 +286,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación", detail: "Reunimos la prueba de tu autorización anterior.", actor: "cliente" },
       { title: "Presentación", detail: "Presentación telemática y seguimiento.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 44900,
+    feeFromCents: 53900,
     timeframe: "Variable según oficina.",
     adminFeesNote: "No incluye tasas ni traducciones.",
     faqs: [
@@ -325,7 +346,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación ante la unidad competente.", actor: "extranjeria-segura" },
       { title: "Resolución y TIE", detail: "Resolución y cita para la tarjeta.", actor: "administracion" },
     ],
-    feeFromCents: 74900,
+    feeFromCents: 89900,
     timeframe:
       "Las solicitudes tramitadas por la unidad de grandes empresas suelen tener plazos más cortos que la vía general. Te damos la estimación en el diagnóstico.",
     adminFeesNote:
@@ -380,7 +401,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Dossier de empresa", detail: "Preparamos la documentación corporativa.", actor: "extranjeria-segura" },
       { title: "Presentación", detail: "Presentación ante la unidad competente.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 79900,
+    feeFromCents: 95900,
     timeframe: "La vía de Ley 14/2013 suele tener plazos de resolución cortos.",
     adminFeesNote: "No incluye tasas ni homologaciones de título.",
     faqs: [
@@ -432,7 +453,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Solicitud consular", detail: "Presentación en el consulado correspondiente.", actor: "extranjeria-segura" },
       { title: "Llegada y TIE", detail: "Entrada en España y cita para la tarjeta.", actor: "cliente" },
     ],
-    feeFromCents: 69900,
+    feeFromCents: null,
     timeframe: "Los plazos consulares varían de forma importante según el país. Te damos la referencia de tu consulado.",
     adminFeesNote: "No incluye tasas consulares, seguro médico, traducciones ni apostillas.",
     faqs: [
@@ -480,7 +501,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación", detail: "Preparación del expediente.", actor: "cliente" },
       { title: "Presentación y TIE", detail: "Presentación y cita de huellas.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 39900,
+    feeFromCents: null,
     timeframe: "Variable según oficina.",
     adminFeesNote: "No incluye tasas.",
     faqs: [
@@ -531,7 +552,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Visado", detail: "El trabajador solicita el visado en el consulado.", actor: "cliente" },
       { title: "Alta y TIE", detail: "Entrada, alta en Seguridad Social y cita de huellas.", actor: "cliente" },
     ],
-    feeFromCents: 74900,
+    feeFromCents: null,
     timeframe: "Plazo administrativo más plazo consular. Te damos la estimación de ambos.",
     adminFeesNote: "No incluye tasas administrativas ni consulares, traducciones ni apostillas.",
     faqs: [
@@ -579,7 +600,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Plan de negocio", detail: "Revisión del plan y de la inversión.", actor: "extranjeria-segura" },
       { title: "Presentación", detail: "Presentación de la solicitud.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 79900,
+    feeFromCents: null,
     timeframe: "Variable según oficina y según informes sectoriales.",
     adminFeesNote: "No incluye tasas, licencias, notaría ni asesoría fiscal o contable.",
     faqs: [
@@ -677,7 +698,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación y seguimiento.", actor: "extranjeria-segura" },
       { title: "TIE", detail: "Cita de huellas si la estancia supera seis meses.", actor: "cliente" },
     ],
-    feeFromCents: 34900,
+    feeFromCents: null,
     timeframe: "Variable según consulado u oficina.",
     adminFeesNote: "No incluye tasas, matrícula, seguro ni traducciones.",
     faqs: [
@@ -725,7 +746,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación", detail: "Expediente del trabajador y de la empresa.", actor: "cliente" },
       { title: "Presentación", detail: "Presentación telemática y seguimiento.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 54900,
+    feeFromCents: null,
     timeframe: "Variable según oficina.",
     adminFeesNote: "No incluye tasas.",
     faqs: [
@@ -777,7 +798,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación de la solicitud en España.", actor: "extranjeria-segura" },
       { title: "Visado del familiar", detail: "Solicitud del visado en el consulado.", actor: "cliente" },
     ],
-    feeFromCents: 54900,
+    feeFromCents: null,
     timeframe: "Plazo administrativo en España más plazo consular en el país del familiar.",
     adminFeesNote: "No incluye tasas, informe de vivienda si el ayuntamiento lo tarifa, traducciones ni apostillas.",
     faqs: [
@@ -829,7 +850,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Cita y documentación", detail: "Gestión de la cita y preparación del expediente.", actor: "extranjeria-segura" },
       { title: "Presentación", detail: "Presentación presencial o telemática según provincia.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 39900,
+    feeFromCents: null,
     timeframe: "El régimen comunitario suele tener plazos de resolución más cortos que el régimen general.",
     adminFeesNote: "No incluye tasas, traducciones ni apostillas.",
     faqs: [
@@ -867,7 +888,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación", detail: "Preparamos el expediente para la comparecencia.", actor: "extranjeria-segura" },
       { title: "Comparecencia", detail: "Acudes con todo listo y recoges el certificado.", actor: "cliente" },
     ],
-    feeFromCents: 14900,
+    feeFromCents: null,
     timeframe: "Se suele entregar en el mismo acto, sujeto a disponibilidad de cita.",
     adminFeesNote: "No incluye tasa modelo 790.",
     faqs: [{ q: "¿Caduca?", a: "El certificado no tiene la misma lógica de caducidad que una TIE, pero conviene revisar tu situación al cambiar de circunstancias." }],
@@ -922,7 +943,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Seguimiento", detail: "Vigilamos el estado y respondemos a requerimientos.", actor: "extranjeria-segura" },
       { title: "Jura y Registro Civil", detail: "Te acompañamos hasta la inscripción.", actor: "administracion" },
     ],
-    feeFromCents: 39900,
+    feeFromCents: 47900,
     timeframe:
       "El plazo legal de resolución es de un año desde la solicitud, prorrogable. En la práctica varía. Te informamos del estado real de tu expediente en cada momento.",
     adminFeesNote:
@@ -974,7 +995,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Documentación registral", detail: "Obtención y legalización de certificados.", actor: "cliente" },
       { title: "Presentación en Registro Civil", detail: "Presentación y seguimiento.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 34900,
+    feeFromCents: 41900,
     timeframe: "Depende del Registro Civil competente.",
     adminFeesNote: "No incluye tasas, traducciones ni legalizaciones.",
     faqs: [
@@ -1022,7 +1043,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Presentación", detail: "Presentación dentro de plazo.", actor: "extranjeria-segura" },
       { title: "TIE", detail: "Cita de huellas para la nueva tarjeta.", actor: "cliente" },
     ],
-    feeFromCents: 29900,
+    feeFromCents: 35900,
     timeframe: "Variable según oficina. La presentación en plazo mantiene la vigencia de tu situación mientras se resuelve.",
     adminFeesNote: "No incluye tasas.",
     faqs: [
@@ -1067,7 +1088,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Preparación", detail: "Te enviamos la carpeta exacta para la comparecencia.", actor: "extranjeria-segura" },
       { title: "Comparecencia", detail: "Acudes a la toma de huellas.", actor: "cliente" },
     ],
-    feeFromCents: 12900,
+    feeFromCents: 15900,
     timeframe: "Sujeto a disponibilidad de cita en tu provincia.",
     adminFeesNote: "No incluye tasa modelo 790.",
     faqs: [
@@ -1113,7 +1134,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Plan de respuesta", detail: "Te decimos exactamente qué necesitamos de ti.", actor: "extranjeria-segura" },
       { title: "Contestación", detail: "Redactamos y presentamos el escrito con la documentación.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 19900,
+    feeFromCents: null,
     timeframe: "Los plazos de subsanación son cortos e improrrogables en la práctica. Actuamos con prioridad.",
     adminFeesNote: "No incluye traducciones ni tasas si el requerimiento las exige.",
     faqs: [
@@ -1158,7 +1179,7 @@ export const TRAMITES: Tramite[] = [
       { title: "Redacción", detail: "Preparamos el escrito con fundamentación y prueba.", actor: "extranjeria-segura" },
       { title: "Presentación", detail: "Presentación telemática y seguimiento.", actor: "extranjeria-segura" },
     ],
-    feeFromCents: 34900,
+    feeFromCents: null,
     timeframe: "El plazo para recurrir es breve y comienza con la notificación. Consúltanos el mismo día que la recibas.",
     adminFeesNote: "No incluye tasas ni costas. Si el caso no tiene recorrido, te lo diremos antes de cobrarte un recurso.",
     faqs: [
