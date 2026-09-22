@@ -10,7 +10,14 @@
  * commercial profile can work a lead without ever seeing a passport.
  */
 
-export type Role = "admin" | "abogado" | "gestor" | "paralegal" | "comercial" | "cliente";
+export type Role =
+  | "admin"
+  | "abogado"
+  | "gestor"
+  | "paralegal"
+  | "comercial"
+  | "colaborador"
+  | "cliente";
 
 /**
  * PERMISOS, EN FORMA DE DATO.
@@ -140,6 +147,27 @@ export const ROLES: RoleDefinition[] = [
     ],
     // Sin `documentos`, y ese es el permiso que más importa de esta tabla:
     // un perfil comercial trabaja un lead entero sin ver un pasaporte.
+    permisos: ["leads"],
+  },
+  {
+    id: "colaborador",
+    label: "Colaborador externo",
+    description: "Profesional o despacho de fuera que deriva clientes y sigue sus derivaciones.",
+    can: [
+      "Ver y trabajar sus propias derivaciones",
+      "Consultar en qué fase está cada caso que ha derivado",
+      "Agendar consultas iniciales",
+    ],
+    cannot: [
+      "Ver derivaciones de otros colaboradores",
+      "Acceder a documentación migratoria de ningún expediente",
+      "Ver pasaportes, antecedentes ni datos de salud",
+    ],
+    // Mismos permisos que el comercial, y a propósito: la diferencia no es de
+    // capacidades sino de a quién responde. Un comercial es del despacho; un
+    // colaborador está fuera de él, así que el criterio de mínimo privilegio
+    // pesa todavía más. Sin `documentos` no ve un solo pasaporte, y sin
+    // `expedientes-todos` solo alcanza lo que él mismo ha derivado.
     permisos: ["leads"],
   },
   {

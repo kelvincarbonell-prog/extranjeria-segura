@@ -401,7 +401,7 @@ export const DEMO_PIPELINE: DemoCaseCard[] = [
   { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 53900, updatedAt: "2026-08-12" },
   { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 53900, updatedAt: "2026-08-12" },
   { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 47900, updatedAt: "2026-08-12" },
-  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Sin asignar", valueCents: 89900, updatedAt: "2026-08-12" },
+  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Bufete asociado", valueCents: 89900, updatedAt: "2026-08-12" },
   { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", valueCents: 0, updatedAt: "2026-08-12" },
   { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 89900, updatedAt: "2026-08-05" },
   { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", valueCents: 47900, updatedAt: "2026-07-30" },
@@ -539,11 +539,14 @@ export function expedientesDemo(): Expediente[] {
     hechos: [],
   },
   {
-    id: "c9",
-    referencia: "ES-2059",
-    cliente: "Diego R.",
-    tramite: "Nómada digital",
-    responsable: "Sin asignar",
+      id: "c9",
+      referencia: "ES-2059",
+      cliente: "Diego R.",
+      tramite: "Nómada digital",
+      // Derivado por un colaborador externo: es la única forma de que su rol
+      // se pueda enseñar. Antes estaba «Sin asignar» y entrar como
+      // colaborador daba una pantalla vacía.
+      responsable: "Bufete asociado",
     hechos: [],
   },
   {

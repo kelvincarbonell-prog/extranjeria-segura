@@ -21,7 +21,7 @@ export default function CrearCuentaPage() {
         ],
       }}
     >
-      <AuthForm mode="signup" />
+      <AuthForm mode="signup" demo={false} />
     </AuthLayout>
   );
 }

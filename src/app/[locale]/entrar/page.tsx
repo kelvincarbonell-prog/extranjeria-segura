@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { AuthForm } from "@/components/auth/AuthForm";
+import { CuentasDemo } from "@/components/auth/CuentasDemo";
+import { demoDisponible } from "@/lib/sesion-demo";
 
 export const metadata: Metadata = {
   title: "Acceder",
@@ -9,6 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function EntrarPage() {
+  // Las cuentas de prueba solo existen mientras no haya autenticación real.
+  const demo = demoDisponible();
+
   return (
     <AuthLayout
       side={{
@@ -21,7 +26,8 @@ export default function EntrarPage() {
         ],
       }}
     >
-      <AuthForm mode="signin" />
+      <AuthForm mode="signin" demo={demo} />
+      {demo && <CuentasDemo />}
     </AuthLayout>
   );
 }

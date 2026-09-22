@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { rolDemo } from "@/lib/rol-demo";
+import { sesionDemo } from "@/lib/sesion-demo";
 
 export const metadata: Metadata = {
   title: "Panel interno",
@@ -30,5 +31,10 @@ export const dynamic = "force-dynamic";
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // El rol se resuelve aquí, en el servidor, y baja como prop. Así cada
   // pantalla puede filtrar antes de renderizar en lugar de esconder después.
-  return <AdminShell rol={await rolDemo()}>{children}</AdminShell>;
+  const [rol, sesion] = await Promise.all([rolDemo(), sesionDemo()]);
+  return (
+    <AdminShell rol={rol} sesion={sesion && { nombre: sesion.nombre, email: sesion.email }}>
+      {children}
+    </AdminShell>
+  );
 }

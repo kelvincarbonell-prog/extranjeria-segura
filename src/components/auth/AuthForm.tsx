@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Divider, LegalNote } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { site } from "@/content/site";
+import { accionEntrar, type EstadoAcceso } from "@/lib/acciones-sesion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -32,7 +33,21 @@ const signUpSchema = signInSchema.extend({
 
 type Mode = "signin" | "signup";
 
-export function AuthForm({ mode }: { mode: Mode }) {
+export function AuthForm({ mode, demo }: { mode: Mode; demo: boolean }) {
+  /**
+   * El acceso de demostración pasa por el servidor.
+   *
+   * Hasta ahora este formulario no comprobaba nada: esperaba 700 ms y decía
+   * que la autenticación no estaba activada. Con cuentas de prueba hay algo
+   * que comprobar, y se comprueba donde se puede —en el servidor, que es
+   * quien escribe la cookie de sesión—, no en el navegador con una lista de
+   * contraseñas en el paquete del cliente.
+   */
+  const [estado, accion, pendiente] = React.useActionState<EstadoAcceso, FormData>(
+    accionEntrar,
+    {},
+  );
+
   const [values, setValues] = React.useState({
     name: "",
     email: "",
@@ -46,27 +61,30 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   const strength = passwordStrength(values.password);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
+  /** Validación de formato antes de molestar al servidor. */
+  const validar = (): boolean => {
     const schema = mode === "signup" ? signUpSchema : signInSchema;
     const parsed = schema.safeParse(values);
-
-    if (!parsed.success) {
-      const map: Record<string, string> = {};
-      for (const issue of parsed.error.issues) {
-        map[String(issue.path[0])] = issue.message;
-      }
-      setErrors(map);
-      return;
+    if (parsed.success) {
+      setErrors({});
+      return true;
     }
+    const map: Record<string, string> = {};
+    for (const issue of parsed.error.issues) map[String(issue.path[0])] = issue.message;
+    setErrors(map);
+    return false;
+  };
 
-    setErrors({});
+  // El alta no tiene a dónde ir todavía: no hay registro real ni cuenta que
+  // crear. Sigue avisando en lugar de fingir que ha pasado algo.
+  const submitAlta = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validar()) return;
     setStatus("loading");
-
-    // Supabase auth is implemented in lib/supabase but not enabled in this
-    // environment. We say so rather than faking a session.
     window.setTimeout(() => setStatus(site.features.supabase ? "idle" : "unavailable"), 700);
   };
+
+  const accesoDemo = mode === "signin" && demo;
 
   return (
     <div>
@@ -79,7 +97,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
           : "Abre tu expediente y guarda el resultado de tu diagnóstico."}
       </p>
 
-      <form onSubmit={submit} noValidate className="mt-8 flex flex-col gap-4">
+      <form
+        {...(accesoDemo
+          ? { action: accion, onSubmit: (e: React.FormEvent) => { if (!validar()) e.preventDefault(); } }
+          : { onSubmit: submitAlta })}
+        noValidate
+        className="mt-8 flex flex-col gap-4"
+      >
         {mode === "signup" && (
           <Field
             id="name"
@@ -179,9 +203,18 @@ export function AuthForm({ mode }: { mode: Mode }) {
           </div>
         )}
 
-        <Button type="submit" size="lg" block loading={status === "loading"} className="mt-1">
+        <Button type="submit" size="lg" block loading={pendiente || status === "loading"} className="mt-1">
           {mode === "signin" ? "Entrar" : "Crear mi cuenta"}
         </Button>
+
+        {estado.error && (
+          <p
+            role="alert"
+            className="bg-signal-risk-soft text-signal-risk rounded-sm px-3.5 py-2.5 text-[13px] leading-relaxed"
+          >
+            {estado.error}
+          </p>
+        )}
 
         <AnimatePresence>
           {status === "unavailable" && (

@@ -8,6 +8,7 @@ import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
 import { Avatar, DemoTag, Progress } from "@/components/ui/primitives";
 import { DEMO_CASE, DEMO_NOTIFICATIONS } from "@/content/demo";
+import { accionSalir } from "@/lib/acciones-sesion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -121,7 +122,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </p>
               <p className="text-ink-400 truncate text-[11.5px]">Cuenta de demostración</p>
             </div>
-            <Link href="/" aria-label="Salir" className="text-ink-300 hover:text-ink-700">
+            {/* Antes llevaba a la portada, que no cierra nada: quien había
+                entrado con una cuenta de prueba seguía dentro al volver. Ahora
+                borra la sesión de verdad. */}
+            <form action={accionSalir}>
+              <button type="submit" aria-label="Salir" className="text-ink-300 hover:text-ink-700 block">
               <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden>
                 <path
                   d="M12.5 6.5V5a1.5 1.5 0 0 0-1.5-1.5H5A1.5 1.5 0 0 0 3.5 5v10A1.5 1.5 0 0 0 5 16.5h6a1.5 1.5 0 0 0 1.5-1.5v-1.5M8 10h8.5m0 0-2.5-2.5M16.5 10 14 12.5"
@@ -131,7 +136,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   strokeLinejoin="round"
                 />
               </svg>
-            </Link>
+              </button>
+            </form>
           </div>
         </div>
       </aside>

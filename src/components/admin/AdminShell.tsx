@@ -6,9 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
-import { Avatar, DemoTag } from "@/components/ui/primitives";
+import { Avatar } from "@/components/ui/primitives";
 import { ROLES, puede, type Permiso, type Role } from "@/content/roles";
 import { USUARIOS_DEMO, ROL_DEMO_INICIAL, COOKIE_ROL } from "@/content/demo-sesion";
+import { accionSalir } from "@/lib/acciones-sesion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -48,10 +49,28 @@ export function navPermitida(role: Role) {
  * Sigue sin ser un control de acceso, y el aviso de debajo lo dice en cada
  * pantalla. Ocultar un botón no protege un pasaporte.
  */
-export function AdminShell({ rol, children }: { rol: Role; children: React.ReactNode }) {
+export function AdminShell({
+  rol,
+  sesion,
+  children,
+}: {
+  rol: Role;
+  /** Cuenta con la que se ha entrado, si hay sesión de demostración. */
+  sesion?: { nombre: string; email: string } | null;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const usuario = USUARIOS_DEMO[rol as Exclude<Role, "cliente">];
+  // El nombre sale de la sesión cuando la hay; si no, del usuario de
+  // demostración del rol. Así «mis expedientes» significa lo mismo por las
+  // dos vías.
+  const perfil = USUARIOS_DEMO[rol as Exclude<Role, "cliente">];
+  const usuario = { ...perfil, nombre: sesion?.nombre ?? perfil.nombre };
+
+  // Cambiar de rol solo tiene sentido sin sesión —para recorrer el modelo— o
+  // siendo administrador, que es quien gestiona el equipo. Un abogado que
+  // entra con su cuenta no puede mirarse a sí mismo como comercial.
+  const puedeCambiarRol = !sesion || sesion.email.startsWith("admin@");
   const nav = navPermitida(rol);
 
   /**
@@ -80,7 +99,7 @@ export function AdminShell({ rol, children }: { rol: Role; children: React.React
             Interno
           </span>
 
-          <nav aria-label="Panel interno" className="ml-2 hidden flex-1 md:block">
+          <nav aria-label="Panel interno" className="ml-2 hidden min-w-0 flex-1 md:block">
             <ul className="flex gap-1">
               {nav.map((item) => {
                 const active = item.exact
@@ -112,8 +131,14 @@ export function AdminShell({ rol, children }: { rol: Role; children: React.React
             </ul>
           </nav>
 
-          <div className="ml-auto flex min-w-0 shrink items-center gap-2 sm:gap-3">
-            <DemoTag className="hidden sm:inline-flex" />
+          {/* `shrink-0`: este grupo lleva la identidad y la salida, y encogerlo
+              recortaba sus hijos en lugar de ceder espacio. Con la cuenta de
+              administrador —la única que suma el selector de rol— la fila
+              pedía 1.628 px y el botón «Salir» caía en 1.585: fuera de la
+              pantalla incluso a 1.536 px de ancho, es decir, inalcanzable.
+              Quien entraba como administrador no podía salir. */}
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+            {puedeCambiarRol && (
             <label className="flex items-center gap-2">
               <span className="text-ink-400 hidden text-[12px] whitespace-nowrap xl:inline">Ver como</span>
               <select
@@ -129,10 +154,11 @@ export function AdminShell({ rol, children }: { rol: Role; children: React.React
                 ))}
               </select>
             </label>
+            )}
             {/* La persona, no la etiqueta del rol. Antes el avatar decía
                 «Administrador»; ahora dice quién eres, que es lo que hace que
                 «mis expedientes» signifique algo. */}
-            <span className="hidden text-right whitespace-nowrap lg:block">
+            <span className="hidden text-right whitespace-nowrap 2xl:block">
               <span className="text-ink-800 block text-[13px] leading-tight font-semibold">
                 {usuario.nombre}
               </span>
@@ -141,6 +167,16 @@ export function AdminShell({ rol, children }: { rol: Role; children: React.React
               </span>
             </span>
             <Avatar name={usuario.nombre} size={32} />
+            {sesion && (
+              <form action={accionSalir}>
+                <button
+                  type="submit"
+                  className="text-ink-500 hover:text-ink-900 rounded-[10px] px-2 py-2 text-[12.5px] font-medium whitespace-nowrap transition-colors"
+                >
+                  Salir
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
