@@ -19,7 +19,7 @@ export async function generateMetadata({
     locale,
     path: "/precios",
     title: "Precios",
-    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta 39 €, revisión documental 79 € y gestión integral desde 359 €. El resto de trámites, presupuesto a medida. Con lo que no está incluido, junto al precio.",
+    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta 39 €, revisión documental 79 €, arraigo desde 479 € y nacionalidad desde 419 €. El resto de trámites, presupuesto a medida. Con lo que no está incluido, junto al precio.",
   });
 }
 

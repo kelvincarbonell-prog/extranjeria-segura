@@ -44,6 +44,22 @@ export interface Plan {
   glyph: string;
 }
 
+/**
+ * La subida del 20 % no toca este bloque, y no es un olvido.
+ *
+ * El diagnóstico es gratuito y la consulta se descuenta íntegra si se
+ * contrata la gestión: su precio no es una línea de ingresos, es el peaje de
+ * entrada al embudo. Subirlo encarece la puerta y no recauda, porque el
+ * importe vuelve al cliente en cuanto convierte. Los 39 € están además en un
+ * umbral psicológico que 47 € rompe.
+ *
+ * La revisión documental sí es un producto independiente, pero 79 € es lo que
+ * hace que alguien la contrate sin pensárselo antes de presentar por su
+ * cuenta, que es precisamente el caso en el que evita un expediente devuelto.
+ *
+ * Si algún día suben, que sea por una decisión propia y no por arrastre de
+ * una subida pensada para la gestión integral.
+ */
 export const ENTRY_PLANS: Plan[] = [
   {
     id: "diagnostico",
@@ -113,7 +129,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "arraigo",
     name: "Arraigo",
     tagline: "Gestión integral de cualquier modalidad de arraigo.",
-    priceCents: 53900,
+    priceCents: 47900,
     priceNote: "desde",
     featured: true,
     includes: [
@@ -139,7 +155,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "nacionalidad",
     name: "Nacionalidad española",
     tagline: "Auditoría de residencia, expediente y seguimiento hasta la jura.",
-    priceCents: 47900,
+    priceCents: 41900,
     priceNote: "desde",
     includes: [
       "Auditoría de años de residencia legal y ausencias",
@@ -209,7 +225,7 @@ export const MANAGED_PLANS: Plan[] = [
     id: "renovacion",
     name: "Renovaciones y TIE",
     tagline: "Que una fecha no te devuelva a la casilla de salida.",
-    priceCents: 35900,
+    priceCents: 15900,
     priceNote: "desde",
     includes: [
       "Auditoría de cotizaciones y de tu vida laboral",

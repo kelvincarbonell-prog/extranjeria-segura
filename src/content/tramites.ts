@@ -1056,6 +1056,12 @@ export const TRAMITES: Tramite[] = [
     seoCities: ["madrid", "barcelona", "valencia", "murcia", "sevilla", "malaga", "alicante"],
   },
   {
+    // El único importe que no cae limpio en la subida del 20 %. 129 × 1,20 =
+    // 154,80, y queda casi a medio camino entre los dos precios terminados en
+    // 9 —149 y 159—; todos los demás caían a menos de 0,20 € de uno. Se elige
+    // 159: 149 sería bajar un 15,5 % cuando lo acordado era subir un 20 %, y
+    // de los dos errores posibles el que cobra de menos es el que hay que
+    // corregir después, delante del cliente.
     slug: "nie-tie",
     name: "NIE y Tarjeta de Identidad de Extranjero",
     shortName: "NIE / TIE",

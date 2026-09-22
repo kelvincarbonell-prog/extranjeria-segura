@@ -377,24 +377,34 @@ export interface DemoCaseCard {
    * ser cierto al día siguiente, y tres pantallas leyéndolo por su cuenta
    * daban tres respuestas distintas a la misma pregunta.
    */
+  /**
+   * Importe de la operación. En las cuatro vías con precio publicado coincide
+   * con la tarifa de `pricing.ts`, para que el panel no enseñe 449 € por un
+   * arraigo mientras la web pide 539.
+   *
+   * En reagrupación familiar y protección internacional no coincide con nada,
+   * y es correcto: son justo las vías que salen a presupuesto a medida, así
+   * que un importe negociado distinto de cualquier tarifa es lo que debe
+   * haber ahí.
+   */
   valueCents: number;
   updatedAt: string;
   flags?: string[];
 }
 
 export const DEMO_PIPELINE: DemoCaseCard[] = [
-  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", valueCents: 39900, updatedAt: "2026-08-12" },
-  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", valueCents: 74900, updatedAt: "2026-08-11" },
+  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", valueCents: 53900, updatedAt: "2026-08-12" },
+  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", valueCents: 47900, updatedAt: "2026-08-12" },
+  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", valueCents: 89900, updatedAt: "2026-08-11" },
   { id: "c4", reference: "ES-2039", client: "Carlos M.", tramite: "Reagrupación familiar", stage: "presentado", owner: "L. Ortega", valueCents: 54900, updatedAt: "2026-08-08" },
-  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", valueCents: 29900, updatedAt: "2026-08-12", flags: ["Plazo vencido"] },
-  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 44900, updatedAt: "2026-08-12" },
-  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 39900, updatedAt: "2026-08-12" },
-  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Sin asignar", valueCents: 74900, updatedAt: "2026-08-12" },
+  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", valueCents: 35900, updatedAt: "2026-08-12", flags: ["Plazo vencido"] },
+  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 53900, updatedAt: "2026-08-12" },
+  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 53900, updatedAt: "2026-08-12" },
+  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 47900, updatedAt: "2026-08-12" },
+  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Sin asignar", valueCents: 89900, updatedAt: "2026-08-12" },
   { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", valueCents: 0, updatedAt: "2026-08-12" },
-  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 74900, updatedAt: "2026-08-05" },
-  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", valueCents: 39900, updatedAt: "2026-07-30" },
+  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 89900, updatedAt: "2026-08-05" },
+  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", valueCents: 47900, updatedAt: "2026-07-30" },
 ];
 
 /* ------------------------------------------------------------------ *
