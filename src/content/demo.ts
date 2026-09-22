@@ -423,15 +423,41 @@ export const DEMO_PIPELINE: DemoCaseCard[] = [
  * ------------------------------------------------------------------ */
 
 import type { Expediente } from "@/lib/vigilancia";
+import { aISO, hoy, sumarDias } from "@/lib/plazos";
 
-export const DEMO_EXPEDIENTES: Expediente[] = [
+/**
+ * Un día de calendario relativo a hoy.
+ *
+ * Las fechas de estos expedientes eran fijas —«2026-08-26»— y eso convierte
+ * la demostración en una bomba de relojería: el motor de plazos deriva los
+ * días de verdad, así que a las dos semanas de escribirlas todo aparecía
+ * vencido. Comprobado: el 22 de septiembre, los tres expedientes del abogado
+ * salían en rojo y la pantalla no demostraba nada salvo un despacho en
+ * llamas.
+ *
+ * Con desplazamientos, la demostración conserva siempre su forma: uno
+ * vencido que exige decidir hoy, uno crítico a seis días, y varios con
+ * margen. Que es justo lo que hay que poder enseñar.
+ */
+function dia(desplazamiento: number): string {
+  return aISO(sumarDias(hoy(), desplazamiento));
+}
+
+/**
+ * Es una función y no una constante a propósito: una constante fija las
+ * fechas cuando arranca el proceso, y un servidor que lleve semanas en pie
+ * volvería a enseñar la demostración envejecida. El panel es `force-dynamic`,
+ * así que llamarla por petición no cuesta nada.
+ */
+export function expedientesDemo(): Expediente[] {
+  return [
   {
     id: "c5",
     referencia: "ES-2033",
     cliente: "Wei L.",
     tramite: "Renovación de residencia",
     responsable: "A. Ruiz",
-    hechos: [{ tipo: "requerimiento-notificado", fecha: "2026-08-26" }],
+    hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-11) }], // venció ayer
   },
   {
     id: "c2",
@@ -439,7 +465,7 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     cliente: "Ibrahim K.",
     tramite: "Nacionalidad por residencia",
     responsable: "A. Ruiz",
-    hechos: [{ tipo: "requerimiento-notificado", fecha: "2026-09-02", diasConcedidos: 10 }],
+    hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-4), diasConcedidos: 10 }], // seis días
   },
   {
     id: "c4",
@@ -447,7 +473,7 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     cliente: "Carlos M.",
     tramite: "Reagrupación familiar",
     responsable: "L. Ortega",
-    hechos: [{ tipo: "presentacion", fecha: "2026-06-30" }],
+    hechos: [{ tipo: "presentacion", fecha: dia(-66) }], // silencio a tres meses
   },
   {
     id: "c11",
@@ -456,8 +482,8 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     tramite: "Nómada digital",
     responsable: "L. Ortega",
     hechos: [
-      { tipo: "presentacion", fecha: "2026-05-20" },
-      { tipo: "resolucion-notificada", fecha: "2026-09-01", sentido: "denegatoria" },
+      { tipo: "presentacion", fecha: dia(-125) },
+      { tipo: "resolucion-notificada", fecha: dia(-5), sentido: "denegatoria" },
     ],
   },
   {
@@ -469,7 +495,7 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     hechos: [
       {
         tipo: "caducidad-documento",
-        fecha: "2026-09-20",
+        fecha: dia(14), // caduca el documento
         etiqueta: "Certificado de antecedentes penales",
       },
     ],
@@ -480,7 +506,7 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     cliente: "Sofia B.",
     tramite: "Nómada digital",
     responsable: "L. Ortega",
-    hechos: [{ tipo: "caducidad-tarjeta", fecha: "2026-11-15" }],
+    hechos: [{ tipo: "caducidad-tarjeta", fecha: dia(54) }],
   },
   {
     id: "c6",
@@ -528,12 +554,13 @@ export const DEMO_EXPEDIENTES: Expediente[] = [
     responsable: "Sin asignar",
     hechos: [],
   },
-  {
-    id: "c12",
+    {
+      id: "c12",
     referencia: "ES-2018",
     cliente: "Nadia H.",
     tramite: "Arraigo familiar",
     responsable: "A. Ruiz",
     hechos: [],
-  },
-];
+    },
+  ];
+}

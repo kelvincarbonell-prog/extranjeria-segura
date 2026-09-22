@@ -1,10 +1,13 @@
 import { Pipeline } from "@/components/admin/Pipeline";
-import { DEMO_EXPEDIENTES } from "@/content/demo";
+import { expedientesDemo, DEMO_PIPELINE } from "@/content/demo";
 import { plazoPrincipal } from "@/lib/vigilancia";
+import { filtrarAsignados, filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
+import { rolDemo } from "@/lib/rol-demo";
 
 export const metadata = { title: "Pipeline" };
 
-export default function PipelinePage() {
+export default async function PipelinePage() {
+  const rol = await rolDemo();
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -20,7 +23,11 @@ export default function PipelinePage() {
           servidor y el navegador podrían estar en días distintos durante la
           hidratación —y aunque `hoy()` trabaja en UTC y la ventana es de
           milisegundos, un panel de plazos no es sitio para esa apuesta. */}
-      <Pipeline plazos={plazoPrincipal(DEMO_EXPEDIENTES)} />
+      <Pipeline
+        key={rol}
+        casos={filtrarAsignadosPorOwner(DEMO_PIPELINE, rol)}
+        plazos={plazoPrincipal(filtrarAsignados(expedientesDemo(), rol))}
+      />
     </div>
   );
 }

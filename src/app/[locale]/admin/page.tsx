@@ -1,11 +1,13 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_PIPELINE, DEMO_EXPEDIENTES, PIPELINE_STAGES } from "@/content/demo";
+import { DEMO_PIPELINE, expedientesDemo, PIPELINE_STAGES } from "@/content/demo";
 import { Card, Badge, DemoTag, Progress } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
 import { plazoPrincipal } from "@/lib/vigilancia";
+import { filtrarAsignados, filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
+import { rolDemo } from "@/lib/rol-demo";
 import { eur, cn } from "@/lib/utils";
 
 export const metadata = { title: "Panel" };
@@ -26,11 +28,18 @@ export const metadata = { title: "Panel" };
  * Ahora sale de `plazoPrincipal()`, igual que la tabla de expedientes y el
  * tablero, y cada número lleva detrás su fecha y su norma.
  */
-export default function AdminHome() {
-  const plazos = plazoPrincipal(DEMO_EXPEDIENTES);
-  const conPlazo = DEMO_PIPELINE.filter((c) => plazos.has(c.id));
+export default async function AdminHome() {
+  // Todo el panel se calcula sobre lo asignado. Si el abogado ve «3 sin
+  // responsable asignado» pero ninguno es suyo, la alerta no es suya y le
+  // está robando la atención a la que sí lo es.
+  const rol = await rolDemo();
+  const expedientes = filtrarAsignados(expedientesDemo(), rol);
+  const cartera = filtrarAsignadosPorOwner(DEMO_PIPELINE, rol);
 
-  const active = DEMO_PIPELINE.filter(
+  const plazos = plazoPrincipal(expedientes);
+  const conPlazo = cartera.filter((c) => plazos.has(c.id));
+
+  const active = cartera.filter(
     (c) => !["archivado", "resolucion"].includes(c.stage),
   );
   const overdue = conPlazo.filter((c) => plazos.get(c.id)!.cuenta.estado === "vencido");
@@ -38,13 +47,16 @@ export default function AdminHome() {
     const { cuenta } = plazos.get(c.id)!;
     return cuenta.estado !== "vencido" && cuenta.critico;
   });
-  const unassigned = DEMO_PIPELINE.filter((c) => c.owner === "Sin asignar");
-  const leads = DEMO_PIPELINE.filter((c) => ["lead", "diagnostico", "consulta"].includes(c.stage));
-  const contracted = DEMO_PIPELINE.filter(
+  const unassigned = cartera.filter((c) => c.owner === "Sin asignar");
+  const leads = cartera.filter((c) => ["lead", "diagnostico", "consulta"].includes(c.stage));
+  const contracted = cartera.filter(
     (c) => !["lead", "diagnostico", "consulta"].includes(c.stage),
   );
   const contractedValue = contracted.reduce((a, c) => a + c.valueCents, 0);
-  const conversion = Math.round((contracted.length / DEMO_PIPELINE.length) * 100);
+  // Sin cartera no hay conversión que calcular. Dividir entre cero daba
+  // «NaN% de conversión» en el panel de un rol sin expedientes asignados: una
+  // métrica rota en la primera pantalla que se ve al entrar.
+  const conversion = cartera.length > 0 ? Math.round((contracted.length / cartera.length) * 100) : null;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-5">
@@ -91,6 +103,24 @@ export default function AdminHome() {
         </Reveal>
       )}
 
+      {/* Un panel a cero no es un panel roto, pero lo parece. Quien entra con
+          un rol sin cartera asignada necesita leer por qué, no deducirlo de
+          cuatro ceros seguidos. */}
+      {cartera.length === 0 && (
+        <Reveal>
+          <Card padding="lg">
+            <h2 className="text-ink-900 text-[15px] font-semibold">
+              No tienes ningún expediente asignado
+            </h2>
+            <p className="text-ink-600 mt-1.5 max-w-2xl text-[13.5px] leading-relaxed">
+              Tu rol ve los expedientes de los que es responsable, y ahora mismo no hay ninguno a
+              tu nombre. Los números de abajo están a cero por eso, no porque el despacho esté
+              parado. Quien administra la cuenta asigna los expedientes.
+            </p>
+          </Card>
+        </Reveal>
+      )}
+
       {/* ---------------- Metrics ---------------- */}
       <Reveal delay={0.04}>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -111,7 +141,7 @@ export default function AdminHome() {
           <Metric
             label="Valor contratado"
             value={eur(contractedValue)}
-            sub={`${conversion}% de conversión`}
+            sub={conversion === null ? "sin cartera asignada" : `${conversion}% de conversión`}
             glyph="stamp"
           />
         </div>
@@ -124,9 +154,9 @@ export default function AdminHome() {
             <h2 className="text-ink-900 mb-5 text-[15px] font-semibold">Distribución por fase</h2>
             <ul className="flex flex-col gap-3">
               {PIPELINE_STAGES.map((s) => {
-                const items = DEMO_PIPELINE.filter((c) => c.stage === s.id);
+                const items = cartera.filter((c) => c.stage === s.id);
                 if (items.length === 0) return null;
-                const pct = Math.round((items.length / DEMO_PIPELINE.length) * 100);
+                const pct = Math.round((items.length / cartera.length) * 100);
                 return (
                   <li key={s.id} className="flex items-center gap-4">
                     <span className="text-ink-600 w-[132px] shrink-0 text-[13px] font-medium">

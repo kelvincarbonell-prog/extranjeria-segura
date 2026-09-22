@@ -202,12 +202,25 @@ export function AuthForm({ mode }: { mode: Mode }) {
                     están implementados. Falta configurar las variables de entorno del proyecto para
                     activarlo. Mientras tanto puedes recorrer el área privada en modo demostración.
                   </p>
-                  <Link
-                    href="/app"
-                    className="text-brand-700 mt-2.5 inline-block text-[13px] font-semibold"
-                  >
-                    Ver el área privada en modo demostración →
-                  </Link>
+                  {/* Dos demostraciones y no una: el producto tiene dos
+                      lados, y quien evalúa esto —un despacho— quiere ver el
+                      suyo, no el del cliente. Se entra sin contraseña y se
+                      dice así, porque un acceso falso delante de una ruta que
+                      hoy está abierta sería peor que ninguno. */}
+                  <span className="mt-2.5 flex flex-col gap-1.5">
+                    <Link
+                      href="/app"
+                      className="text-brand-700 hover:text-brand-800 text-[13px] font-semibold"
+                    >
+                      Ver el área del cliente en modo demostración →
+                    </Link>
+                    <Link
+                      href="/admin"
+                      className="text-brand-700 hover:text-brand-800 text-[13px] font-semibold"
+                    >
+                      Ver el panel del despacho como abogada →
+                    </Link>
+                  </span>
                 </div>
               </div>
             </motion.div>

@@ -1,5 +1,8 @@
 import { Recordatorios } from "@/components/admin/Recordatorios";
-import { DEMO_EXPEDIENTES } from "@/content/demo";
+import { SoloCon } from "@/components/admin/SoloCon";
+import { expedientesDemo } from "@/content/demo";
+import { filtrarAsignados } from "@/lib/mis-expedientes";
+import { rolDemo } from "@/lib/rol-demo";
 import { plazosDe } from "@/lib/vigilancia";
 import { DemoTag } from "@/components/ui/primitives";
 import type { Locale } from "@/i18n/config";
@@ -74,11 +77,21 @@ const PENDIENTES: {
   },
 ];
 
-export default function RecordatoriosPage() {
+async function RecordatoriosPageInterior() {
+  const mios = filtrarAsignados(expedientesDemo(), await rolDemo());
+
+  // El recorte va sobre la lista de pendientes, no solo sobre la búsqueda del
+  // plazo. La primera versión recorría `PENDIENTES` entero y solo miraba
+  // `mios` para localizar el vencimiento: el abogado veía la documentación
+  // pendiente de Carlos M., que es de su compañera, con el plazo en blanco. Lo
+  // encontró la barrida de las siete pantallas por los cinco roles, no la
+  // lectura del código —desde dentro parecía filtrado—.
+  const asignados = new Set(mios.map((e) => e.id));
+
   // El plazo vivo del expediente se calcula, no se guarda: es el mismo motor
   // que la torre de plazos, así que las dos pantallas no pueden discrepar.
-  const conPlazo = PENDIENTES.map((p) => {
-    const exp = DEMO_EXPEDIENTES.find((e) => e.id === p.id);
+  const conPlazo = PENDIENTES.filter((p) => asignados.has(p.id)).map((p) => {
+    const exp = mios.find((e) => e.id === p.id);
     const plazos = exp ? plazosDe(exp) : [];
     const vivo = plazos.find((x) => x.cuenta.estado !== "vencido");
     return { ...p, plazo: vivo };
@@ -101,5 +114,14 @@ export default function RecordatoriosPage() {
 
       <Recordatorios expedientes={conPlazo} />
     </div>
+  );
+}
+
+/** La pantalla solo se renderiza si el rol activo tiene «documentos». */
+export default function RecordatoriosPage() {
+  return (
+    <SoloCon permiso="documentos">
+      <RecordatoriosPageInterior />
+    </SoloCon>
   );
 }

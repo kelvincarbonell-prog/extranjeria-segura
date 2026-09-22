@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { PIPELINE_STAGES, DEMO_PIPELINE, type DemoCaseCard, type StageId } from "@/content/demo";
+import { PIPELINE_STAGES, type DemoCaseCard, type StageId } from "@/content/demo";
 import { Badge, DemoTag } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
@@ -27,8 +27,22 @@ import { eur, cn } from "@/lib/utils";
 /** Sin plazo vivo se ordena al final, no al principio con un cero. */
 const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
 
-export function Pipeline({ plazos }: { plazos: Map<string, PlazoVivo> }) {
-  const [cases, setCases] = React.useState<DemoCaseCard[]>(DEMO_PIPELINE);
+export function Pipeline({
+  casos,
+  plazos,
+}: {
+  casos: DemoCaseCard[];
+  plazos: Map<string, PlazoVivo>;
+}) {
+  // Los casos llegan ya recortados al rol desde el servidor: un abogado no
+  // recibe en el HTML los expedientes de su compañera.
+  //
+  // El estado local existe porque el tablero se manipula arrastrando. Para
+  // recogerlos cuando cambian había un `useEffect` que llamaba a `setState`,
+  // que es el patrón que avisa `react-hooks/set-state-in-effect`: un render
+  // de más y un parpadeo. Se resuelve remontando desde la página con `key`,
+  // que es lo que de verdad ocurre —otro rol, otro tablero—.
+  const [cases, setCases] = React.useState<DemoCaseCard[]>(casos);
   const [dragging, setDragging] = React.useState<string | null>(null);
   const [over, setOver] = React.useState<StageId | null>(null);
   const [query, setQuery] = React.useState("");
@@ -36,8 +50,8 @@ export function Pipeline({ plazos }: { plazos: Map<string, PlazoVivo> }) {
   const reduce = useReducedMotion();
 
   const owners = React.useMemo(
-    () => [...new Set(DEMO_PIPELINE.map((c) => c.owner))].sort(),
-    [],
+    () => [...new Set(casos.map((c) => c.owner))].sort(),
+    [casos],
   );
 
   const visible = cases.filter((c) => {

@@ -1,4 +1,5 @@
 import { Link } from "@/components/ui/Link";
+import { SoloCon } from "@/components/admin/SoloCon";
 import {
   colaVerificacion,
   resumenVerificacion,
@@ -34,7 +35,7 @@ export const metadata = { title: "Verificación de contenido" };
  * aquí solo. Una lista de tareas que hay que actualizar aparte de la cosa que
  * describe siempre acaba mintiendo.
  */
-export default function VerificacionPage() {
+function VerificacionPageInterior() {
   const cola = colaVerificacion();
   const resumen = resumenVerificacion();
 
@@ -180,5 +181,14 @@ function Fila({ pendiente: p }: { pendiente: Pendiente }) {
         </div>
       </dl>
     </Card>
+  );
+}
+
+/** La pantalla solo se renderiza si el rol activo tiene «verificacion». */
+export default function VerificacionPage() {
+  return (
+    <SoloCon permiso="verificacion">
+      <VerificacionPageInterior />
+    </SoloCon>
   );
 }

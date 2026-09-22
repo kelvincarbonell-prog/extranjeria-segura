@@ -12,6 +12,42 @@
 
 export type Role = "admin" | "abogado" | "gestor" | "paralegal" | "comercial" | "cliente";
 
+/**
+ * PERMISOS, EN FORMA DE DATO.
+ *
+ * `can` y `cannot` son prosa: sirven para que una persona entienda el rol en
+ * /admin/equipo, y no hay forma de preguntarle a una frase si autoriza algo.
+ * Por eso el panel no comprobaba nada. El selector «Ver como» llevaba desde
+ * el principio un comentario que prometía que cambiar a «comercial» retiraba
+ * los documentos migratorios de la vista, y no lo hacía: nadie consumía el
+ * contexto. Cambiaba el nombre del avatar.
+ *
+ * Estos permisos son la misma lista, en un formato que el código puede
+ * comprobar. Las dos versiones tienen que decir lo mismo, y de eso se ocupa
+ * `roles.test.ts`.
+ */
+export type Permiso =
+  /** Gestionar el equipo y los roles. */
+  | "equipo"
+  /** Precios, plantillas y automatizaciones. */
+  | "configuracion"
+  /** Ver todos los expedientes, no solo los asignados. */
+  | "expedientes-todos"
+  /** Ver documentación migratoria: pasaportes, antecedentes, salud. */
+  | "documentos"
+  /** Dar un documento por válido de forma definitiva. */
+  | "validar-documentos"
+  /** Firmar y presentar el expediente. */
+  | "firmar"
+  /** Redactar recursos y escritos. */
+  | "escritos"
+  /** Comunicarse con la Administración. */
+  | "administracion"
+  /** Trabajar leads, diagnósticos y presupuestos. */
+  | "leads"
+  /** Cola de revisión jurídica del contenido publicado. */
+  | "verificacion";
+
 export interface RoleDefinition {
   id: Role;
   label: string;
@@ -19,6 +55,8 @@ export interface RoleDefinition {
   /** Capabilities, matching the policy names in the SQL migrations. */
   can: string[];
   cannot: string[];
+  /** La misma lista que `can`, comprobable. Vacía en `cliente`: no entra al panel. */
+  permisos: Permiso[];
 }
 
 export const ROLES: RoleDefinition[] = [
@@ -33,6 +71,9 @@ export const ROLES: RoleDefinition[] = [
       "Consultar el registro de auditoría completo",
     ],
     cannot: ["Firmar expedientes: eso corresponde al profesional responsable"],
+    // Lo ve y lo configura todo, pero no firma ni valida: esa
+    // responsabilidad es del colegiado, no de quien administra la cuenta.
+    permisos: ["equipo", "configuracion", "expedientes-todos", "documentos", "leads", "verificacion"],
   },
   {
     id: "abogado",
@@ -45,6 +86,16 @@ export const ROLES: RoleDefinition[] = [
       "Ver los expedientes que tiene asignados",
     ],
     cannot: ["Modificar precios o configuración de la plataforma"],
+    // Sin `expedientes-todos`: ve los que tiene asignados. Es el único rol
+    // que firma y el único que valida un documento de forma definitiva.
+    permisos: [
+      "documentos",
+      "validar-documentos",
+      "firmar",
+      "escritos",
+      "administracion",
+      "verificacion",
+    ],
   },
   {
     id: "gestor",
@@ -57,6 +108,9 @@ export const ROLES: RoleDefinition[] = [
       "Gestionar citas y plazos",
     ],
     cannot: ["Dar por validado un documento sin revisión del abogado", "Presentar expedientes"],
+    // Se comunica con el cliente, no con la Administración: eso último lo
+    // hace quien firma.
+    permisos: ["expedientes-todos", "documentos"],
   },
   {
     id: "paralegal",
@@ -68,6 +122,8 @@ export const ROLES: RoleDefinition[] = [
       "Marcar incidencias en documentos",
     ],
     cannot: ["Validar documentos definitivamente", "Comunicarse con la Administración"],
+    // Prepara borradores; el escrito sale con la firma del abogado.
+    permisos: ["documentos", "escritos"],
   },
   {
     id: "comercial",
@@ -82,6 +138,9 @@ export const ROLES: RoleDefinition[] = [
       "Acceder a documentación migratoria de expedientes contratados",
       "Ver pasaportes, antecedentes ni datos de salud",
     ],
+    // Sin `documentos`, y ese es el permiso que más importa de esta tabla:
+    // un perfil comercial trabaja un lead entero sin ver un pasaporte.
+    permisos: ["leads"],
   },
   {
     id: "cliente",
@@ -94,6 +153,8 @@ export const ROLES: RoleDefinition[] = [
       "Ejercer sus derechos RGPD",
     ],
     cannot: ["Acceder a ningún dato de otro cliente"],
+    // El cliente no entra al panel interno: su sitio es /app.
+    permisos: [],
   },
 ];
 
@@ -101,3 +162,17 @@ export const ROLE_MAP = Object.fromEntries(ROLES.map((r) => [r.id, r])) as Recor
   Role,
   RoleDefinition
 >;
+
+/**
+ * ¿Este rol tiene este permiso?
+ *
+ * Con una advertencia que no es retórica: esto decide qué se **enseña**, no
+ * qué se puede hacer. Ocultar una pantalla no protege un pasaporte; lo
+ * protege la política de seguridad a nivel de fila, que vive en la base de
+ * datos y hoy no está conectada. Mientras no lo esté, el panel es una
+ * demostración del modelo de permisos, no un control de acceso, y así se dice
+ * en pantalla en lugar de dejar creer lo contrario.
+ */
+export function puede(role: Role, permiso: Permiso): boolean {
+  return ROLE_MAP[role].permisos.includes(permiso);
+}

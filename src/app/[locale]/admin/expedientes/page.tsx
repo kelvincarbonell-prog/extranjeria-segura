@@ -1,9 +1,12 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_PIPELINE, DEMO_EXPEDIENTES, PIPELINE_STAGES } from "@/content/demo";
+import { SoloCon } from "@/components/admin/SoloCon";
+import { DEMO_PIPELINE, expedientesDemo, PIPELINE_STAGES } from "@/content/demo";
 import { Card, Badge, DemoTag } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
 import { plazoPrincipal } from "@/lib/vigilancia";
+import { filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
+import { rolDemo } from "@/lib/rol-demo";
 import { eur, formatDateES, cn } from "@/lib/utils";
 
 export const metadata = { title: "Expedientes" };
@@ -13,12 +16,13 @@ const STAGE_LABEL = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.id, s.label
 /** Un expediente sin plazo vivo va al final, no al principio con un cero. */
 const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
 
-export default function ExpedientesPage() {
+async function ExpedientesPageInterior() {
+  const rol = await rolDemo();
   // El plazo se deriva de los hechos en cada render. Antes se leía de un campo
   // guardado que dejaba de ser cierto al día siguiente de escribirlo.
-  const plazos = plazoPrincipal(DEMO_EXPEDIENTES);
+  const plazos = plazoPrincipal(expedientesDemo());
 
-  const rows = [...DEMO_PIPELINE].sort(
+  const rows = filtrarAsignadosPorOwner(DEMO_PIPELINE, rol).sort(
     (a, b) =>
       (plazos.get(a.id)?.cuenta.dias ?? SIN_PLAZO) - (plazos.get(b.id)?.cuenta.dias ?? SIN_PLAZO),
   );
@@ -31,7 +35,9 @@ export default function ExpedientesPage() {
             Expedientes
           </h1>
           <p className="text-ink-500 mt-1.5 text-[14.5px]">
-            {rows.length} expedientes, ordenados por proximidad del plazo.
+            {rows.length === DEMO_PIPELINE.length
+              ? `${rows.length} expedientes, ordenados por proximidad del plazo.`
+              : `${rows.length} expedientes asignados a ti, ordenados por proximidad del plazo.`}
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -98,7 +104,24 @@ export default function ExpedientesPage() {
             </tbody>
           </table>
         </div>
+        {/* Una tabla con encabezados y sin filas se lee como un error de
+            carga. Decir que está vacía, y por qué, cuesta una frase. */}
+        {rows.length === 0 && (
+          <p className="text-ink-500 px-4 py-8 text-center text-[13.5px]">
+            No hay ningún expediente asignado a ti. Tu rol ve los expedientes de los que es
+            responsable; quien administra la cuenta los asigna.
+          </p>
+        )}
       </Card>
     </div>
+  );
+}
+
+/** La pantalla solo se renderiza si el rol activo tiene «documentos». */
+export default function ExpedientesPage() {
+  return (
+    <SoloCon permiso="documentos">
+      <ExpedientesPageInterior />
+    </SoloCon>
   );
 }

@@ -1,5 +1,8 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_EXPEDIENTES } from "@/content/demo";
+import { SoloCon } from "@/components/admin/SoloCon";
+import { expedientesDemo } from "@/content/demo";
+import { filtrarAsignados } from "@/lib/mis-expedientes";
+import { rolDemo } from "@/lib/rol-demo";
 import { vigilar, aperturaRenovacion, type PlazoVivo } from "@/lib/vigilancia";
 import { fechaLarga, parseDia } from "@/lib/plazos";
 import { Fuente } from "@/components/contenido/Fuente";
@@ -32,9 +35,12 @@ export const metadata = { title: "Plazos" };
  * contrastado, lo dice. Quien organiza su semana con esta pantalla tiene
  * derecho a saber cuáles de estos relojes están confirmados y cuáles no.
  */
-export default function PlazosPage() {
-  const { vencidos, criticos, proximos, sinPlazo } = vigilar(DEMO_EXPEDIENTES);
-  const porId = new Map(DEMO_EXPEDIENTES.map((e) => [e.id, e]));
+async function PlazosPageInterior() {
+  // Se filtra ANTES de calcular: un plazo de otro no es un plazo que
+  // atenuar en pantalla, es un plazo que no es tuyo.
+  const mios = filtrarAsignados(expedientesDemo(), await rolDemo());
+  const { vencidos, criticos, proximos, sinPlazo } = vigilar(mios);
+  const porId = new Map(mios.map((e) => [e.id, e]));
 
   const bloques = [
     {
@@ -246,5 +252,14 @@ function FilaPlazo({
         </div>
       </div>
     </Card>
+  );
+}
+
+/** La pantalla solo se renderiza si el rol activo tiene «documentos». */
+export default function PlazosPage() {
+  return (
+    <SoloCon permiso="documentos">
+      <PlazosPageInterior />
+    </SoloCon>
   );
 }

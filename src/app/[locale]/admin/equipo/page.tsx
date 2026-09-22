@@ -1,4 +1,5 @@
 import { ROLES } from "@/content/roles";
+import { SoloCon } from "@/components/admin/SoloCon";
 import { Card, Badge, LegalNote } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { Reveal } from "@/components/motion/primitives";
@@ -16,6 +17,7 @@ const GLYPHS: Record<string, string> = {
 
 export default function EquipoPage() {
   return (
+    <SoloCon permiso="equipo">
     <div className="mx-auto flex max-w-5xl flex-col gap-5">
       <div>
         <h1 className="text-ink-900 font-display text-[24px] leading-tight font-extrabold tracking-[-0.035em] md:text-[28px]">
@@ -94,5 +96,6 @@ export default function EquipoPage() {
         </LegalNote>
       </Card>
     </div>
+    </SoloCon>
   );
 }
