@@ -79,9 +79,9 @@ export function CheckTeaser() {
                 {t.check.headline}
               </h2>
               <p className="text-ink-500 mt-5 max-w-lg text-[17px] leading-[1.6] md:text-lg">
-                Ocho preguntas condicionales: solo te preguntamos lo que hace falta para tu caso.
-                Al final sabes qué vías pueden encajar, qué documentación piden y qué habría que
-                verificar.
+                Te preguntamos solo lo que hace falta para tu caso: si no aplica, no aparece. Al
+                final sabes qué vías pueden encajar contigo, qué documentos te van a pedir y qué
+                tendría que mirar un profesional antes de nada.
               </p>
             </Reveal>
 
@@ -91,7 +91,7 @@ export function CheckTeaser() {
                   {
                     glyph: "path",
                     t: "Vías que pueden encajar contigo",
-                    d: "Ordenadas por encaje preliminar, con las alternativas.",
+                    d: "De la que más encaja a la que menos, con sus alternativas.",
                   },
                   {
                     glyph: "doc",

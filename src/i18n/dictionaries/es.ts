@@ -67,14 +67,21 @@ export const es = {
     eyebrow: "Extranjería · 100% online",
     titleA: "Tu vida en España.",
     titleB: "Nosotros resolvemos los papeles.",
+    /* El subtítulo enumeraba lo que hace la herramienta. Ahora dice lo que
+       resuelve, que es lo que la persona tiene en la cabeza: no saber cómo se
+       llama lo suyo, y no querer volver a pagar por un formulario. */
     subtitle:
-      "Descubre en menos de 3 minutos qué permiso necesitas, qué documentación debes presentar y cómo podemos gestionarlo por ti de principio a fin.",
+      "No hace falta que sepas cómo se llama tu trámite. Cuéntanos tu situación y te decimos qué vías tienes, qué papeles piden y qué cuesta, antes de que pagues nada.",
     ctaPrimary: "Comprobar mi situación",
     ctaSecondary: "Ya sé qué trámite necesito",
+    /* Tres frases que hablaban de la plataforma —«gestión 100% online»,
+       «seguimiento en tiempo real»— y ninguna de lo que le preocupa a quien
+       lee. Ahora responden los tres miedos que trae: que le cobren antes de
+       saber si tiene caso, que le den largas, y que se le pase un plazo. */
     promises: [
-      "Primera orientación gratuita",
-      "Gestión 100% online",
-      "Seguimiento en tiempo real",
+      "Saber si tienes caso es gratis",
+      "Te decimos el precio antes de empezar",
+      "Si tienes un plazo, lo vigilamos nosotros",
     ],
     strip: "Gestionamos el expediente completo en",
   },
@@ -117,11 +124,17 @@ export const es = {
   },
 
   check: {
-    name: "Immigration Check",
-    eyebrow: "La joya de la plataforma",
+    /* «Immigration Check» es un nombre de producto en inglés puesto delante
+       de alguien que a lo mejor no lee español, y desde luego no lo busca:
+       nadie escribe «immigration check» en Google, escribe «qué papeles
+       necesito para quedarme en España». Y «la joya de la plataforma» es lo
+       que diría de sí misma una empresa, no lo que necesita leer quien llega
+       aquí con miedo a que le denieguen. */
+    name: "Diagnóstico gratuito",
+    eyebrow: "Empieza por aquí",
     /** Titular de la sección: la intención en palabras del usuario, no la marca. */
     headline: "Comprueba en 3 minutos qué vía de residencia encaja contigo.",
-    lede: "Responde unas preguntas y descubre qué opciones pueden encajar con tu situación. Ocho preguntas condicionales: solo te preguntamos lo que hace falta para tu caso.",
+    lede: "Te preguntamos solo lo que hace falta para tu caso: si no aplica, no aparece. En unos minutos sabes qué vías pueden encajar contigo, qué documentos te van a pedir y qué tendría que mirar un profesional.",
     start: "Empezar el diagnóstico",
     howWeAnalyse: "Ver cómo lo analizamos",
     preview: "Vista previa",
