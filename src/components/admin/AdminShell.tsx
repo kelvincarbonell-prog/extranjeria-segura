@@ -8,7 +8,8 @@ import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
 import { Avatar } from "@/components/ui/primitives";
 import { ROLES, puede, type Permiso, type Role } from "@/content/roles";
-import { navPermitida } from "@/content/nav-admin";
+import { navPermitida, navMovil } from "@/content/nav-admin";
+import { NavMovil } from "./NavMovil";
 import { USUARIOS_DEMO, ROL_DEMO_INICIAL, COOKIE_ROL } from "@/content/demo-sesion";
 import { CerrarSesion } from "@/components/auth/CerrarSesion";
 import { Buscador, type Resultado } from "./Buscador";
@@ -58,6 +59,7 @@ export function AdminShell({
   // entra con su cuenta no puede mirarse a sí mismo como comercial.
   const puedeCambiarRol = !sesion || sesion.email.startsWith("admin@");
   const nav = navPermitida(rol);
+  const movil = navMovil(rol);
 
   /**
    * Cambiar de rol escribe la cookie y pide al servidor que vuelva a
@@ -177,17 +179,30 @@ export function AdminShell({
           </div>
         </div>
 
-        {/* Mobile nav */}
-        <nav aria-label="Panel interno" className="no-scrollbar border-ink-100 flex gap-1 overflow-x-auto border-t px-4 py-2 2xl:hidden">
+        {/* ───── Tablet y portátil pequeño: píldoras que ENVUELVEN ─────
+            
+            Aquí había una fila con desplazamiento horizontal. A 768 px el
+            contenido medía 816 y la octava entrada quedaba fuera sin que nada
+            lo indicara. `flex-wrap` la baja a una segunda línea: ocupa
+            veintitantos píxeles más y no esconde nada, que es justo el
+            intercambio que interesa en una herramienta interna.
+            
+            Por debajo de `md` manda la barra inferior —el pulgar no llega
+            arriba— y a partir de `2xl` el menú en línea de la cabecera. */}
+        <nav
+          aria-label="Secciones del panel"
+          className="border-ink-100 hidden flex-wrap gap-1.5 border-t px-4 py-2.5 md:flex 2xl:hidden"
+        >
           {nav.map((item) => {
             const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium",
-                  active ? "bg-ink-950 text-white" : "text-ink-500 bg-ink-50",
+                  "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-medium transition-colors",
+                  active ? "bg-ink-950 text-white" : "text-ink-500 bg-ink-50 hover:bg-ink-100",
                 )}
               >
                 <Glyph name={item.glyph} className="size-3.5" />
@@ -199,10 +214,11 @@ export function AdminShell({
       </header>
 
       <RoleContext.Provider value={rol}>
-        <main id="contenido" className="px-4 py-6 sm:px-6 lg:px-8">
+        <main id="contenido" className="px-4 pt-6 pb-28 sm:px-6 md:pb-6 lg:px-8">
           <AvisoDemostracion usuario={usuario.nombre} puesto={usuario.puesto} />
           {children}
         </main>
+        <NavMovil barra={movil.barra} mas={movil.mas} />
       </RoleContext.Provider>
     </div>
   );
