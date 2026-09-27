@@ -4,28 +4,55 @@ import { DEMO_PIPELINE, expedientesDemo, PIPELINE_STAGES } from "@/content/demo"
 import { Card, Badge, DemoTag } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
+import { EstadoPreparacion, BarraPreparacion } from "@/components/admin/Preparacion";
 import { plazoPrincipal } from "@/lib/vigilancia";
-import { filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
+import { ordenDelDia, motivoDelOrden } from "@/lib/orden-del-dia";
+import { filtrarAsignados, filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
 import { rolDemo } from "@/lib/rol-demo";
-import { eur, formatDateES, cn } from "@/lib/utils";
+import { formatDateES, cn } from "@/lib/utils";
 
 export const metadata = { title: "Expedientes" };
 
 const STAGE_LABEL = Object.fromEntries(PIPELINE_STAGES.map((s) => [s.id, s.label]));
 
-/** Un expediente sin plazo vivo va al final, no al principio con un cero. */
-const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
-
+/**
+ * LA LISTA DE EXPEDIENTES, ORDENADA POR LO QUE HAY QUE HACER.
+ *
+ * Antes ordenaba solo por plazo y se servía como una tabla de 860 px dentro
+ * de un contenedor con desplazamiento horizontal. En un teléfono eso son ocho
+ * columnas que hay que arrastrar para leer, cuando la pregunta que se hace
+ * quien abre esto en el metro es una sola: ¿qué hago ahora?
+ *
+ * Dos cambios, y el segundo depende del primero:
+ *
+ *  1. ORDEN. Lo irreversible primero —un plazo vencido o a siete días—, y el
+ *     resto por esfuerzo: lo que una firma cierra antes que lo que necesita
+ *     seis documentos del cliente. Ver `orden-del-dia.ts`.
+ *
+ *  2. FORMA. Por debajo de `sm` deja de ser tabla y pasa a ser una lista de
+ *     tarjetas, cada una con la frase de qué toca hacer. La tabla sigue
+ *     existiendo desde `sm`, donde caben las ocho columnas y comparar filas
+ *     tiene sentido.
+ *
+ * No es la tabla apilada de `globals.css`: allí se conserva el `<table>`
+ * porque la relación encabezado-celda es la información. Aquí lo que importa
+ * en móvil no es la fila entera sino una frase por expediente, así que el
+ * marcado que sirve es una lista.
+ */
 async function ExpedientesPageInterior() {
   const rol = await rolDemo();
-  // El plazo se deriva de los hechos en cada render. Antes se leía de un campo
-  // guardado que dejaba de ser cierto al día siguiente de escribirlo.
-  const plazos = plazoPrincipal(expedientesDemo());
 
-  const rows = filtrarAsignadosPorOwner(DEMO_PIPELINE, rol).sort(
-    (a, b) =>
-      (plazos.get(a.id)?.cuenta.dias ?? SIN_PLAZO) - (plazos.get(b.id)?.cuenta.dias ?? SIN_PLAZO),
-  );
+  const cartera = filtrarAsignadosPorOwner(DEMO_PIPELINE, rol);
+  const expedientes = filtrarAsignados(expedientesDemo(), rol);
+  const plazos = plazoPrincipal(expedientes);
+
+  const porId = new Map(cartera.map((c) => [c.id, c]));
+  const filas = ordenDelDia(
+    expedientes.map((e) => ({ expediente: e, plazo: plazos.get(e.id) })),
+  ).filter((f) => porId.has(f.expediente.id));
+
+  const listos = filas.filter((f) => f.preparacion.estado === "listo").length;
+  const urgentes = filas.filter((f) => f.urgente).length;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-5">
@@ -34,10 +61,12 @@ async function ExpedientesPageInterior() {
           <h1 className="text-ink-900 font-display text-[24px] leading-tight font-extrabold tracking-[-0.035em] md:text-[28px]">
             Expedientes
           </h1>
-          <p className="text-ink-500 mt-1.5 text-[14.5px]">
-            {rows.length === DEMO_PIPELINE.length
-              ? `${rows.length} expedientes, ordenados por proximidad del plazo.`
-              : `${rows.length} expedientes asignados a ti, ordenados por proximidad del plazo.`}
+          {/* Qué orden es, dicho. Una lista ordenada por un criterio invisible
+              parece arbitraria, y lo que parece arbitrario se reordena a mano. */}
+          <p className="text-ink-500 mt-1.5 max-w-xl text-[14px] leading-relaxed">
+            {filas.length} expedientes. Primero lo que no admite espera
+            {urgentes > 0 ? ` (${urgentes})` : ""}; después, lo que se cierra con menos trabajo
+            {listos > 0 ? `, empezando por ${listos} listo${listos === 1 ? "" : "s"} para presentar` : ""}.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
@@ -48,12 +77,67 @@ async function ExpedientesPageInterior() {
         </div>
       </div>
 
-      <Card padding="none" className="overflow-hidden">
+      {/* ───────── Móvil: una tarjeta por expediente ───────── */}
+      <ul className="flex flex-col gap-2.5 sm:hidden">
+        {filas.map((f) => {
+          const c = porId.get(f.expediente.id)!;
+          return (
+            <li key={f.expediente.id}>
+              <Card padding="none" className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-ink-900 truncate text-[15px] font-semibold">{c.client}</p>
+                    <p className="text-ink-500 mt-0.5 truncate text-[12.5px]">
+                      <span className="data">{c.reference}</span> · {c.tramite}
+                    </p>
+                  </div>
+                  <CuentaPlazo plazo={plazos.get(c.id)} className="shrink-0" />
+                </div>
+
+                <p
+                  className={cn(
+                    "mt-3 text-[13.5px] leading-snug font-medium",
+                    f.urgente ? "text-signal-risk" : "text-ink-700",
+                  )}
+                >
+                  {motivoDelOrden(f)}
+                </p>
+
+                <div className="mt-3">
+                  <BarraPreparacion preparacion={f.preparacion} />
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                    <EstadoPreparacion preparacion={f.preparacion} />
+                    <span
+                      className={cn(
+                        "text-[12px]",
+                        c.owner === "Sin asignar" ? "text-signal-warn font-medium" : "text-ink-400",
+                      )}
+                    >
+                      {c.owner}
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </li>
+          );
+        })}
+        {filas.length === 0 && (
+          <li>
+            <SinExpedientes />
+          </li>
+        )}
+      </ul>
+
+      {/* ───────── Tablet y escritorio: la tabla ───────── */}
+      <Card padding="none" className="hidden overflow-hidden sm:block">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[860px] border-collapse text-left">
+          <table className="w-full min-w-[820px] border-collapse text-left">
+            <caption className="sr-only">
+              Expedientes ordenados por urgencia y después por trabajo pendiente
+            </caption>
             <thead>
               <tr className="border-ink-100 border-b">
-                {["Referencia", "Cliente", "Trámite", "Fase", "Responsable", "Plazo", "Valor", "Actualizado"].map(
+                {["Cliente", "Trámite", "Qué toca", "Preparación", "Plazo", "Responsable", "Actualizado"].map(
                   (h) => (
                     <th
                       key={h}
@@ -67,53 +151,79 @@ async function ExpedientesPageInterior() {
               </tr>
             </thead>
             <tbody className="divide-ink-100 divide-y">
-              {rows.map((c) => (
-                <tr key={c.id} className="hover:bg-canvas-deep transition-colors">
-                  <td className="px-4 py-3.5">
-                    <Link
-                      href="/admin/pipeline"
-                      className="data text-brand-600 hover:text-brand-800 tap inline-block text-[12.5px] font-semibold"
+              {filas.map((f) => {
+                const c = porId.get(f.expediente.id)!;
+                return (
+                  <tr key={f.expediente.id} className="hover:bg-canvas-deep transition-colors">
+                    <td className="px-4 py-3.5">
+                      <Link
+                        href="/admin/pipeline"
+                        className="text-ink-900 hover:text-brand-700 block text-[13.5px] font-medium"
+                      >
+                        {c.client}
+                        <span className="data text-ink-400 block text-[11.5px] font-normal">
+                          {c.reference}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="text-ink-600 px-4 py-3.5 text-[13px]">
+                      {c.tramite}
+                      <Badge tone="neutral" className="mt-1 block w-fit">
+                        {STAGE_LABEL[c.stage]}
+                      </Badge>
+                    </td>
+                    <td
+                      className={cn(
+                        "max-w-[260px] px-4 py-3.5 text-[13px] leading-snug",
+                        f.urgente ? "text-signal-risk font-medium" : "text-ink-700",
+                      )}
                     >
-                      {c.reference}
-                    </Link>
-                  </td>
-                  <td className="text-ink-900 px-4 py-3.5 text-[13.5px] font-medium">{c.client}</td>
-                  <td className="text-ink-600 px-4 py-3.5 text-[13px]">{c.tramite}</td>
-                  <td className="px-4 py-3.5">
-                    <Badge tone="neutral">{STAGE_LABEL[c.stage]}</Badge>
-                  </td>
-                  <td
-                    className={cn(
-                      "px-4 py-3.5 text-[13px]",
-                      c.owner === "Sin asignar" ? "text-signal-warn font-medium" : "text-ink-600",
-                    )}
-                  >
-                    {c.owner}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <CuentaPlazo plazo={plazos.get(c.id)} />
-                  </td>
-                  <td className="text-ink-800 data px-4 py-3.5 text-[13px] font-semibold">
-                    {c.valueCents > 0 ? eur(c.valueCents) : "—"}
-                  </td>
-                  <td className="text-ink-400 px-4 py-3.5 text-[12.5px]">
-                    {formatDateES(c.updatedAt, "short")}
-                  </td>
-                </tr>
-              ))}
+                      {motivoDelOrden(f)}
+                    </td>
+                    <td className="w-[150px] px-4 py-3.5">
+                      <BarraPreparacion preparacion={f.preparacion} />
+                      <span className="mt-1.5 block">
+                        <EstadoPreparacion preparacion={f.preparacion} />
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <CuentaPlazo plazo={plazos.get(c.id)} />
+                    </td>
+                    <td
+                      className={cn(
+                        "px-4 py-3.5 text-[13px]",
+                        c.owner === "Sin asignar" ? "text-signal-warn font-medium" : "text-ink-600",
+                      )}
+                    >
+                      {c.owner}
+                    </td>
+                    <td className="text-ink-400 px-4 py-3.5 text-[12.5px] whitespace-nowrap">
+                      {formatDateES(c.updatedAt, "short")}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
-        {/* Una tabla con encabezados y sin filas se lee como un error de
-            carga. Decir que está vacía, y por qué, cuesta una frase. */}
-        {rows.length === 0 && (
-          <p className="text-ink-500 px-4 py-8 text-center text-[13.5px]">
-            No hay ningún expediente asignado a ti. Tu rol ve los expedientes de los que es
-            responsable; quien administra la cuenta los asigna.
-          </p>
-        )}
+        {filas.length === 0 && <SinExpedientes />}
       </Card>
+
+      <p className="text-ink-400 text-[12px] leading-relaxed">
+        La preparación cuenta documentos aportados y validados frente a los que exige el trámite.
+        No es una previsión de resultado: nadie puede calcular eso, y este producto no publica
+        cifras que no pueda sostener.
+      </p>
     </div>
+  );
+}
+
+function SinExpedientes() {
+  return (
+    <p className="text-ink-500 px-4 py-8 text-center text-[13.5px]">
+      No hay ningún expediente asignado a ti. Tu rol ve los expedientes de los que es responsable;
+      quien administra la cuenta los asigna.
+    </p>
   );
 }
 

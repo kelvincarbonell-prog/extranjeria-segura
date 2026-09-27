@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
 import { plazoPrincipal } from "@/lib/vigilancia";
+import { ordenDelDia, motivoDelOrden } from "@/lib/orden-del-dia";
+import { EstadoPreparacion } from "@/components/admin/Preparacion";
 import { filtrarAsignados, filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
 import { rolDemo } from "@/lib/rol-demo";
+import { puede } from "@/content/roles";
 import { eur, cn } from "@/lib/utils";
 
 export const metadata = { title: "Panel" };
@@ -38,6 +41,16 @@ export default async function AdminHome() {
 
   const plazos = plazoPrincipal(expedientes);
   const conPlazo = cartera.filter((c) => plazos.has(c.id));
+
+  // El orden del día: lo irreversible primero, después lo que menos trabajo
+  // pide. Es la misma función que ordena /admin/expedientes, para que las dos
+  // pantallas no propongan planes distintos para la misma mañana.
+  const porCartera = new Map(cartera.map((c) => [c.id, c]));
+  const agenda = ordenDelDia(
+    expedientes.map((e) => ({ expediente: e, plazo: plazos.get(e.id) })),
+  ).filter((f) => porCartera.has(f.expediente.id));
+
+  const listos = agenda.filter((f) => f.preparacion.estado === "listo");
 
   const active = cartera.filter(
     (c) => !["archivado", "resolucion"].includes(c.stage),
@@ -121,8 +134,12 @@ export default async function AdminHome() {
         </Reveal>
       )}
 
+      {/* En una pantalla estrecha lo primero tiene que ser accionable. Cuatro
+          métricas seguidas de un bloque de fases no dicen qué hacer; la lista
+          de qué toca hoy, sí. En escritorio caben las dos cosas a la vez y se
+          recupera el orden de lectura original. */}
       {/* ---------------- Metrics ---------------- */}
-      <Reveal delay={0.04}>
+      <Reveal delay={0.04} className="order-2 lg:order-none">
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Metric label="Expedientes activos" value={String(active.length)} sub="en tramitación" glyph="path" />
           {/* El subtítulo decía «vencen en 48 h o menos» y contaba dos cosas
@@ -137,7 +154,20 @@ export default async function AdminHome() {
             glyph="clock"
             tone={overdue.length > 0 ? "risk" : urgent.length > 0 ? "warn" : "ok"}
           />
-          <Metric label="Leads abiertos" value={String(leads.length)} sub="sin contratar" glyph="door" />
+          {/* El número que más decide la mañana de quien tramita: cuántos
+              expedientes cierra hoy una firma. Para un perfil comercial, que
+              no ve expedientes, el dato útil sigue siendo el de leads. */}
+          {puede(rol, "documentos") ? (
+            <Metric
+              label="Listos para presentar"
+              value={String(listos.length)}
+              sub="solo falta firmar"
+              glyph="stamp"
+              tone={listos.length > 0 ? "ok" : undefined}
+            />
+          ) : (
+            <Metric label="Leads abiertos" value={String(leads.length)} sub="sin contratar" glyph="door" />
+          )}
           <Metric
             label="Valor contratado"
             value={eur(contractedValue)}
@@ -147,9 +177,9 @@ export default async function AdminHome() {
         </div>
       </Reveal>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="order-1 grid gap-5 lg:order-none lg:grid-cols-[minmax(0,1fr)_340px]">
         {/* ---------------- Stage distribution ---------------- */}
-        <Reveal delay={0.06}>
+        <Reveal delay={0.06} className="order-2 lg:order-none">
           <Card padding="lg">
             <h2 className="text-ink-900 mb-5 text-[15px] font-semibold">Distribución por fase</h2>
             <ul className="flex flex-col gap-3">
@@ -175,42 +205,59 @@ export default async function AdminHome() {
           </Card>
         </Reveal>
 
-        {/* ---------------- Cola por plazo ---------------- */}
-        <Reveal delay={0.08}>
+        {/* ---------------- Orden del día ---------------- */}
+        <Reveal delay={0.08} className="order-1 lg:order-none">
           <Card padding="none" className="overflow-hidden">
             <div className="border-ink-100 border-b px-5 py-4">
-              <h2 className="text-ink-900 text-[15px] font-semibold">Cola por plazo</h2>
-              <p className="text-ink-400 text-[12px]">Lo que vence antes, primero</p>
+              <h2 className="text-ink-900 text-[15px] font-semibold">Qué toca hoy</h2>
+              {/* Antes era «cola por plazo» y solo ordenaba por reloj. Un
+                  expediente completo esperando una firma se quedaba semanas
+                  sin presentar porque su vencimiento estaba lejos. */}
+              <p className="text-ink-400 text-[12px]">
+                Lo que no espera, y luego lo que se cierra antes
+              </p>
             </div>
             <ul className="divide-ink-100 divide-y">
-              {[...conPlazo]
-                .sort((a, b) => plazos.get(a.id)!.cuenta.dias - plazos.get(b.id)!.cuenta.dias)
-                .slice(0, 6)
-                .map((c) => {
-                  const plazo = plazos.get(c.id)!;
-                  return (
-                    <li key={c.id} className="flex items-center gap-3 px-5 py-3.5">
-                      <CuentaPlazo plazo={plazo} className="shrink-0" />
-                      <span className="min-w-0 flex-1">
-                        <span className="text-ink-900 block truncate text-[13.5px] font-medium">
-                          {c.client}
-                        </span>
-                        {/* Qué vence, no solo cuándo. «6 d» junto a un nombre
-                            no dice qué hay que hacer con ese expediente hoy. */}
-                        <span className="text-ink-400 block truncate text-[12px]">
-                          {c.reference} · {plazo.titulo}
-                        </span>
+              {agenda.slice(0, 6).map((f) => {
+                const c = porCartera.get(f.expediente.id)!;
+                return (
+                  <li key={f.expediente.id} className="flex items-start gap-3 px-5 py-3.5">
+                    <CuentaPlazo plazo={plazos.get(c.id)} className="mt-0.5 shrink-0" />
+                    <span className="min-w-0 flex-1">
+                      <span className="text-ink-900 block truncate text-[13.5px] font-medium">
+                        {c.client}
                       </span>
-                    </li>
-                  );
-                })}
+                      <span
+                        className={cn(
+                          "mt-0.5 block text-[12px] leading-snug",
+                          f.urgente ? "text-signal-risk" : "text-ink-500",
+                        )}
+                      >
+                        {motivoDelOrden(f)}
+                      </span>
+                      <span className="mt-1.5 block">
+                        <EstadoPreparacion preparacion={f.preparacion} />
+                      </span>
+                    </span>
+                  </li>
+                );
+              })}
+              {agenda.length === 0 && (
+                <li className="text-ink-500 px-5 py-8 text-center text-[13px]">
+                  Nada pendiente en tus expedientes.
+                </li>
+              )}
             </ul>
           </Card>
         </Reveal>
       </div>
 
+      {/* `order-3` explícito: en un contenedor flex, los hijos sin `order`
+          valen 0, así que este bloque informativo se colaba por delante de
+          todo lo que sí lo llevaba. Medido a 360 px: «Automatizaciones»
+          salía en y=693 y «Qué toca hoy» en y=1392. */}
       {/* ---------------- Automations ---------------- */}
-      <Reveal delay={0.1}>
+      <Reveal delay={0.1} className="order-3 lg:order-none">
         <Card padding="lg">
           <div className="mb-1 flex items-center justify-between gap-3">
             <h2 className="text-ink-900 text-[15px] font-semibold">Automatizaciones</h2>

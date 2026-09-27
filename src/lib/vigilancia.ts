@@ -1,4 +1,5 @@
 import { FUENTES, type Fuente } from "@/content/fuentes";
+import type { DocumentoExpediente } from "./preparacion";
 import { aISO, cuentaAtras, hoy, parseDia, sumarDias, sumarMeses, type Cuenta } from "./plazos";
 
 /**
@@ -60,8 +61,22 @@ export interface Expediente {
   referencia: string;
   cliente: string;
   tramite: string;
+  /** Slug del catálogo: de ahí sale el plan documental del expediente. */
+  tramiteSlug: string;
   responsable: string;
   hechos: HechoExpediente[];
+  /**
+   * Estado de cada documento, por nombre.
+   *
+   * La *lista* de documentos no se guarda aquí: sale del trámite, que es
+   * donde vive y donde se revisa jurídicamente. Guardar una copia por
+   * expediente significaría que actualizar un requisito no llega a los
+   * expedientes abiertos, que es exactamente cómo se presenta un expediente
+   * con la documentación del año pasado.
+   */
+  documentos?: DocumentoExpediente[];
+  /** `true` cuando ya está en la Administración. */
+  presentado?: boolean;
 }
 
 export interface PlazoVivo {

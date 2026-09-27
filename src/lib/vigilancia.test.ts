@@ -17,6 +17,7 @@ function exp(hechos: Expediente["hechos"], id = "e1"): Expediente {
     referencia: "ES-0001",
     cliente: "Cliente de prueba",
     tramite: "Arraigo social",
+    tramiteSlug: "arraigo-social",
     responsable: "A. Ruiz",
     hechos,
   };

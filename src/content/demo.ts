@@ -424,6 +424,8 @@ export const DEMO_PIPELINE: DemoCaseCard[] = [
 
 import type { Expediente } from "@/lib/vigilancia";
 import { aISO, hoy, sumarDias } from "@/lib/plazos";
+import { TRAMITE_MAP } from "./tramites";
+import type { DocumentoExpediente } from "@/lib/preparacion";
 
 /**
  * Un día de calendario relativo a hoy.
@@ -449,121 +451,181 @@ function dia(desplazamiento: number): string {
  * volvería a enseñar la demostración envejecida. El panel es `force-dynamic`,
  * así que llamarla por petición no cuesta nada.
  */
+/**
+ * Todos los documentos del trámite, validados.
+ *
+ * Se deriva del catálogo en lugar de escribirse a mano: si mañana un trámite
+ * gana un requisito, este expediente deja de estar completo solo, que es lo
+ * correcto. Una lista copiada seguiría diciendo «listo para presentar» con un
+ * documento de menos.
+ */
+function todosValidados(slug: string): DocumentoExpediente[] {
+  return (TRAMITE_MAP[slug]?.documents ?? []).map((d) => ({
+    nombre: d.name,
+    estado: "correcto" as const,
+  }));
+}
+
 export function expedientesDemo(): Expediente[] {
   return [
-  {
-    id: "c5",
-    referencia: "ES-2033",
-    cliente: "Wei L.",
-    tramite: "Renovación de residencia",
-    responsable: "A. Ruiz",
-    hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-11) }], // venció ayer
-  },
-  {
-    id: "c2",
-    referencia: "ES-2051",
-    cliente: "Ibrahim K.",
-    tramite: "Nacionalidad por residencia",
-    responsable: "A. Ruiz",
-    hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-4), diasConcedidos: 10 }], // seis días
-  },
-  {
-    id: "c4",
-    referencia: "ES-2039",
-    cliente: "Carlos M.",
-    tramite: "Reagrupación familiar",
-    responsable: "L. Ortega",
-    hechos: [{ tipo: "presentacion", fecha: dia(-66) }], // silencio a tres meses
-  },
-  {
-    id: "c11",
-    referencia: "ES-2021",
-    cliente: "Paulo S.",
-    tramite: "Nómada digital",
-    responsable: "L. Ortega",
-    hechos: [
-      { tipo: "presentacion", fecha: dia(-125) },
-      { tipo: "resolucion-notificada", fecha: dia(-5), sentido: "denegatoria" },
-    ],
-  },
-  {
-    id: "c1",
-    referencia: "ES-2048",
-    cliente: "María G.",
-    tramite: "Arraigo sociolaboral",
-    responsable: "A. Ruiz",
-    hechos: [
-      {
-        tipo: "caducidad-documento",
-        fecha: dia(14), // caduca el documento
-        etiqueta: "Certificado de antecedentes penales",
-      },
-    ],
-  },
-  {
-    id: "c3",
-    referencia: "ES-2044",
-    cliente: "Sofia B.",
-    tramite: "Nómada digital",
-    responsable: "L. Ortega",
-    hechos: [{ tipo: "caducidad-tarjeta", fecha: dia(54) }],
-  },
-  {
-    id: "c6",
-    referencia: "ES-2055",
-    cliente: "Ana P.",
-    tramite: "Arraigo social",
-    responsable: "Sin asignar",
-    hechos: [],
-  },
+    {
+      id: "c5",
+      referencia: "ES-2033",
+      cliente: "Wei L.",
+      tramite: "Renovación de residencia",
+      tramiteSlug: "renovacion-residencia-trabajo",
+      responsable: "A. Ruiz",
+      hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-11) }], // venció ayer
+      // Un documento caducado es la causa más común de un requerimiento de
+      // subsanación, y por eso está aquí: es el caso que hay que saber ver.
+      documentos: [
+        { nombre: "Pasaporte y TIE", estado: "correcto" },
+        { nombre: "Vida laboral actualizada", estado: "caducado" },
+        { nombre: "Contrato vigente o documentación de la actividad", estado: "correcto" },
+        { nombre: "Empadronamiento", estado: "correcto" },
+      ],
+    },
+    {
+      id: "c2",
+      referencia: "ES-2051",
+      cliente: "Ibrahim K.",
+      tramite: "Nacionalidad por residencia",
+      tramiteSlug: "nacionalidad-por-residencia",
+      responsable: "A. Ruiz",
+      hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-4), diasConcedidos: 10 }], // seis días
+      documentos: [
+        { nombre: "Pasaporte y TIE en vigor", estado: "revision" },
+        { nombre: "Certificado de nacimiento legalizado y traducido", estado: "cambios" },
+        { nombre: "Certificado de antecedentes penales del país de origen", estado: "correcto" },
+        { nombre: "Certificado de antecedentes penales en España", estado: "correcto" },
+        { nombre: "Certificado de empadronamiento", estado: "correcto" },
+        { nombre: "Diploma CCSE", estado: "correcto" },
+      ],
+    },
+    {
+      id: "c4",
+      referencia: "ES-2039",
+      cliente: "Carlos M.",
+      tramite: "Reagrupación familiar",
+      tramiteSlug: "reagrupacion-familiar",
+      responsable: "L. Ortega",
+      hechos: [{ tipo: "presentacion", fecha: dia(-66) }], // silencio a tres meses
+      presentado: true,
+    },
+    {
+      id: "c11",
+      referencia: "ES-2021",
+      cliente: "Paulo S.",
+      tramite: "Nómada digital",
+      tramiteSlug: "teletrabajo-internacional",
+      responsable: "L. Ortega",
+      hechos: [
+        { tipo: "presentacion", fecha: dia(-125) },
+        { tipo: "resolucion-notificada", fecha: dia(-5), sentido: "denegatoria" },
+      ],
+      presentado: true,
+    },
+    {
+      id: "c1",
+      referencia: "ES-2048",
+      cliente: "María G.",
+      tramite: "Arraigo sociolaboral",
+      tramiteSlug: "arraigo-sociolaboral",
+      responsable: "A. Ruiz",
+      hechos: [
+        {
+          tipo: "caducidad-documento",
+          fecha: dia(14), // caduca el documento
+          etiqueta: "Certificado de antecedentes penales",
+        },
+      ],
+      documentos: [
+        { nombre: "Pasaporte completo en vigor", estado: "correcto" },
+        { nombre: "Certificado de empadronamiento", estado: "correcto" },
+        { nombre: "Contrato u oferta de trabajo firmada", estado: "cambios" },
+        { nombre: "Prueba de permanencia continuada", estado: "correcto" },
+        { nombre: "Documentación de la empresa contratante", estado: "revision" },
+      ],
+    },
+    {
+      id: "c3",
+      referencia: "ES-2044",
+      cliente: "Sofia B.",
+      tramite: "Nómada digital",
+      tramiteSlug: "teletrabajo-internacional",
+      responsable: "L. Ortega",
+      hechos: [{ tipo: "caducidad-tarjeta", fecha: dia(54) }],
+      // Completo: este es el expediente que una firma cierra, y el que debe
+      // salir el primero de la lista aunque su plazo sea el más lejano.
+      documentos: todosValidados("teletrabajo-internacional"),
+    },
+    {
+      id: "c6",
+      referencia: "ES-2055",
+      cliente: "Ana P.",
+      tramite: "Arraigo social",
+      tramiteSlug: "arraigo-social",
+      responsable: "Sin asignar",
+      hechos: [],
+      documentos: [
+        { nombre: "Pasaporte completo en vigor", estado: "revision" },
+        { nombre: "Empadronamiento histórico", estado: "subido" },
+      ],
+    },
 
-  /* Los cinco sin plazo vivo. Un lead al que todavía no se le ha presentado
-     nada no tiene ningún reloj administrativo corriendo, y no hay que
-     inventarle uno: la urgencia comercial de contestarle es otra cosa, se
-     mide de otra forma y mezclarla con los plazos de la Administración es
-     justo lo que vuelve inservible un panel de plazos. */
-  {
-    id: "c7",
-    referencia: "ES-2057",
-    cliente: "Youssef A.",
-    tramite: "Arraigo sociolaboral",
-    responsable: "Comercial",
-    hechos: [],
-  },
-  {
-    id: "c8",
-    referencia: "ES-2058",
-    cliente: "Elena V.",
-    tramite: "Nacionalidad por residencia",
-    responsable: "Comercial",
-    hechos: [],
-  },
-  {
+    /* Los cinco sin plazo vivo. Un lead al que todavía no se le ha presentado
+       nada no tiene ningún reloj administrativo corriendo, y no hay que
+       inventarle uno: la urgencia comercial de contestarle es otra cosa, se
+       mide de otra forma y mezclarla con los plazos de la Administración es
+       justo lo que vuelve inservible un panel de plazos. */
+    {
+      id: "c7",
+      referencia: "ES-2057",
+      cliente: "Youssef A.",
+      tramite: "Arraigo sociolaboral",
+      tramiteSlug: "arraigo-sociolaboral",
+      responsable: "Comercial",
+      hechos: [],
+    },
+    {
+      id: "c8",
+      referencia: "ES-2058",
+      cliente: "Elena V.",
+      tramite: "Nacionalidad por residencia",
+      tramiteSlug: "nacionalidad-por-residencia",
+      responsable: "Comercial",
+      hechos: [],
+    },
+    {
       id: "c9",
       referencia: "ES-2059",
       cliente: "Diego R.",
       tramite: "Nómada digital",
+      tramiteSlug: "teletrabajo-internacional",
       // Derivado por un colaborador externo: es la única forma de que su rol
       // se pueda enseñar. Antes estaba «Sin asignar» y entrar como
       // colaborador daba una pantalla vacía.
       responsable: "Bufete asociado",
-    hechos: [],
-  },
-  {
-    id: "c10",
-    referencia: "ES-2060",
-    cliente: "Fatou N.",
-    tramite: "Protección internacional",
-    responsable: "Sin asignar",
-    hechos: [],
-  },
+      hechos: [],
+    },
+    {
+      id: "c10",
+      referencia: "ES-2060",
+      cliente: "Fatou N.",
+      tramite: "Protección internacional",
+      tramiteSlug: "proteccion-internacional",
+      responsable: "Sin asignar",
+      hechos: [],
+    },
     {
       id: "c12",
-    referencia: "ES-2018",
-    cliente: "Nadia H.",
-    tramite: "Arraigo familiar",
-    responsable: "A. Ruiz",
-    hechos: [],
+      referencia: "ES-2018",
+      cliente: "Nadia H.",
+      tramite: "Arraigo familiar",
+      tramiteSlug: "arraigo-familiar",
+      responsable: "A. Ruiz",
+      hechos: [],
+      presentado: true,
     },
   ];
 }
