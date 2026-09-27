@@ -3,6 +3,9 @@ import { Card, Avatar, Badge, LegalNote, KeyValue } from "@/components/ui/primit
 import { Button } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
 import { Reveal } from "@/components/motion/primitives";
+import { LanguageSwitcher } from "@/components/marketing/LanguageSwitcher";
+import { CerrarSesion, SinSesion } from "@/components/auth/CerrarSesion";
+import { sesionDemo } from "@/lib/sesion-demo";
 
 export const metadata = { title: "Perfil" };
 
@@ -40,7 +43,9 @@ const RIGHTS = [
   },
 ];
 
-export default function PerfilPage() {
+export default async function PerfilPage() {
+  const sesion = await sesionDemo();
+
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -62,16 +67,25 @@ export default function PerfilPage() {
               </p>
               <p className="text-ink-400 mt-0.5 text-[13.5px]">Cuenta de demostración</p>
             </div>
-            <Button variant="secondary" size="md" className="shrink-0">
-              Editar perfil
-            </Button>
           </div>
 
           <dl className="divide-ink-100 mt-6 divide-y border-t border-ink-100 pt-2">
-            <KeyValue k="Idioma de la plataforma" v="Español" />
             <KeyValue k="Zona horaria" v="Europe/Madrid" />
             <KeyValue k="Expediente activo" v={`#${DEMO_CASE.reference}`} mono />
           </dl>
+
+          {/* «Idioma de la plataforma: Español» estaba escrito como dato fijo,
+              con forma de ajuste y sin serlo, teniendo el sitio ocho idiomas
+              construidos y un selector que funciona por URL. Un ajuste que no
+              ajusta nada es peor que no ofrecerlo. */}
+          <div className="border-ink-100 mt-5 border-t pt-5">
+            <p className="text-ink-700 text-[13.5px] font-medium">Idioma de la plataforma</p>
+            <p className="text-ink-400 mt-0.5 mb-3 text-[12.5px] leading-relaxed">
+              Cambia la interfaz y se conserva al navegar. Tu expediente y los documentos siguen en
+              el idioma en que están.
+            </p>
+            <LanguageSwitcher />
+          </div>
         </Card>
       </Reveal>
 
@@ -185,6 +199,28 @@ export default function PerfilPage() {
           </ul>
         </Card>
       </Reveal>
+
+      {/* ───────── Sesión ─────────
+          En móvil no había ninguna forma de cerrar sesión: el control vivía
+          en la barra lateral, que se oculta por debajo de `lg`. Un cliente
+          que entra desde el teléfono —la mayoría— se quedaba dentro. */}
+      <Reveal delay={0.2}>
+        <Card padding="lg">
+          <h2 className="text-ink-900 mb-1 text-[16px] font-semibold">Sesión</h2>
+          {sesion ? (
+            <>
+              <p className="text-ink-500 mb-4 max-w-xl text-[13.5px] leading-relaxed">
+                Cierra la sesión si compartes el dispositivo. Tus documentos siguen guardados y los
+                recuperas al volver a entrar.
+              </p>
+              <CerrarSesion className="max-w-xs" />
+            </>
+          ) : (
+            <SinSesion className="mt-2" />
+          )}
+        </Card>
+      </Reveal>
+
     </div>
   );
 }

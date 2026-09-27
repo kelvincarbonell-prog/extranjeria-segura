@@ -32,6 +32,7 @@ const PAGES = [
   "/app", "/app/expediente", "/app/documentos", "/app/mensajes", "/app/citas",
   "/app/pagos", "/app/notificaciones", "/app/perfil",
   "/admin", "/admin/pipeline", "/admin/expedientes", "/admin/equipo",
+  "/admin/cuenta", "/admin/plazos", "/admin/recordatorios", "/admin/contenido",
 ];
 
 // 360 is the narrowest phone worth supporting (Galaxy A-series, older iPhones

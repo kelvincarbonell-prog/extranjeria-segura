@@ -8,29 +8,12 @@ import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
 import { Avatar } from "@/components/ui/primitives";
 import { ROLES, puede, type Permiso, type Role } from "@/content/roles";
+import { navPermitida } from "@/content/nav-admin";
 import { USUARIOS_DEMO, ROL_DEMO_INICIAL, COOKIE_ROL } from "@/content/demo-sesion";
-import { accionSalir } from "@/lib/acciones-sesion";
+import { CerrarSesion } from "@/components/auth/CerrarSesion";
+import { Buscador, type Resultado } from "./Buscador";
 import { cn } from "@/lib/utils";
 
-/**
- * Cada entrada declara qué permiso hace falta para verla. `null` = todos los
- * roles del panel. Antes la lista era fija y un comercial veía «Expedientes»
- * y «Equipo» igual que la dirección.
- */
-const NAV: { href: string; label: string; glyph: string; exact?: boolean; permiso: Permiso | null }[] =
-  [
-    { href: "/admin", label: "Panel", glyph: "door", exact: true, permiso: null },
-    { href: "/admin/plazos", label: "Plazos", glyph: "clock", permiso: "documentos" },
-    { href: "/admin/recordatorios", label: "Avisos", glyph: "help", permiso: "documentos" },
-    { href: "/admin/pipeline", label: "Pipeline", glyph: "path", permiso: null },
-    { href: "/admin/expedientes", label: "Expedientes", glyph: "doc", permiso: "documentos" },
-    { href: "/admin/contenido", label: "Verificación", glyph: "stamp", permiso: "verificacion" },
-    { href: "/admin/equipo", label: "Equipo", glyph: "family", permiso: "equipo" },
-  ];
-
-export function navPermitida(role: Role) {
-  return NAV.filter((i) => i.permiso === null || puede(role, i.permiso));
-}
 
 /**
  * CÁSCARA DEL PANEL INTERNO, CON LA SESIÓN DE DEMOSTRACIÓN.
@@ -52,11 +35,14 @@ export function navPermitida(role: Role) {
 export function AdminShell({
   rol,
   sesion,
+  buscables,
   children,
 }: {
   rol: Role;
   /** Cuenta con la que se ha entrado, si hay sesión de demostración. */
   sesion?: { nombre: string; email: string } | null;
+  /** Lo que el buscador puede encontrar, ya recortado al rol en el servidor. */
+  buscables: Resultado[];
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -99,7 +85,20 @@ export function AdminShell({
             Interno
           </span>
 
-          <nav aria-label="Panel interno" className="ml-2 hidden min-w-0 flex-1 md:block">
+          {/* El menú en línea solo cuando de verdad cabe.
+              
+              Medido con la cuenta de administrador —la que suma el selector de
+              rol—: la fila necesitaba 1.144 px a 768 y el `<ul>` desbordaba su
+              caja pintándose ENCIMA del grupo derecho. Resultado: el botón de
+              buscar era inalcanzable de 768 a 1.536 px; solo respondía a
+              1.920. `overflow-hidden` impide el desbordamiento aunque algo
+              crezca, y `2xl` es el ancho donde las ocho entradas y los
+              controles de cuenta caben de verdad. Por debajo manda la fila de
+              píldoras, que se desplaza y siempre ha funcionado. */}
+          <nav
+            aria-label="Panel interno"
+            className="ml-2 hidden min-w-0 flex-1 overflow-hidden 2xl:block"
+          >
             <ul className="flex gap-1">
               {nav.map((item) => {
                 const active = item.exact
@@ -138,6 +137,7 @@ export function AdminShell({
               pantalla incluso a 1.536 px de ancho, es decir, inalcanzable.
               Quien entraba como administrador no podía salir. */}
           <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+            <Buscador resultados={buscables} />
             {puedeCambiarRol && (
             <label className="flex items-center gap-2">
               <span className="text-ink-400 hidden text-[12px] whitespace-nowrap xl:inline">Ver como</span>
@@ -155,33 +155,30 @@ export function AdminShell({
               </select>
             </label>
             )}
-            {/* La persona, no la etiqueta del rol. Antes el avatar decía
-                «Administrador»; ahora dice quién eres, que es lo que hace que
-                «mis expedientes» signifique algo. */}
-            <span className="hidden text-right whitespace-nowrap 2xl:block">
-              <span className="text-ink-800 block text-[13px] leading-tight font-semibold">
-                {usuario.nombre}
+            {/* El avatar era decorativo. Ahora es la puerta a la cuenta:
+                es donde la gente busca su perfil y su salida, y no había
+                ninguna de las dos. */}
+            <Link
+              href="/admin/cuenta"
+              aria-label={`Tu cuenta · ${usuario.nombre}`}
+              className="hover:bg-ink-50 flex items-center gap-2.5 rounded-[10px] py-1 pr-1 pl-2 transition-colors"
+            >
+              <span className="hidden text-right whitespace-nowrap 2xl:block">
+                <span className="text-ink-800 block text-[13px] leading-tight font-semibold">
+                  {usuario.nombre}
+                </span>
+                <span className="text-ink-400 block text-[11.5px] leading-tight">
+                  {usuario.puesto}
+                </span>
               </span>
-              <span className="text-ink-400 block text-[11.5px] leading-tight">
-                {usuario.puesto}
-              </span>
-            </span>
-            <Avatar name={usuario.nombre} size={32} />
-            {sesion && (
-              <form action={accionSalir}>
-                <button
-                  type="submit"
-                  className="text-ink-500 hover:text-ink-900 rounded-[10px] px-2 py-2 text-[12.5px] font-medium whitespace-nowrap transition-colors"
-                >
-                  Salir
-                </button>
-              </form>
-            )}
+              <Avatar name={usuario.nombre} size={32} />
+            </Link>
+            {sesion && <CerrarSesion variante="icono" />}
           </div>
         </div>
 
         {/* Mobile nav */}
-        <nav aria-label="Panel interno" className="no-scrollbar border-ink-100 flex gap-1 overflow-x-auto border-t px-4 py-2 md:hidden">
+        <nav aria-label="Panel interno" className="no-scrollbar border-ink-100 flex gap-1 overflow-x-auto border-t px-4 py-2 2xl:hidden">
           {nav.map((item) => {
             const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
             return (

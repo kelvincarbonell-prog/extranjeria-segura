@@ -40,6 +40,24 @@ const SEMILLAS = [
   "/empresa",
   "/citas",
   "/diagnostico",
+
+  // Las privadas también. No por SEO —llevan `noindex`— sino porque una
+  // página que no recorre nadie puede estar devolviendo un 500 sin que se
+  // note: /admin/cuenta lo hizo, por llamar desde el servidor a una función
+  // exportada por un módulo de cliente, y el build pasó limpio porque es un
+  // error de ejecución.
+  "/entrar",
+  "/crear-cuenta",
+  "/admin",
+  "/admin/cuenta",
+  "/admin/expedientes",
+  "/admin/plazos",
+  "/admin/recordatorios",
+  "/admin/contenido",
+  "/admin/equipo",
+  "/app",
+  "/app/documentos",
+  "/app/perfil",
 ];
 
 const cache = new Map();
