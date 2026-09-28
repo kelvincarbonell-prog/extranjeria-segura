@@ -46,7 +46,7 @@ export const NAV_ADMIN: EntradaNav[] = [
   { href: "/admin", label: "Panel", glyph: "door", exact: true, permiso: null, principal: true },
   { href: "/admin/expedientes", label: "Expedientes", glyph: "doc", permiso: "documentos", principal: true },
   { href: "/admin/plazos", label: "Plazos", glyph: "clock", permiso: "documentos", principal: true },
-  { href: "/admin/recordatorios", label: "Avisos", glyph: "help", permiso: "documentos", principal: true },
+  { href: "/admin/recordatorios", label: "Avisos", glyph: "bell", permiso: "documentos", principal: true },
 
   // Lo que se abre algunas veces por semana.
   { href: "/admin/pipeline", label: "Pipeline", glyph: "path", permiso: null },

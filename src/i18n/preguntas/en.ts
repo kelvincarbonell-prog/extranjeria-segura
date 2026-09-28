@@ -24,7 +24,7 @@ export const en: TraduccionPreguntas = {
       nacionalidad: { label: "Get Spanish citizenship" },
       requerimiento: {
         label: "I've received a request or a refusal",
-        hint: "I need to respond",
+        hint: "I have a deadline to respond",
       },
       no_se: { label: "I don't know what I need", hint: "Help me work it out" },
     },

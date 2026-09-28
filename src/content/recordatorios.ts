@@ -46,7 +46,15 @@ export interface PlantillaRecordatorio {
   cierre: string;
   /** Nota de que puede responder en su idioma. */
   idioma: string;
+  /**
+   * Por qué se reclama un documento que ya se entregó. Va traducido: una
+   * frase en español dentro de un mensaje en árabe es justo la parte que el
+   * cliente no entiende, y es la que le dice qué hacer.
+   */
+  motivos: Record<MotivoReclamacion, string>;
 }
+
+export type MotivoReclamacion = "caducado" | "corregir";
 
 export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
   es: {
@@ -61,6 +69,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "Puedes subirlos desde tu área privada, o hacerles una foto con el móvil si no tienes escáner. Se guardan en privado y solo los ve quien lleva tu expediente.",
     cierre: "Si algo no lo encuentras o no sabes dónde pedirlo, dínoslo y te explicamos cómo.",
     idioma: "",
+    motivos: { caducado: "El que tenemos ha caducado: hace falta uno nuevo", corregir: "Hay que corregirlo" },
   },
 
   en: {
@@ -75,6 +84,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "You can upload them from your private area, or photograph them with your phone if you don't have a scanner. They're stored privately and only the person handling your case can see them.",
     cierre: "If you can't find something, or don't know where to request it, tell us and we'll explain how.",
     idioma: "You can reply in English.",
+    motivos: { caducado: "The one we have has expired: we need a new one", corregir: "It needs to be corrected" },
   },
 
   pt: {
@@ -89,6 +99,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "Pode enviá-los pela sua área privada, ou tirar uma foto com o celular se não tiver scanner. Ficam guardados em privado e só quem cuida do seu processo os vê.",
     cierre: "Se não encontrar algum, ou não souber onde pedir, diga-nos e explicamos como.",
     idioma: "Pode responder em português.",
+    motivos: { caducado: "O que temos caducou: é preciso um novo", corregir: "É preciso corrigi-lo" },
   },
 
   fr: {
@@ -104,6 +115,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
     cierre:
       "Si vous ne trouvez pas un document, ou ne savez pas où le demander, dites-le nous et nous vous expliquerons.",
     idioma: "Vous pouvez répondre en français.",
+    motivos: { caducado: "Celui que nous avons a expiré : il en faut un nouveau", corregir: "Il faut le corriger" },
   },
 
   it: {
@@ -118,6 +130,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "Puoi caricarli dalla tua area privata, o fotografarli con il telefono se non hai uno scanner. Restano archiviati in privato e li vede solo chi segue la tua pratica.",
     cierre: "Se non trovi qualcosa, o non sai dove richiederlo, dillo e ti spieghiamo come.",
     idioma: "Puoi rispondere in italiano.",
+    motivos: { caducado: "Quello che abbiamo è scaduto: ne serve uno nuovo", corregir: "Va corretto" },
   },
 
   ar: {
@@ -132,6 +145,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "يمكنك رفعها من مساحتك الخاصة، أو تصويرها بهاتفك إن لم يكن لديك ماسح ضوئي. تُحفظ بشكل خاص ولا يطّلع عليها إلا من يتولى ملفك.",
     cierre: "إذا لم تجد مستندًا أو لم تعرف من أين تطلبه، أخبرنا ونشرح لك الطريقة.",
     idioma: "يمكنك الرد بالعربية.",
+    motivos: { caducado: "النسخة التي لدينا منتهية الصلاحية: نحتاج إلى نسخة جديدة", corregir: "يحتاج إلى تصحيح" },
   },
 
   ru: {
@@ -146,6 +160,7 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "Их можно загрузить в личном кабинете или сфотографировать телефоном, если нет сканера. Они хранятся приватно, и их видит только тот, кто ведёт ваше дело.",
     cierre: "Если что-то не находится или непонятно, где это запросить, напишите — объясним.",
     idioma: "Отвечать можно по-русски.",
+    motivos: { caducado: "Тот, что у нас есть, просрочен: нужен новый", corregir: "Его нужно исправить" },
   },
 
   zh: {
@@ -158,12 +173,14 @@ export const RECORDATORIOS: Record<Locale, PlantillaRecordatorio> = {
       "你可以在个人区域上传，没有扫描仪的话用手机拍照也可以。材料私密存储，只有负责你案件的人能看到。",
     cierre: "如果有材料找不到，或者不知道去哪里申请，告诉我们，我们会说明怎么办。",
     idioma: "你可以用中文回复。",
+    motivos: { caducado: "我们手上的这份已过期，需要一份新的", corregir: "需要更正" },
   },
 };
 
 export interface DocumentoPendiente {
   nombre: string;
   nota?: string;
+  motivo?: MotivoReclamacion;
 }
 
 export interface DatosRecordatorio {
@@ -188,7 +205,8 @@ export function componerRecordatorio(d: DatosRecordatorio): string {
   const partes: string[] = [p.saludo(d.cliente), "", p.intro(d.tramite), "", p.listaTitulo];
 
   for (const doc of d.documentos) {
-    partes.push(p.item(doc.nombre, doc.nota));
+    const nota = [doc.motivo && p.motivos[doc.motivo], doc.nota].filter(Boolean).join(". ");
+    partes.push(p.item(doc.nombre, nota || undefined));
   }
 
   if (d.plazo) {

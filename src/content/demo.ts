@@ -15,6 +15,8 @@ export type DocState = "pendiente" | "subido" | "revision" | "correcto" | "cambi
 export interface DemoDocument {
   id: string;
   name: string;
+  /** Artículo del nombre, para poder escribir «sube el certificado». */
+  articulo: "el" | "la";
   state: DocState;
   /** Who has to act next. */
   owner: "cliente" | "nosotros" | "administracion";
@@ -40,38 +42,77 @@ export const DOC_STATE_META: Record<
   caducado: { label: "Caducado", tone: "risk", glyph: "alert" },
 };
 
-export const DEMO_CASE = {
-  reference: "ES-2048",
-  clientFirstName: "María",
-  tramite: "Arraigo sociolaboral",
-  tramiteSlug: "arraigo-sociolaboral",
-  status: "Documentación en curso",
-  progress: 68,
-  openedAt: "2026-07-14",
-  advisor: { name: "Especialista asignado", role: "Abogada de extranjería" },
-  nextStep: {
-    title: "Subir el certificado de antecedentes penales",
-    detail: "Es el último documento que nos falta para poder cerrar la revisión.",
-    href: "/app/documentos",
-  },
-  timeline: [
-    { key: "diagnostico", label: "Diagnóstico", state: "done", date: "2026-07-14" },
-    { key: "contratacion", label: "Contratación", state: "done", date: "2026-07-18" },
-    { key: "documentacion", label: "Documentación", state: "active", date: null },
-    { key: "revision", label: "Revisión jurídica", state: "todo", date: null },
-    { key: "presentacion", label: "Presentación", state: "todo", date: null },
-    { key: "administracion", label: "En la Administración", state: "todo", date: null },
-    { key: "resolucion", label: "Resolución", state: "todo", date: null },
-  ] as const,
-};
+/* ------------------------------------------------------------------ *
+ * FECHAS DEL EXPEDIENTE DE DEMOSTRACIÓN DEL CLIENTE
+ *
+ * Eran fijas —julio y agosto de 2026— y la demostración se pudría sola: a
+ * finales de septiembre la «próxima cita» del 20 de agosto ya había pasado,
+ * el segundo pago «programado» para el 18 de septiembre también, y la
+ * última actividad del expediente era de hacía siete semanas. Un área de
+ * cliente que enseña un caso abandonado demuestra justo lo contrario de lo
+ * que viene a demostrar.
+ *
+ * Ahora todo se sitúa respecto a hoy y la historia conserva su forma: se
+ * abrió hace unos dos meses y medio, hubo movimiento esta semana y la
+ * siguiente cita está por delante.
+ * ------------------------------------------------------------------ */
+
+/** Un instante `dias` después de hoy (negativo: antes), a una hora UTC. */
+function momento(dias: number, hora = "10:00"): string {
+  const d = new Date();
+  const [h, m] = hora.split(":").map(Number);
+  d.setUTCHours(h, m, 0, 0);
+  d.setUTCDate(d.getUTCDate() + dias);
+  return d.toISOString();
+}
+
+/** Solo el día, en ISO. */
+function fechaDemo(dias: number): string {
+  return momento(dias).slice(0, 10);
+}
+
+/** «28/07/2026», como lo imprime un certificado español. */
+function fechaCertificado(dias: number): string {
+  const [a, m, d] = fechaDemo(dias).split("-");
+  return `${d}/${m}/${a}`;
+}
+
+const APERTURA = -75;
+/**
+ * Un día laborable a `dias` de hoy: si cae en fin de semana, el lunes.
+ * Una videollamada con el despacho un sábado es la clase de detalle que hace
+ * que una demostración deje de parecer real.
+ */
+function laborable(dias: number): number {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + dias);
+  const dow = d.getUTCDay();
+  return dias + (dow === 6 ? 2 : dow === 0 ? 1 : 0);
+}
+
+const CITA_SEGUIMIENTO = momento(laborable(5), "15:00");
+
+/** «Viernes 3 de octubre, 17:00 (hora de España)», para el aviso de la cita. */
+function fechaCita(iso: string): string {
+  const texto = new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Madrid",
+  }).format(new Date(iso));
+  return `${texto.charAt(0).toUpperCase()}${texto.slice(1)} (hora de España).`;
+}
 
 export const DEMO_DOCUMENTS: DemoDocument[] = [
   {
     id: "d1",
+    articulo: "el",
     name: "Pasaporte completo",
     state: "correcto",
     owner: "cliente",
-    updatedAt: "2026-08-02T10:12:00Z",
+    updatedAt: momento(-58, "10:12"),
     sizeKb: 2410,
     pages: 32,
     extracted: {
@@ -84,25 +125,27 @@ export const DEMO_DOCUMENTS: DemoDocument[] = [
   },
   {
     id: "d2",
+    articulo: "el",
     name: "Certificado de empadronamiento histórico",
     state: "correcto",
     owner: "cliente",
-    updatedAt: "2026-08-04T16:40:00Z",
+    updatedAt: momento(-56, "16:40"),
     sizeKb: 180,
     pages: 2,
     extracted: {
       "Tipo documental": "Empadronamiento histórico",
       Municipio: "València",
-      "Fecha de expedición": "28/07/2026",
+      "Fecha de expedición": fechaCertificado(-60),
       "Antigüedad acreditada": "3 años y 2 meses",
     },
   },
   {
     id: "d3",
+    articulo: "el",
     name: "Contrato de trabajo",
     state: "cambios",
     owner: "cliente",
-    updatedAt: "2026-08-11T09:05:00Z",
+    updatedAt: momento(-3, "09:05"),
     sizeKb: 640,
     pages: 6,
     issue: {
@@ -119,47 +162,140 @@ export const DEMO_DOCUMENTS: DemoDocument[] = [
   },
   {
     id: "d4",
+    articulo: "el",
     name: "Certificado de antecedentes penales",
     state: "pendiente",
     owner: "cliente",
-    updatedAt: "2026-07-18T12:00:00Z",
+    updatedAt: momento(APERTURA + 4, "12:00"),
     hint: "Debe estar apostillado y traducido por traductor jurado.",
   },
   {
     id: "d5",
+    articulo: "la",
     name: "Vida laboral",
     state: "correcto",
     owner: "cliente",
-    updatedAt: "2026-08-05T11:20:00Z",
+    updatedAt: momento(-55, "11:20"),
     sizeKb: 220,
     pages: 3,
   },
   {
     id: "d6",
+    articulo: "la",
     name: "Documentación de la empresa",
     state: "revision",
     owner: "nosotros",
-    updatedAt: "2026-08-12T08:30:00Z",
+    updatedAt: momento(-2, "08:30"),
     sizeKb: 1120,
     pages: 11,
   },
   {
     id: "d7",
+    articulo: "el",
     name: "Impreso oficial de solicitud",
     state: "pendiente",
     owner: "nosotros",
-    updatedAt: "2026-07-18T12:00:00Z",
+    updatedAt: momento(APERTURA + 4, "12:00"),
     hint: "Lo preparamos nosotros cuando el resto esté validado.",
   },
   {
     id: "d8",
+    articulo: "el",
     name: "Justificante de abono de tasa",
     state: "pendiente",
     owner: "nosotros",
-    updatedAt: "2026-07-18T12:00:00Z",
+    updatedAt: momento(APERTURA + 4, "12:00"),
     hint: "Se genera en el momento de la presentación.",
   },
 ];
+
+const CASO_BASE = {
+  reference: "ES-2048",
+  clientFirstName: "María",
+  tramite: "Arraigo sociolaboral",
+  tramiteSlug: "arraigo-sociolaboral",
+  status: "Documentación en curso",
+  openedAt: fechaDemo(APERTURA),
+  advisor: { name: "Especialista asignado", role: "Abogada de extranjería" },
+  timeline: [
+    { key: "diagnostico", label: "Diagnóstico", state: "done", date: fechaDemo(APERTURA) },
+    { key: "contratacion", label: "Contratación", state: "done", date: fechaDemo(APERTURA + 4) },
+    { key: "documentacion", label: "Documentación", state: "active", date: null },
+    { key: "revision", label: "Revisión jurídica", state: "todo", date: null },
+    { key: "presentacion", label: "Presentación", state: "todo", date: null },
+    { key: "administracion", label: "En la Administración", state: "todo", date: null },
+    { key: "resolucion", label: "Resolución", state: "todo", date: null },
+  ] as const,
+};
+
+/**
+ * Lo que el cliente tiene que hacer, derivado de sus documentos.
+ *
+ * Estaba escrito a mano: «Subir el certificado de antecedentes penales. Es el
+ * último documento que nos falta». No era verdad —el contrato también tenía
+ * que corregirse, y estaba justo debajo con su aviso—, y la tarjeta de al
+ * lado decía «4 pendientes de ti» contando el impreso y la tasa, que prepara
+ * el despacho. Tres números distintos para la misma pregunta en la misma
+ * pantalla, en el producto que promete no dar sorpresas.
+ *
+ * Ahora la frase, el contador y la lista salen del mismo filtro.
+ */
+export function pendientesDelClienteDemo(docs: DemoDocument[]): DemoDocument[] {
+  return docs
+    .filter(
+      (d) =>
+        d.owner === "cliente" &&
+        (d.state === "pendiente" || d.state === "cambios" || d.state === "caducado"),
+    )
+    // Primero lo que no existe todavía: pedir una apostilla lleva semanas;
+    // corregir una firma, un día.
+    .sort((a, b) => Number(b.state === "pendiente") - Number(a.state === "pendiente"));
+}
+
+function siguientePasoCliente(docs: DemoDocument[]) {
+  const [primero, ...resto] = pendientesDelClienteDemo(docs);
+  if (!primero) {
+    return {
+      title: "Por tu parte no falta nada",
+      detail: "Estamos revisando lo que has enviado. Te avisaremos si hace falta algo más.",
+      href: "/app/expediente",
+    };
+  }
+  const accion = (d: DemoDocument) =>
+    d.state === "cambios"
+      ? `corregir ${d.articulo} ${d.name.toLowerCase()}${d.issue ? ` (${d.issue.title.toLowerCase()})` : ""}`
+      : d.state === "caducado"
+        ? `renovar ${d.articulo} ${d.name.toLowerCase()}`
+        : `subir ${d.articulo} ${d.name.toLowerCase()}`;
+  const titulo = accion(primero);
+  return {
+    title: titulo.charAt(0).toUpperCase() + titulo.slice(1),
+    detail:
+      resto.length === 0
+        ? "Es lo único que falta por tu parte. El resto lo preparamos nosotros."
+        : `Y después, ${resto.map(accion).join(" y ")}. Con eso, tu parte está hecha.`,
+    href: "/app/documentos",
+  };
+}
+
+/**
+ * Avance por fases, no un número escrito a mano.
+ *
+ * Decía «68 % completado» con el expediente en la tercera de siete fases y
+ * tres de ocho documentos validados. No salía de ningún sitio. Ahora es la
+ * proporción de fases cerradas, con la actual contada a medias.
+ */
+function progresoPorFases(timeline: readonly { state: string }[]): number {
+  const hechas = timeline.filter((t) => t.state === "done").length;
+  const activa = timeline.some((t) => t.state === "active") ? 0.5 : 0;
+  return Math.round(((hechas + activa) / timeline.length) * 100);
+}
+
+export const DEMO_CASE = {
+  ...CASO_BASE,
+  progress: progresoPorFases(CASO_BASE.timeline),
+  nextStep: siguientePasoCliente(DEMO_DOCUMENTS),
+};
 
 export interface DemoNotification {
   id: string;
@@ -177,7 +313,7 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     kind: "documento",
     title: "Tu contrato necesita una corrección",
     body: "Falta la firma de la parte empleadora.",
-    at: "2026-08-12T09:10:00Z",
+    at: momento(-2, "09:10"),
     read: false,
     href: "/app/documentos",
   },
@@ -186,7 +322,7 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     kind: "mensaje",
     title: "Tu especialista ha respondido",
     body: "Sobre la apostilla del certificado de antecedentes.",
-    at: "2026-08-11T18:42:00Z",
+    at: momento(-3, "18:42"),
     read: false,
     href: "/app/mensajes",
   },
@@ -195,7 +331,7 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     kind: "documento",
     title: "Empadronamiento validado",
     body: "Acredita 3 años y 2 meses de permanencia.",
-    at: "2026-08-04T17:02:00Z",
+    at: momento(-55, "17:02"),
     read: true,
     href: "/app/documentos",
   },
@@ -203,8 +339,8 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     id: "n4",
     kind: "cita",
     title: "Videollamada de seguimiento",
-    body: "Miércoles 20 de agosto, 17:00 (CEST).",
-    at: "2026-08-03T10:00:00Z",
+    body: fechaCita(CITA_SEGUIMIENTO),
+    at: momento(-4, "10:00"),
     read: true,
     href: "/app/citas",
   },
@@ -213,7 +349,7 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     kind: "pago",
     title: "Factura disponible",
     body: "Primer plazo de la gestión del expediente.",
-    at: "2026-07-18T14:20:00Z",
+    at: momento(APERTURA + 4, "14:20"),
     read: true,
     href: "/app/pagos",
   },
@@ -222,7 +358,7 @@ export const DEMO_NOTIFICATIONS: DemoNotification[] = [
     kind: "expediente",
     title: "Tu expediente se ha abierto",
     body: "Referencia ES-2048 · Arraigo sociolaboral.",
-    at: "2026-07-14T09:00:00Z",
+    at: momento(APERTURA, "09:00"),
     read: true,
     href: "/app/expediente",
   },
@@ -243,28 +379,28 @@ export const DEMO_MESSAGES: DemoMessage[] = [
     from: "asistente",
     authorName: "Asistente de Extranjería Segura",
     body: "Hola María. Soy el asistente de la plataforma. Puedo ayudarte con el estado de tu expediente, la documentación y los siguientes pasos. Para cualquier cuestión jurídica te paso con tu especialista.",
-    at: "2026-07-14T09:02:00Z",
+    at: momento(APERTURA, "09:02"),
   },
   {
     id: "m2",
     from: "cliente",
     authorName: "María",
     body: "Hola. El certificado de antecedentes de Colombia, ¿tiene que estar apostillado sí o sí?",
-    at: "2026-08-11T17:58:00Z",
+    at: momento(-3, "17:58"),
   },
   {
     id: "m3",
     from: "asistente",
     authorName: "Asistente de Extranjería Segura",
     body: "Es una cuestión que afecta a la validez de tu expediente, así que voy a trasladar esta consulta a tu especialista para que te la confirme.",
-    at: "2026-08-11T17:58:30Z",
+    at: momento(-3, "17:58"),
   },
   {
     id: "m4",
     from: "especialista",
     authorName: "Tu especialista",
     body: "Hola María. Sí: el certificado tiene que venir apostillado por la autoridad competente colombiana y, si no está en español, traducido por traductor jurado. Te dejo la guía paso a paso.",
-    at: "2026-08-11T18:42:00Z",
+    at: momento(-3, "18:42"),
     attachment: { name: "Guia-apostilla-Colombia.pdf", kind: "pdf" },
   },
   {
@@ -272,7 +408,7 @@ export const DEMO_MESSAGES: DemoMessage[] = [
     from: "cliente",
     authorName: "María",
     body: "Perfecto, lo pido esta semana. Gracias.",
-    at: "2026-08-11T19:03:00Z",
+    at: momento(-3, "19:03"),
   },
 ];
 
@@ -291,7 +427,7 @@ export const DEMO_PAYMENTS: DemoPayment[] = [
     concept: "Consulta inicial con especialista",
     amountCents: 3900,
     state: "pagado",
-    date: "2026-07-14",
+    date: fechaDemo(APERTURA),
     invoice: "F-2026-0417",
   },
   {
@@ -299,7 +435,7 @@ export const DEMO_PAYMENTS: DemoPayment[] = [
     concept: "Gestión de arraigo sociolaboral · 1er plazo",
     amountCents: 22450,
     state: "pagado",
-    date: "2026-07-18",
+    date: fechaDemo(APERTURA + 4),
     invoice: "F-2026-0431",
   },
   {
@@ -307,7 +443,7 @@ export const DEMO_PAYMENTS: DemoPayment[] = [
     concept: "Gestión de arraigo sociolaboral · 2º plazo",
     amountCents: 22450,
     state: "programado",
-    date: "2026-09-18",
+    date: fechaDemo(21),
   },
 ];
 
@@ -326,7 +462,7 @@ export const DEMO_APPOINTMENTS: DemoAppointment[] = [
   {
     id: "a1",
     title: "Seguimiento de documentación",
-    at: "2026-08-20T15:00:00Z",
+    at: CITA_SEGUIMIENTO,
     durationMin: 30,
     mode: "videollamada",
     language: "Español",
@@ -336,7 +472,7 @@ export const DEMO_APPOINTMENTS: DemoAppointment[] = [
   {
     id: "a2",
     title: "Consulta inicial",
-    at: "2026-07-14T09:00:00Z",
+    at: momento(APERTURA, "09:00"),
     durationMin: 45,
     mode: "videollamada",
     language: "Español",
@@ -344,6 +480,21 @@ export const DEMO_APPOINTMENTS: DemoAppointment[] = [
     state: "pasada",
   },
 ];
+
+/**
+ * La próxima cita confirmada que todavía no ha pasado.
+ *
+ * «Próxima» significa por delante: la tarjeta de Inicio enseñaba la primera
+ * cita confirmada de la lista aunque fuera de hacía un mes.
+ */
+export function proximaCita(
+  citas: DemoAppointment[],
+  desde: number = Date.now(),
+): DemoAppointment | undefined {
+  return citas
+    .filter((a) => a.state === "confirmada" && new Date(a.at).getTime() > desde)
+    .sort((a, b) => a.at.localeCompare(b.at))[0];
+}
 
 /* ---------------- Admin / CRM demo data ---------------- */
 
@@ -358,7 +509,11 @@ export const PIPELINE_STAGES = [
   { id: "presentado", label: "Presentado" },
   { id: "requerimiento", label: "Requerimiento" },
   { id: "resolucion", label: "Resolución" },
-  { id: "archivado", label: "Archivado" },
+  // «Cerrado» y no «Archivado». En extranjería el archivo del procedimiento
+  // es un resultado —casi siempre por desistimiento o caducidad—, no una
+  // carpeta. Un expediente presentado aparecía con la etiqueta «Archivado»,
+  // que para un abogado de la materia se lee como «se ha perdido».
+  { id: "archivado", label: "Cerrado" },
 ] as const;
 
 export type StageId = (typeof PIPELINE_STAGES)[number]["id"];
@@ -388,23 +543,28 @@ export interface DemoCaseCard {
    * haber ahí.
    */
   valueCents: number;
-  updatedAt: string;
+  /**
+   * Días desde el último movimiento. Era una fecha fija —«12 ago 2026»— y a
+   * las pocas semanas toda la lista parecía abandonada. Lo que interesa a
+   * quien lleva el caso no es la fecha, es cuánto lleva quieto.
+   */
+  movimientoHaceDias: number;
   flags?: string[];
 }
 
 export const DEMO_PIPELINE: DemoCaseCard[] = [
-  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", valueCents: 53900, updatedAt: "2026-08-12" },
-  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", valueCents: 47900, updatedAt: "2026-08-12" },
-  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", valueCents: 89900, updatedAt: "2026-08-11" },
-  { id: "c4", reference: "ES-2039", client: "Carlos M.", tramite: "Reagrupación familiar", stage: "presentado", owner: "L. Ortega", valueCents: 54900, updatedAt: "2026-08-08" },
-  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", valueCents: 35900, updatedAt: "2026-08-12", flags: ["Plazo vencido"] },
-  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 53900, updatedAt: "2026-08-12" },
-  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 53900, updatedAt: "2026-08-12" },
-  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 47900, updatedAt: "2026-08-12" },
-  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Bufete asociado", valueCents: 89900, updatedAt: "2026-08-12" },
-  { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", valueCents: 0, updatedAt: "2026-08-12" },
-  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 89900, updatedAt: "2026-08-05" },
-  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "archivado", owner: "A. Ruiz", valueCents: 47900, updatedAt: "2026-07-30" },
+  { id: "c1", reference: "ES-2048", client: "María G.", tramite: "Arraigo sociolaboral", stage: "documentacion", owner: "A. Ruiz", valueCents: 53900, movimientoHaceDias: 1 },
+  { id: "c2", reference: "ES-2051", client: "Ibrahim K.", tramite: "Nacionalidad por residencia", stage: "revision", owner: "A. Ruiz", valueCents: 47900, movimientoHaceDias: 0 },
+  { id: "c3", reference: "ES-2044", client: "Sofia B.", tramite: "Nómada digital", stage: "listo", owner: "L. Ortega", valueCents: 89900, movimientoHaceDias: 1 },
+  { id: "c4", reference: "ES-2039", client: "Carlos M.", tramite: "Reagrupación familiar", stage: "presentado", owner: "L. Ortega", valueCents: 54900, movimientoHaceDias: 4 },
+  { id: "c5", reference: "ES-2033", client: "Wei L.", tramite: "Renovación de residencia", stage: "requerimiento", owner: "A. Ruiz", valueCents: 35900, movimientoHaceDias: 0, flags: ["Plazo vencido"] },
+  { id: "c6", reference: "ES-2055", client: "Ana P.", tramite: "Arraigo social", stage: "contratado", owner: "Sin asignar", valueCents: 53900, movimientoHaceDias: 2 },
+  { id: "c7", reference: "ES-2057", client: "Youssef A.", tramite: "Arraigo sociolaboral", stage: "consulta", owner: "Comercial", valueCents: 53900, movimientoHaceDias: 0 },
+  { id: "c8", reference: "ES-2058", client: "Elena V.", tramite: "Nacionalidad por residencia", stage: "diagnostico", owner: "Comercial", valueCents: 47900, movimientoHaceDias: 1 },
+  { id: "c9", reference: "ES-2059", client: "Diego R.", tramite: "Nómada digital", stage: "lead", owner: "Bufete asociado", valueCents: 89900, movimientoHaceDias: 3 },
+  { id: "c10", reference: "ES-2060", client: "Fatou N.", tramite: "Protección internacional", stage: "lead", owner: "Sin asignar", valueCents: 0, movimientoHaceDias: 0 },
+  { id: "c11", reference: "ES-2021", client: "Paulo S.", tramite: "Nómada digital", stage: "resolucion", owner: "L. Ortega", valueCents: 89900, movimientoHaceDias: 5 },
+  { id: "c12", reference: "ES-2018", client: "Nadia H.", tramite: "Arraigo familiar", stage: "presentado", owner: "A. Ruiz", valueCents: 47900, movimientoHaceDias: 9 },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -475,12 +635,13 @@ export function expedientesDemo(): Expediente[] {
       tramite: "Renovación de residencia",
       tramiteSlug: "renovacion-residencia-trabajo",
       responsable: "A. Ruiz",
+      idioma: "zh",
       hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-11) }], // venció ayer
       // Un documento caducado es la causa más común de un requerimiento de
       // subsanación, y por eso está aquí: es el caso que hay que saber ver.
       documentos: [
         { nombre: "Pasaporte y TIE", estado: "correcto" },
-        { nombre: "Vida laboral actualizada", estado: "caducado" },
+        { nombre: "Vida laboral actualizada", estado: "caducado", pedidoEl: dia(-6) },
         { nombre: "Contrato vigente o documentación de la actividad", estado: "correcto" },
         { nombre: "Empadronamiento", estado: "correcto" },
       ],
@@ -492,14 +653,16 @@ export function expedientesDemo(): Expediente[] {
       tramite: "Nacionalidad por residencia",
       tramiteSlug: "nacionalidad-por-residencia",
       responsable: "A. Ruiz",
+      idioma: "ar",
       hechos: [{ tipo: "requerimiento-notificado", fecha: dia(-4), diasConcedidos: 10 }], // seis días
       documentos: [
         { nombre: "Pasaporte y TIE en vigor", estado: "revision" },
-        { nombre: "Certificado de nacimiento legalizado y traducido", estado: "cambios" },
+        { nombre: "Certificado de nacimiento legalizado y traducido", estado: "cambios", pedidoEl: dia(-19) },
         { nombre: "Certificado de antecedentes penales del país de origen", estado: "correcto" },
         { nombre: "Certificado de antecedentes penales en España", estado: "correcto" },
         { nombre: "Certificado de empadronamiento", estado: "correcto" },
         { nombre: "Diploma CCSE", estado: "correcto" },
+        { nombre: "Diploma DELE A2 cuando proceda", estado: "pendiente", pedidoEl: dia(-4) },
       ],
     },
     {
@@ -509,8 +672,10 @@ export function expedientesDemo(): Expediente[] {
       tramite: "Reagrupación familiar",
       tramiteSlug: "reagrupacion-familiar",
       responsable: "L. Ortega",
+      idioma: "pt",
       hechos: [{ tipo: "presentacion", fecha: dia(-66) }], // silencio a tres meses
       presentado: true,
+      documentos: todosValidados("reagrupacion-familiar"),
     },
     {
       id: "c11",
@@ -524,6 +689,7 @@ export function expedientesDemo(): Expediente[] {
         { tipo: "resolucion-notificada", fecha: dia(-5), sentido: "denegatoria" },
       ],
       presentado: true,
+      documentos: todosValidados("teletrabajo-internacional"),
     },
     {
       id: "c1",
@@ -532,11 +698,16 @@ export function expedientesDemo(): Expediente[] {
       tramite: "Arraigo sociolaboral",
       tramiteSlug: "arraigo-sociolaboral",
       responsable: "A. Ruiz",
+      idioma: "es",
       hechos: [
         {
+          // La caducidad se vigila sobre un documento ENTREGADO. Antes estaba
+          // puesta sobre el certificado de antecedentes penales, que el
+          // cliente todavía no ha aportado: el panel avisaba de que iba a
+          // caducar un papel que no existía.
           tipo: "caducidad-documento",
-          fecha: dia(14), // caduca el documento
-          etiqueta: "Certificado de antecedentes penales",
+          fecha: dia(14),
+          etiqueta: "Certificado de empadronamiento",
         },
       ],
       documentos: [
@@ -545,6 +716,11 @@ export function expedientesDemo(): Expediente[] {
         { nombre: "Contrato u oferta de trabajo firmada", estado: "cambios" },
         { nombre: "Prueba de permanencia continuada", estado: "correcto" },
         { nombre: "Documentación de la empresa contratante", estado: "revision" },
+        {
+          nombre: "Certificado de antecedentes penales del país de origen",
+          estado: "pendiente",
+          pedidoEl: dia(-11),
+        },
       ],
     },
     {
@@ -573,7 +749,7 @@ export function expedientesDemo(): Expediente[] {
       ],
     },
 
-    /* Los cinco sin plazo vivo. Un lead al que todavía no se le ha presentado
+    /* Los que no tienen plazo vivo. Un lead al que todavía no se le ha presentado
        nada no tiene ningún reloj administrativo corriendo, y no hay que
        inventarle uno: la urgencia comercial de contestarle es otra cosa, se
        mide de otra forma y mezclarla con los plazos de la Administración es
@@ -624,8 +800,9 @@ export function expedientesDemo(): Expediente[] {
       tramite: "Arraigo familiar",
       tramiteSlug: "arraigo-familiar",
       responsable: "A. Ruiz",
-      hechos: [],
+      hechos: [{ tipo: "presentacion", fecha: dia(-58) }],
       presentado: true,
+      documentos: todosValidados("arraigo-familiar"),
     },
   ];
 }

@@ -28,7 +28,7 @@ export const ar: TraduccionPreguntas = {
       regularizar: { label: "تسوية وضعي القانوني", hint: "أعيش هنا بالفعل وأحتاج أوراقًا" },
       renovar: { label: "تجديد تصريحي", hint: "بطاقتي على وشك الانتهاء أو انتهت" },
       nacionalidad: { label: "الحصول على الجنسية الإسبانية" },
-      requerimiento: { label: "وصلني طلب استكمال أو قرار رفض", hint: "أحتاج إلى الرد" },
+      requerimiento: { label: "وصلني طلب استكمال أو قرار رفض", hint: "لدي مهلة للرد" },
       no_se: { label: "لا أعرف ما أحتاج إليه", hint: "ساعدني في معرفة ذلك" },
     },
   },

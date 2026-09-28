@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Link } from "@/components/ui/Link";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { PIPELINE_STAGES, type DemoCaseCard, type StageId } from "@/content/demo";
 import { Badge, DemoTag } from "@/components/ui/primitives";
@@ -30,9 +31,12 @@ const SIN_PLAZO = Number.MAX_SAFE_INTEGER;
 export function Pipeline({
   casos,
   plazos,
+  puedeAbrir = false,
 }: {
   casos: DemoCaseCard[];
   plazos: Map<string, PlazoVivo>;
+  /** Si el rol ve documentación, el nombre abre la ficha del expediente. */
+  puedeAbrir?: boolean;
 }) {
   // Los casos llegan ya recortados al rol desde el servidor: un abogado no
   // recibe en el HTML los expedientes de su compañera.
@@ -209,7 +213,25 @@ export function Pipeline({
                           </div>
 
                           <p className="text-ink-900 text-[13.5px] leading-tight font-semibold">
-                            {c.client}
+                            {/* El nombre abre la ficha. La tarjeta entera no
+                                puede ser enlace: se arrastra, y un enlace que
+                                navega al soltarlo pierde el movimiento. */}
+                            {puedeAbrir ? (
+                              <Link
+                                href={`/admin/expedientes/${c.id}`}
+                                draggable={false}
+                                onKeyDown={(e) => e.stopPropagation()}
+                                // 24 px de alto como mínimo (WCAG 2.5.8): la
+                                // línea de texto mide 16, y el relleno
+                                // vertical con margen negativo lo agranda
+                                // sin mover la tarjeta. Lo cazó audit:movil.
+                                className="hover:text-brand-700 -my-1 inline-block py-1 underline-offset-2 hover:underline"
+                              >
+                                {c.client}
+                              </Link>
+                            ) : (
+                              c.client
+                            )}
                           </p>
                           <p className="text-ink-500 mt-0.5 text-[12px] leading-snug">{c.tramite}</p>
 

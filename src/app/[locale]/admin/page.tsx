@@ -1,6 +1,6 @@
 import { Link } from "@/components/ui/Link";
 import { DEMO_PIPELINE, expedientesDemo, PIPELINE_STAGES } from "@/content/demo";
-import { Card, Badge, DemoTag, Progress } from "@/components/ui/primitives";
+import { Card, Badge, Progress } from "@/components/ui/primitives";
 import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/primitives";
@@ -83,8 +83,7 @@ export default async function AdminHome() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <DemoTag label="Datos de demostración" />
-          <Button href="/admin/pipeline" size="sm" arrow>
+          <Button href="/admin/pipeline" size="sm" variant="secondary" arrow>
             Abrir pipeline
           </Button>
         </div>
@@ -100,7 +99,9 @@ export default async function AdminHome() {
                 glyph="alert"
                 title={`${overdue.length} ${overdue.length === 1 ? "expediente con plazo vencido" : "expedientes con plazo vencido"}`}
                 body={overdue.map((c) => `${c.reference} · ${c.client}`).join(" · ")}
-                href="/admin/pipeline"
+                // Uno solo: directo a su ficha, que es donde se decide. Varios:
+                // a la torre de plazos, que los ordena.
+                href={overdue.length === 1 ? `/admin/expedientes/${overdue[0].id}` : "/admin/plazos"}
               />
             )}
             {unassigned.length > 0 && (
@@ -171,15 +172,95 @@ export default async function AdminHome() {
           <Metric
             label="Valor contratado"
             value={eur(contractedValue)}
-            sub={conversion === null ? "sin cartera asignada" : `${conversion}% de conversión`}
+            // La conversión solo significa algo para quien ve los leads. Sobre
+            // la cartera de un abogado —que solo recibe lo ya contratado—
+            // salía siempre «100 % de conversión»: una cifra verdadera y
+            // perfectamente inútil.
+            sub={
+              conversion === null
+                ? "sin cartera asignada"
+                : puede(rol, "leads")
+                  ? `${conversion}% de conversión`
+                  : `${contracted.length} ${contracted.length === 1 ? "expediente" : "expedientes"}`
+            }
             glyph="stamp"
           />
         </div>
       </Reveal>
 
       <div className="order-1 grid gap-5 lg:order-none lg:grid-cols-[minmax(0,1fr)_340px]">
+        {/* ---------------- Orden del día ---------------- */}
+        <Reveal delay={0.06} className="order-1 lg:order-none">
+          <Card padding="none" className="overflow-hidden">
+            <div className="border-ink-100 border-b px-5 py-4">
+              <h2 className="text-ink-900 text-[15px] font-semibold">Qué toca hoy</h2>
+              {/* Antes era «cola por plazo» y solo ordenaba por reloj. Un
+                  expediente completo esperando una firma se quedaba semanas
+                  sin presentar porque su vencimiento estaba lejos. */}
+              <p className="text-ink-400 text-[12px]">
+                Lo que no espera, y luego lo que se cierra antes
+              </p>
+            </div>
+            <ul className="divide-ink-100 divide-y">
+              {agenda.slice(0, 6).map((f) => {
+                const c = porCartera.get(f.expediente.id)!;
+                return (
+                  <li key={f.expediente.id}>
+                    {/* La fila entera abre la ficha. Antes no llevaba a
+                        ninguna parte: se leía qué tocaba y había que ir a
+                        buscar el expediente a otra pantalla para hacerlo. */}
+                    <Link
+                      href={`/admin/expedientes/${c.id}`}
+                      className="hover:bg-canvas-deep group flex items-start gap-3 px-5 py-3.5 transition-colors"
+                    >
+                      <CuentaPlazo plazo={plazos.get(c.id)} className="mt-0.5 shrink-0" />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-baseline gap-x-2">
+                          <span className="text-ink-900 text-[14px] font-semibold">{c.client}</span>
+                          <span className="text-ink-400 truncate text-[12.5px]">
+                            <span className="data">{c.reference}</span> · {c.tramite}
+                          </span>
+                        </span>
+                        <span
+                          className={cn(
+                            "mt-0.5 block text-[13px] leading-snug",
+                            f.urgente ? "text-signal-risk font-medium" : "text-ink-600",
+                          )}
+                        >
+                          {motivoDelOrden(f)}
+                        </span>
+                        <span className="mt-1.5 block">
+                          <EstadoPreparacion preparacion={f.preparacion} />
+                        </span>
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="text-ink-300 group-hover:text-ink-600 mt-0.5 shrink-0 text-[15px] transition-colors"
+                      >
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+              {agenda.length === 0 && (
+                <li className="text-ink-500 px-5 py-8 text-center text-[13px]">
+                  Nada pendiente en tus expedientes.
+                </li>
+              )}
+            </ul>
+            {agenda.length > 6 && (
+              <Link
+                href="/admin/expedientes"
+                className="border-ink-100 text-brand-700 hover:bg-canvas-deep block border-t px-5 py-3 text-[13px] font-medium transition-colors"
+              >
+                Ver los {agenda.length} expedientes →
+              </Link>
+            )}
+          </Card>
+        </Reveal>
         {/* ---------------- Stage distribution ---------------- */}
-        <Reveal delay={0.06} className="order-2 lg:order-none">
+        <Reveal delay={0.08} className="order-2 lg:order-none">
           <Card padding="lg">
             <h2 className="text-ink-900 mb-5 text-[15px] font-semibold">Distribución por fase</h2>
             <ul className="flex flex-col gap-3">
@@ -205,51 +286,6 @@ export default async function AdminHome() {
           </Card>
         </Reveal>
 
-        {/* ---------------- Orden del día ---------------- */}
-        <Reveal delay={0.08} className="order-1 lg:order-none">
-          <Card padding="none" className="overflow-hidden">
-            <div className="border-ink-100 border-b px-5 py-4">
-              <h2 className="text-ink-900 text-[15px] font-semibold">Qué toca hoy</h2>
-              {/* Antes era «cola por plazo» y solo ordenaba por reloj. Un
-                  expediente completo esperando una firma se quedaba semanas
-                  sin presentar porque su vencimiento estaba lejos. */}
-              <p className="text-ink-400 text-[12px]">
-                Lo que no espera, y luego lo que se cierra antes
-              </p>
-            </div>
-            <ul className="divide-ink-100 divide-y">
-              {agenda.slice(0, 6).map((f) => {
-                const c = porCartera.get(f.expediente.id)!;
-                return (
-                  <li key={f.expediente.id} className="flex items-start gap-3 px-5 py-3.5">
-                    <CuentaPlazo plazo={plazos.get(c.id)} className="mt-0.5 shrink-0" />
-                    <span className="min-w-0 flex-1">
-                      <span className="text-ink-900 block truncate text-[13.5px] font-medium">
-                        {c.client}
-                      </span>
-                      <span
-                        className={cn(
-                          "mt-0.5 block text-[12px] leading-snug",
-                          f.urgente ? "text-signal-risk" : "text-ink-500",
-                        )}
-                      >
-                        {motivoDelOrden(f)}
-                      </span>
-                      <span className="mt-1.5 block">
-                        <EstadoPreparacion preparacion={f.preparacion} />
-                      </span>
-                    </span>
-                  </li>
-                );
-              })}
-              {agenda.length === 0 && (
-                <li className="text-ink-500 px-5 py-8 text-center text-[13px]">
-                  Nada pendiente en tus expedientes.
-                </li>
-              )}
-            </ul>
-          </Card>
-        </Reveal>
       </div>
 
       {/* `order-3` explícito: en un contenedor flex, los hijos sin `order`

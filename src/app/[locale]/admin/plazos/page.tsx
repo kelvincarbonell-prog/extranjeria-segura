@@ -6,7 +6,7 @@ import { rolDemo } from "@/lib/rol-demo";
 import { vigilar, aperturaRenovacion, type PlazoVivo } from "@/lib/vigilancia";
 import { fechaLarga, parseDia } from "@/lib/plazos";
 import { Fuente } from "@/components/contenido/Fuente";
-import { Card, Badge, DemoTag } from "@/components/ui/primitives";
+import { Card, Badge } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Plazos" };
@@ -78,7 +78,6 @@ async function PlazosPageInterior() {
             guardado. Ordenado por lo único que decide el orden del día: cuánto queda.
           </p>
         </div>
-        <DemoTag />
       </header>
 
       <div className="mb-9 grid gap-3 sm:grid-cols-3">
@@ -243,8 +242,9 @@ function FilaPlazo({
 
         <div className="flex shrink-0 flex-col items-end gap-2">
           {vencido && <Badge tone="risk">Decidir hoy</Badge>}
+          {/* Llevaba a la lista general: «Abrir expediente» abría otra lista. */}
           <Link
-            href="/admin/expedientes"
+            href={`/admin/expedientes/${p.expedienteId}`}
             className="text-brand-700 hover:text-brand-800 tap text-[13px] font-medium"
           >
             Abrir expediente

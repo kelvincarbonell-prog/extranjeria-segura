@@ -66,7 +66,12 @@ export function Hero() {
               transition={{ delay: 0.74, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <Button href="/diagnostico" size="xl" arrow magnetic>
+              {/* `block`: en móvil el botón principal ocupaba su ancho natural
+                  —unos 255 px— y el secundario, debajo, el ancho entero. El
+                  que menos importaba era el más grande de la pantalla. El
+                  envoltorio magnético es `inline-flex` y no estira a su hijo:
+                  hay que pedírselo al botón. */}
+              <Button href="/diagnostico" size="xl" arrow magnetic block>
                 {t.hero.ctaPrimary}
               </Button>
               <Button href="/tramites" size="xl" variant="secondary">

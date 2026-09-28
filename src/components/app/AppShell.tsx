@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Logo } from "@/components/brand/Logo";
 import { Glyph } from "@/components/brand/Glyph";
 import { Avatar, DemoTag, Progress } from "@/components/ui/primitives";
-import { DEMO_CASE, DEMO_NOTIFICATIONS } from "@/content/demo";
+import { DEMO_CASE, DEMO_DOCUMENTS, DEMO_NOTIFICATIONS, pendientesDelClienteDemo } from "@/content/demo";
 import { CerrarSesion } from "@/components/auth/CerrarSesion";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ const NAV = [
   { href: "/app/mensajes", label: "Mensajes", glyph: "family" },
   { href: "/app/citas", label: "Citas", glyph: "clock" },
   { href: "/app/pagos", label: "Pagos", glyph: "stamp" },
-  { href: "/app/notificaciones", label: "Notificaciones", glyph: "alert" },
+  { href: "/app/notificaciones", label: "Notificaciones", glyph: "bell" },
   { href: "/app/perfil", label: "Perfil", glyph: "shield" },
 ];
 
@@ -128,7 +128,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* ================= Mobile top bar ================= */}
-      <header className="glass border-ink-100 sticky top-0 z-40 border-b lg:hidden">
+      {/* Opaca, no `glass`. Con el 72 % de blanco, al desplazar se leía
+          «Expediente #ES-2048» del contenido por debajo de «#ES-2048» de la
+          cabecera: dos referencias superpuestas en la línea que dice de quién
+          es el expediente. El panel del despacho ya había pasado por esto. */}
+      <header className="bg-surface border-ink-100 sticky top-0 z-40 border-b lg:hidden">
         <div className="flex h-14 items-center justify-between px-4">
           <Logo size="sm" href="/app" showWordmark={false} />
           <div className="flex flex-col items-center">
@@ -140,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             aria-label={`Notificaciones${unread ? `, ${unread} sin leer` : ""}`}
             className="text-ink-500 relative flex size-9 items-center justify-center"
           >
-            <Glyph name="alert" className="size-[19px]" />
+            <Glyph name="bell" className="size-[19px]" />
             {unread > 0 && (
               <span className="bg-brand-600 absolute top-1.5 right-1.5 size-2 rounded-full ring-2 ring-white" />
             )}
@@ -165,7 +169,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <ContextualAction />
       <nav
         aria-label="Navegación principal"
-        className="glass border-ink-100 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] lg:hidden"
+        // Opaca por lo mismo: el «2» de «Pendientes de ti» se leía encima de
+        // «Inicio» y la fecha de la cita encima de «Mensajes».
+        className="bg-surface border-ink-100 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgb(10_13_22_/_0.25)] lg:hidden"
       >
         <ul className="flex">
           {MOBILE_NAV.map((item) => {
@@ -200,25 +206,62 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 /* ------------------------------------------------------------------ */
 
 /**
- * The floating action changes with what the case actually needs next —
- * upload a document while documents are pending, otherwise continue the case.
+ * ACCIÓN FLOTANTE.
+ *
+ * Tres fallos medidos en un móvil de 390 px, y los tres venían de lo mismo:
+ * el botón no sabía nada de la pantalla que tenía debajo.
+ *
+ *  1. En Inicio aparecía nada más entrar, justo debajo de la tarjeta «Lo que
+ *     necesitamos de ti ahora», que ya lleva su propio «Subir documento».
+ *     Dos botones iguales en la misma vista no refuerzan la acción: la
+ *     duplican y hacen dudar de cuál es la buena.
+ *  2. Se pintaba encima de la tarjeta de «Pendientes de ti» y tapaba el
+ *     número, que es precisamente lo que había que leer.
+ *  3. Salía siempre, hubiera algo que subir o no.
+ *
+ * Ahora solo aparece si al cliente le falta algo, y en cuanto la acción
+ * principal de la pantalla —la marcada con `data-accion-principal`— sale de
+ * la vista. Mientras esa acción está visible, el botón flotante sobra.
  */
 function ContextualAction() {
   const pathname = usePathname();
-  const [visible, setVisible] = React.useState(true);
+  const [bajando, setBajando] = React.useState(false);
+  const [principalVisible, setPrincipalVisible] = React.useState(false);
   const lastY = React.useRef(0);
+
+  // Sin prefijo de idioma: en /en/app/documentos también hay que ocultarlo.
+  const ruta = pathname.replace(/^\/[a-z]{2}(?=\/)/, "");
+  const hayQueSubir = pendientesDelClienteDemo(DEMO_DOCUMENTS).length > 0;
 
   React.useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      setVisible(y < lastY.current || y < 80);
+      // Se esconde al bajar —el pulgar está leyendo— y vuelve al subir.
+      setBajando(y > lastY.current && y > 80);
       lastY.current = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (pathname === "/app/documentos" || pathname.startsWith("/app/mensajes")) return null;
+  React.useEffect(() => {
+    const el = document.querySelector("[data-accion-principal]");
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setPrincipalVisible(e.isIntersecting), {
+      // Cuenta como visible mientras no la tape la barra inferior.
+      rootMargin: "0px 0px -80px 0px",
+    });
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      setPrincipalVisible(false);
+    };
+  }, [ruta]);
+
+  if (!hayQueSubir) return null;
+  if (ruta === "/app/documentos" || ruta.startsWith("/app/mensajes")) return null;
+
+  const visible = !bajando && !principalVisible;
 
   return (
     <AnimatePresence>
@@ -242,4 +285,3 @@ function ContextualAction() {
     </AnimatePresence>
   );
 }
-

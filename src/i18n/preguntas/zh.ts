@@ -36,7 +36,7 @@ export const zh: TraduccionPreguntas = {
       nacionalidad: { label: "取得西班牙国籍" },
       requerimiento: {
         label: "我收到了补件通知或驳回决定",
-        hint: "我需要答复",
+        hint: "我有答复期限",
       },
       no_se: { label: "我不知道自己需要办什么", hint: "请帮我判断" },
     },

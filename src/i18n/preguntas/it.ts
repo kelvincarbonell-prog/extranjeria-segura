@@ -33,7 +33,7 @@ export const it: TraduccionPreguntas = {
       nacionalidad: { label: "Ottenere la cittadinanza spagnola" },
       requerimiento: {
         label: "Ho ricevuto una richiesta o un diniego",
-        hint: "Devo rispondere",
+        hint: "Ho una scadenza per rispondere",
       },
       no_se: { label: "Non so di cosa ho bisogno", hint: "Aiutami a capirlo" },
     },

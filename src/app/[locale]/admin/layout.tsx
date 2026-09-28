@@ -3,6 +3,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { rolDemo } from "@/lib/rol-demo";
 import { sesionDemo } from "@/lib/sesion-demo";
 import { navPermitida } from "@/content/nav-admin";
+import { puede } from "@/content/roles";
 import { DEMO_PIPELINE } from "@/content/demo";
 import { filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
 import type { Resultado } from "@/components/admin/Buscador";
@@ -49,7 +50,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       id: c.id,
       titulo: c.client,
       detalle: `${c.reference} · ${c.tramite}`,
-      href: "/admin/expedientes",
+      // A la ficha del expediente, no a la lista: buscar a alguien por su
+      // nombre y aterrizar en una tabla donde volver a buscarlo es la mitad
+      // del camino. Quien no ve documentación —comercial— va al tablero,
+      // que es su pantalla.
+      href: puede(rol, "documentos") ? `/admin/expedientes/${c.id}` : "/admin/pipeline",
       glifo: "doc",
       grupo: "Expedientes" as const,
     })),

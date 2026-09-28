@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { componerRecordatorio, IDIOMAS_RECORDATORIO } from "@/content/recordatorios";
+import {
+  componerRecordatorio,
+  IDIOMAS_RECORDATORIO,
+  RECORDATORIOS,
+  type MotivoReclamacion,
+} from "@/content/recordatorios";
 import { LOCALE_META, type Locale } from "@/i18n/config";
 import { fechaLarga, parseDia } from "@/lib/plazos";
 import type { PlazoVivo } from "@/lib/vigilancia";
@@ -35,18 +40,29 @@ import { cn } from "@/lib/utils";
  */
 export function Recordatorios({
   expedientes,
+  inicial,
 }: {
+  /** Expediente con el que se abre, cuando se llega desde su ficha. */
+  inicial?: string;
   expedientes: {
     id: string;
     referencia: string;
     cliente: string;
     tramite: string;
     idioma: Locale;
-    documentos: { nombre: string; nota?: string; desdeDias: number }[];
+    /** `desdeDias` falta cuando no consta cuándo se pidió: se omite, no se inventa. */
+    documentos: {
+      nombre: string;
+      nota?: string;
+      motivo?: MotivoReclamacion;
+      desdeDias?: number;
+    }[];
     plazo?: PlazoVivo;
   }[];
 }) {
-  const [activo, setActivo] = React.useState(expedientes[0]?.id ?? "");
+  const [activo, setActivo] = React.useState(
+    expedientes.some((e) => e.id === inicial) ? inicial! : (expedientes[0]?.id ?? ""),
+  );
   const [idioma, setIdioma] = React.useState<Locale | null>(null);
   const [copiado, setCopiado] = React.useState(false);
 
@@ -59,7 +75,7 @@ export function Recordatorios({
     ? componerRecordatorio({
         cliente: exp.cliente,
         tramite: exp.tramite,
-        documentos: exp.documentos.map((d) => ({ nombre: d.nombre, nota: d.nota })),
+        documentos: exp.documentos.map((d) => ({ nombre: d.nombre, nota: d.nota, motivo: d.motivo })),
         plazo: exp.plazo
           ? {
               dias: Math.max(0, exp.plazo.cuenta.dias),
@@ -98,7 +114,10 @@ export function Recordatorios({
         <ul className="space-y-2">
           {expedientes.map((e) => {
             const esActivo = e.id === exp.id;
-            const masAntiguo = Math.max(...e.documentos.map((d) => d.desdeDias));
+            const esperas = e.documentos
+              .map((d) => d.desdeDias)
+              .filter((d): d is number => d !== undefined);
+            const masAntiguo = esperas.length > 0 ? Math.max(...esperas) : null;
             return (
               <li key={e.id}>
                 <button
@@ -127,8 +146,9 @@ export function Recordatorios({
                   </span>
                   <span className="text-ink-500 mt-0.5 block text-[12.5px]">
                     {e.documentos.length}{" "}
-                    {e.documentos.length === 1 ? "documento" : "documentos"} · el más antiguo lleva{" "}
-                    {masAntiguo} {masAntiguo === 1 ? "día" : "días"}
+                    {e.documentos.length === 1 ? "documento" : "documentos"}
+                    {masAntiguo !== null &&
+                      ` · el más antiguo lleva ${masAntiguo} ${masAntiguo === 1 ? "día" : "días"}`}
                   </span>
                   <span className="mt-1.5 flex items-center gap-1.5">
                     <span className="text-ink-400 text-[11.5px]">
@@ -162,11 +182,19 @@ export function Recordatorios({
               >
                 <span className="text-ink-700 text-[14px]">
                   {d.nombre}
+                  {d.motivo && (
+                    <span className="text-signal-warn font-medium">
+                      {" "}
+                      — {RECORDATORIOS.es.motivos[d.motivo].toLowerCase()}
+                    </span>
+                  )}
                   {d.nota && <span className="text-ink-400"> — {d.nota}</span>}
                 </span>
-                <span className="data text-ink-400 shrink-0 text-[12px]">
-                  {d.desdeDias} {d.desdeDias === 1 ? "día" : "días"}
-                </span>
+                {d.desdeDias !== undefined && (
+                  <span className="data text-ink-400 shrink-0 text-[12px]">
+                    {d.desdeDias} {d.desdeDias === 1 ? "día" : "días"}
+                  </span>
+                )}
               </li>
             ))}
           </ul>

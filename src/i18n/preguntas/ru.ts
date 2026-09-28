@@ -34,7 +34,7 @@ export const ru: TraduccionPreguntas = {
       nacionalidad: { label: "Получить испанское гражданство" },
       requerimiento: {
         label: "Мне пришло требование или отказ",
-        hint: "Нужно ответить",
+        hint: "Есть срок для ответа",
       },
       no_se: { label: "Не знаю, что мне нужно", hint: "Помогите разобраться" },
     },

@@ -1,3 +1,4 @@
+import { puede } from "@/content/roles";
 import { Pipeline } from "@/components/admin/Pipeline";
 import { expedientesDemo, DEMO_PIPELINE } from "@/content/demo";
 import { plazoPrincipal } from "@/lib/vigilancia";
@@ -27,6 +28,7 @@ export default async function PipelinePage() {
         key={rol}
         casos={filtrarAsignadosPorOwner(DEMO_PIPELINE, rol)}
         plazos={plazoPrincipal(filtrarAsignados(expedientesDemo(), rol))}
+        puedeAbrir={puede(rol, "documentos")}
       />
     </div>
   );

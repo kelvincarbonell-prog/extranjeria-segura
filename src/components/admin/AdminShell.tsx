@@ -233,19 +233,35 @@ export function AdminShell({
  * a cualquiera que escriba la URL.
  */
 function AvisoDemostracion({ usuario, puesto }: { usuario: string; puesto: string }) {
+  /* Una línea siempre visible y el detalle a un toque.
+
+     El aviso entero ocupaba ocho líneas en un móvil de 390 px —el 45 % de la
+     primera pantalla— y se repetía en cada pantalla del panel. Lo que se lee
+     por encima una vez se deja de leer a la tercera, así que el tamaño no
+     compraba más honestidad: compraba ceguera al aviso.
+
+     Lo imprescindible —que es una demostración y que los datos son
+     inventados— sigue a la vista siempre. Lo demás, en un `<details>` nativo,
+     que funciona sin JavaScript y se anuncia como desplegable. */
   return (
-    <div className="bg-signal-warn-soft ring-signal-warn/15 mx-auto mb-5 flex max-w-7xl gap-3 rounded-sm p-3.5 ring-1 ring-inset">
-      <Glyph name="alert" className="text-signal-warn mt-0.5 size-4 shrink-0" />
-      <p className="text-ink-700 text-[12.5px] leading-relaxed">
-        <span className="font-semibold">
-          Demostración: estás viendo el panel como {usuario}, {puesto.toLowerCase()}.
-        </span>{" "}
-        Los expedientes son inventados y no hay sesión iniciada: esta dirección responde a
-        cualquiera que la escriba. Los permisos de abajo enseñan el modelo —qué ve cada rol— pero
-        no lo imponen; eso corresponde a las políticas de la base de datos, que están escritas y
-        todavía no conectadas.
+    <details className="group bg-signal-warn-soft ring-signal-warn/15 mx-auto mb-5 max-w-7xl rounded-sm ring-1 ring-inset">
+      <summary className="flex cursor-pointer list-none items-center gap-2.5 px-3.5 py-2.5">
+        <Glyph name="alert" className="text-signal-warn size-4 shrink-0" />
+        <span className="text-ink-700 min-w-0 flex-1 text-[12.5px] leading-snug">
+          <span className="font-semibold">Demostración</span> · ves el panel como {usuario},{" "}
+          {puesto.toLowerCase()}. Datos inventados.
+        </span>
+        <span className="text-signal-warn shrink-0 text-[12px] font-semibold whitespace-nowrap">
+          <span className="group-open:hidden">Qué significa</span>
+          <span className="hidden group-open:inline">Cerrar</span>
+        </span>
+      </summary>
+      <p className="text-ink-700 px-3.5 pb-3 pl-[42px] text-[12.5px] leading-relaxed">
+        No hay sesión real: esta dirección responde a cualquiera que la escriba. Los permisos
+        enseñan el modelo —qué ve cada rol— pero no lo imponen; eso corresponde a las políticas de
+        la base de datos, que están escritas y todavía no conectadas.
       </p>
-    </div>
+    </details>
   );
 }
 

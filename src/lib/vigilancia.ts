@@ -1,4 +1,5 @@
 import { FUENTES, type Fuente } from "@/content/fuentes";
+import type { Locale } from "@/i18n/config";
 import type { DocumentoExpediente } from "./preparacion";
 import { aISO, cuentaAtras, hoy, parseDia, sumarDias, sumarMeses, type Cuenta } from "./plazos";
 
@@ -77,6 +78,13 @@ export interface Expediente {
   documentos?: DocumentoExpediente[];
   /** `true` cuando ya está en la Administración. */
   presentado?: boolean;
+  /**
+   * Idioma en el que hay que escribir al cliente.
+   *
+   * Es un dato del expediente, no una preferencia de interfaz: el despacho
+   * trabaja en español y el mensaje sale en la lengua de quien lo recibe.
+   */
+  idioma?: Locale;
 }
 
 export interface PlazoVivo {

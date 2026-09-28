@@ -1,5 +1,13 @@
 import { Link } from "@/components/ui/Link";
-import { DEMO_CASE, DEMO_DOCUMENTS, DEMO_NOTIFICATIONS, DEMO_APPOINTMENTS, DOC_STATE_META } from "@/content/demo";
+import {
+  DEMO_CASE,
+  DEMO_DOCUMENTS,
+  DEMO_NOTIFICATIONS,
+  DEMO_APPOINTMENTS,
+  DOC_STATE_META,
+  pendientesDelClienteDemo,
+  proximaCita,
+} from "@/content/demo";
 import { Card, Badge, Progress, Avatar, KeyValue } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
 import { Glyph } from "@/components/brand/Glyph";
@@ -8,9 +16,12 @@ import { Reveal } from "@/components/motion/primitives";
 import { formatDateES, relativeES, cn } from "@/lib/utils";
 
 export default function AppHome() {
-  const pending = DEMO_DOCUMENTS.filter((d) => d.state === "pendiente" || d.state === "cambios");
+  // Lo pendiente DEL CLIENTE, con el mismo filtro que escribe la frase de
+  // arriba. Antes contaba también el impreso y la tasa —que prepara el
+  // despacho— y la tarjeta decía «4 pendientes de ti» con dos.
+  const pending = pendientesDelClienteDemo(DEMO_DOCUMENTS);
   const validated = DEMO_DOCUMENTS.filter((d) => d.state === "correcto").length;
-  const nextAppointment = DEMO_APPOINTMENTS.find((a) => a.state === "confirmada");
+  const nextAppointment = proximaCita(DEMO_APPOINTMENTS);
   const unread = DEMO_NOTIFICATIONS.filter((n) => !n.read);
 
   return (
@@ -55,9 +66,13 @@ export default function AppHome() {
                 {DEMO_CASE.nextStep.detail}
               </p>
             </div>
-            <Button href="/app/documentos" variant="inverse" size="lg" arrow className="shrink-0">
-              Subir documento
-            </Button>
+            {/* `data-accion-principal`: mientras este botón se ve, el flotante
+                de la barra inferior no aparece. Ver `ContextualAction`. */}
+            <span data-accion-principal className="shrink-0">
+              <Button href={DEMO_CASE.nextStep.href} variant="inverse" size="lg" arrow>
+                {pending.length > 0 ? "Subir documento" : "Ver mi expediente"}
+              </Button>
+            </span>
           </div>
         </div>
       </Reveal>
@@ -76,7 +91,7 @@ export default function AppHome() {
             label="Pendientes de ti"
             value={String(pending.length)}
             sub={pending.length === 1 ? "documento" : "documentos"}
-            glyph="alert"
+            glyph="doc"
             tone={pending.length > 0 ? "warn" : "ok"}
             href="/app/documentos"
           />
@@ -91,9 +106,11 @@ export default function AppHome() {
             label="Próxima cita"
             value={
               nextAppointment
-                ? new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short" }).format(
-                    new Date(nextAppointment.at),
-                  )
+                ? new Intl.DateTimeFormat("es-ES", {
+                    day: "numeric",
+                    month: "short",
+                    timeZone: "Europe/Madrid",
+                  }).format(new Date(nextAppointment.at))
                 : "—"
             }
             sub={nextAppointment ? "videollamada" : "sin citas"}

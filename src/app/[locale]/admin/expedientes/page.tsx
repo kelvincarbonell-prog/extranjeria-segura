@@ -1,15 +1,16 @@
 import { Link } from "@/components/ui/Link";
 import { SoloCon } from "@/components/admin/SoloCon";
 import { DEMO_PIPELINE, expedientesDemo, PIPELINE_STAGES } from "@/content/demo";
-import { Card, Badge, DemoTag } from "@/components/ui/primitives";
-import { Button } from "@/components/ui/Button";
+import { Card, Badge } from "@/components/ui/primitives";
+import { ExportarCSV } from "@/components/admin/ExportarCSV";
+import { ETIQUETA_ESTADO } from "@/lib/preparacion";
 import { CuentaPlazo } from "@/components/admin/CuentaPlazo";
 import { EstadoPreparacion, BarraPreparacion } from "@/components/admin/Preparacion";
 import { plazoPrincipal } from "@/lib/vigilancia";
 import { ordenDelDia, motivoDelOrden } from "@/lib/orden-del-dia";
 import { filtrarAsignados, filtrarAsignadosPorOwner } from "@/lib/mis-expedientes";
 import { rolDemo } from "@/lib/rol-demo";
-import { formatDateES, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Expedientes" };
 
@@ -69,12 +70,41 @@ async function ExpedientesPageInterior() {
             {listos > 0 ? `, empezando por ${listos} listo${listos === 1 ? "" : "s"} para presentar` : ""}.
           </p>
         </div>
-        <div className="flex items-center gap-2.5">
-          <DemoTag label="Datos de demostración" />
-          <Button size="sm" variant="secondary">
-            Exportar CSV
-          </Button>
-        </div>
+        <ExportarCSV
+          nombre={`expedientes-${new Date().toISOString().slice(0, 10)}`}
+          cabecera={[
+            "Referencia",
+            "Cliente",
+            "Trámite",
+            "Fase",
+            "Qué toca",
+            "Estado",
+            "Validados",
+            "Requeridos",
+            "Plazo",
+            "Vence",
+            "Días",
+            "Responsable",
+          ]}
+          filas={filas.map((f) => {
+            const c = porId.get(f.expediente.id)!;
+            const p = plazos.get(c.id);
+            return [
+              c.reference,
+              c.client,
+              c.tramite,
+              STAGE_LABEL[c.stage],
+              motivoDelOrden(f),
+              ETIQUETA_ESTADO[f.preparacion.estado],
+              f.preparacion.validados,
+              f.preparacion.requeridos,
+              p?.titulo ?? "",
+              p?.vence ?? "",
+              p ? p.cuenta.dias : "",
+              c.owner,
+            ];
+          })}
+        />
       </div>
 
       {/* ───────── Móvil: una tarjeta por expediente ───────── */}
@@ -83,7 +113,10 @@ async function ExpedientesPageInterior() {
           const c = porId.get(f.expediente.id)!;
           return (
             <li key={f.expediente.id}>
-              <Card padding="none" className="p-4">
+              {/* La tarjeta entera abre la ficha: en móvil no hay nombre
+                  pequeño que acertar con el dedo. */}
+              <Link href={`/admin/expedientes/${c.id}`} className="block rounded-lg">
+              <Card padding="none" className="active:bg-canvas-deep p-4 transition-colors">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-ink-900 truncate text-[15px] font-semibold">{c.client}</p>
@@ -118,6 +151,7 @@ async function ExpedientesPageInterior() {
                   </div>
                 </div>
               </Card>
+              </Link>
             </li>
           );
         })}
@@ -137,7 +171,7 @@ async function ExpedientesPageInterior() {
             </caption>
             <thead>
               <tr className="border-ink-100 border-b">
-                {["Cliente", "Trámite", "Qué toca", "Preparación", "Plazo", "Responsable", "Actualizado"].map(
+                {["Cliente", "Trámite", "Qué toca", "Preparación", "Plazo", "Responsable", "Último movimiento"].map(
                   (h) => (
                     <th
                       key={h}
@@ -157,7 +191,7 @@ async function ExpedientesPageInterior() {
                   <tr key={f.expediente.id} className="hover:bg-canvas-deep transition-colors">
                     <td className="px-4 py-3.5">
                       <Link
-                        href="/admin/pipeline"
+                        href={`/admin/expedientes/${c.id}`}
                         className="text-ink-900 hover:text-brand-700 block text-[13.5px] font-medium"
                       >
                         {c.client}
@@ -197,8 +231,13 @@ async function ExpedientesPageInterior() {
                     >
                       {c.owner}
                     </td>
-                    <td className="text-ink-400 px-4 py-3.5 text-[12.5px] whitespace-nowrap">
-                      {formatDateES(c.updatedAt, "short")}
+                    <td
+                      className={cn(
+                        "px-4 py-3.5 text-[12.5px] whitespace-nowrap",
+                        c.movimientoHaceDias >= 7 ? "text-signal-warn font-medium" : "text-ink-400",
+                      )}
+                    >
+                      {haceDias(c.movimientoHaceDias)}
                     </td>
                   </tr>
                 );
@@ -216,6 +255,13 @@ async function ExpedientesPageInterior() {
       </p>
     </div>
   );
+}
+
+/** «hoy», «ayer», «hace 5 días»: cuánto lleva quieto, que es lo que se mira. */
+function haceDias(n: number): string {
+  if (n <= 0) return "hoy";
+  if (n === 1) return "ayer";
+  return `hace ${n} días`;
 }
 
 function SinExpedientes() {

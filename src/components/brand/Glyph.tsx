@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 export type GlyphKey =
   | "door" | "briefcase" | "roots" | "cap" | "family" | "passport"
   | "signal" | "cycle" | "scales" | "alert" | "shelter" | "stars"
-  | "help" | "shield" | "clock" | "doc" | "stamp" | "path" | "globe" | "lock";
+  | "help" | "shield" | "clock" | "doc" | "stamp" | "path" | "globe" | "lock"
+  | "bell";
 
 const S = { fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 
@@ -137,6 +138,15 @@ const PATHS: Record<GlyphKey, React.ReactNode> = {
     <>
       <path d="M12 2.8 4.8 5.6v6c0 4.4 3 8.2 7.2 9.6 4.2-1.4 7.2-5.2 7.2-9.6v-6L12 2.8Z" {...S} />
       <path d="M8.9 12.1 11 14.3l4.2-4.4" {...S} />
+    </>
+  ),
+  /* Campana — avisos. No el triángulo de alerta: «tienes algo nuevo» y
+     «algo va mal» son dos mensajes distintos, y quien espera una resolución
+     de extranjería no necesita leer el segundo cada vez que abre la app. */
+  bell: (
+    <>
+      <path d="M6.2 16.4V11a5.8 5.8 0 0 1 11.6 0v5.4l1.6 1.8H4.6l1.6-1.8Z" {...S} />
+      <path d="M10 20.4a2.1 2.1 0 0 0 4 0" {...S} />
     </>
   ),
   clock: (

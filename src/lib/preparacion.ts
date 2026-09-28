@@ -49,6 +49,14 @@ export interface DocumentoExpediente {
   /** Coincide con `name` del requisito del trámite. */
   nombre: string;
   estado: DocState;
+  /**
+   * Día en que se le pidió al cliente, cuando se le ha pedido.
+   *
+   * Se guarda la fecha y no «lleva 11 días»: el número deja de ser cierto al
+   * día siguiente, la fecha no. De aquí sale cuánto tiempo lleva esperando un
+   * documento, que es lo que decide a quién se reclama primero.
+   */
+  pedidoEl?: string;
 }
 
 export interface Preparacion {

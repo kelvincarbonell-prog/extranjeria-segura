@@ -15,6 +15,11 @@ export interface Option {
   hint?: string;
   /** Geometric glyph key. Never an emoji in the wizard itself. */
   glyph?: string;
+  /**
+   * Hay un plazo legal corriendo. Se pinta primero, a lo ancho y con otro
+   * tono: es la única opción en la que llegar tarde tiene consecuencias.
+   */
+  urgente?: boolean;
 }
 
 export interface Question {
@@ -42,6 +47,12 @@ export const QUESTIONS: Question[] = [
     help: "Elige lo que más se parezca a tu situación. Podrás ajustarlo después.",
     type: "single",
     options: [
+      /* Primera, y no novena. Quien ha recibido un requerimiento tiene un
+         plazo corriendo —diez días para subsanar, un mes para recurrir— y en
+         un móvil de 390 px esta opción estaba a casi dos pantallas de
+         desplazamiento, debajo de «Estudiar». Es la única de la lista en la
+         que perder tiempo leyendo las demás cuesta algo. */
+      { value: "requerimiento", label: "He recibido un requerimiento o denegación", hint: "Tengo un plazo para responder", glyph: "alert", urgente: true },
       { value: "vivir", label: "Vivir en España", hint: "Establecerme de forma estable", glyph: "door" },
       { value: "trabajar", label: "Trabajar en España", hint: "Por cuenta ajena o propia", glyph: "briefcase" },
       { value: "nomada", label: "Trabajar en remoto desde España", hint: "Para una empresa o clientes de fuera", glyph: "signal" },
@@ -50,7 +61,6 @@ export const QUESTIONS: Question[] = [
       { value: "regularizar", label: "Regularizar mi situación", hint: "Ya vivo aquí y quiero papeles", glyph: "roots" },
       { value: "renovar", label: "Renovar mi permiso", hint: "Mi tarjeta caduca o ha caducado", glyph: "cycle" },
       { value: "nacionalidad", label: "Obtener la nacionalidad española", glyph: "passport" },
-      { value: "requerimiento", label: "He recibido un requerimiento o denegación", hint: "Necesito responder", glyph: "alert" },
       { value: "no_se", label: "No sé qué necesito", hint: "Ayúdame a averiguarlo", glyph: "help" },
     ],
   },

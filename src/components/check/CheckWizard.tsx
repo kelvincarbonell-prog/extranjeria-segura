@@ -174,7 +174,9 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
         goBack();
         return;
       }
-      const n = Number(e.key);
+      // 1–9 y el 0 para la décima. La décima enseñaba «10» en su tecla, que
+      // no existe en ningún teclado: la única opción imposible de elegir así.
+      const n = e.key === "0" ? 10 : Number(e.key);
       if (n >= 1 && n <= question.options.length) {
         e.preventDefault();
         choose(question, question.options[n - 1].value);
@@ -321,7 +323,9 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                       transition={{ delay: 0.06 + i * 0.035, ease: [0.16, 1, 0.3, 1] }}
                       className={cn(
                         "group relative flex items-center gap-3.5 rounded-lg px-4 py-4 text-left transition-all duration-250",
-                        "bg-surface shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)]",
+                        opt.urgente
+                          ? "bg-signal-warn-soft shadow-[inset_0_0_0_1px_rgb(154_91_0_/_0.22)] sm:col-span-2"
+                          : "bg-surface shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)]",
                         "hover:shadow-[inset_0_0_0_1.5px_rgb(36_56_232_/_0.35),0_8px_24px_-10px_rgb(36_56_232_/_0.3)]",
                         "active:scale-[0.99]",
                         selected &&
@@ -334,7 +338,9 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                             "flex size-10 shrink-0 items-center justify-center rounded-[12px] transition-colors",
                             selected
                               ? "bg-brand-600 text-white"
-                              : "bg-ink-50 text-ink-500 group-hover:bg-brand-50 group-hover:text-brand-600",
+                              : opt.urgente
+                                ? "bg-surface text-signal-warn"
+                                : "bg-ink-50 text-ink-500 group-hover:bg-brand-50 group-hover:text-brand-600",
                           )}
                         >
                           <Glyph name={opt.glyph} className="size-[19px]" />
@@ -364,26 +370,40 @@ function Wizard({ initialAnswers }: { initialAnswers: Answers }) {
                           {opt.label}
                         </span>
                         {opt.hint && (
-                          <span className="text-ink-400 mt-0.5 block text-[12.5px] leading-snug">
+                          <span
+                            className={cn(
+                              "mt-0.5 block text-[12.5px] leading-snug",
+                              opt.urgente ? "text-signal-warn font-medium" : "text-ink-400",
+                            )}
+                          >
                             {opt.hint}
                           </span>
                         )}
                       </span>
 
-                      <kbd className="text-ink-400 bg-ink-50 hidden size-5 shrink-0 items-center justify-center rounded-[5px] text-[10.5px] font-semibold sm:flex">
-                        {i + 1}
-                      </kbd>
+                      {i < 10 && (
+                        <kbd className="text-ink-400 bg-ink-50 hidden size-5 shrink-0 items-center justify-center rounded-[5px] text-[10.5px] font-semibold sm:flex">
+                          {i === 9 ? 0 : i + 1}
+                        </kbd>
+                      )}
                     </motion.button>
                   );
                 })}
               </div>
 
               <div className="mt-8 flex items-center justify-between gap-4">
+                {/* En la primera pregunta no hay atrás. Se oculta en vez de
+                    deshabilitarse: un botón gris que no hace nada es ruido en
+                    la pantalla que más gente abandona. `invisible` conserva el
+                    hueco, así «Continuar» no salta de sitio. */}
                 <Button
                   variant="ghost"
                   size="md"
                   onClick={goBack}
                   disabled={index === 0}
+                  aria-hidden={index === 0 || undefined}
+                  tabIndex={index === 0 ? -1 : undefined}
+                  className={cn(index === 0 && "invisible")}
                   icon={
                     <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden>
                       <path

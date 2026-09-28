@@ -4,124 +4,82 @@ import { expedientesDemo } from "@/content/demo";
 import { filtrarAsignados } from "@/lib/mis-expedientes";
 import { rolDemo } from "@/lib/rol-demo";
 import { plazosDe } from "@/lib/vigilancia";
-import { DemoTag } from "@/components/ui/primitives";
-import type { Locale } from "@/i18n/config";
+import { pendientesDelCliente } from "@/lib/ficha-expediente";
 
-export const metadata = { title: "Recordatorios" };
+export const metadata = { title: "Avisos" };
 
-/**
- * Datos de demostración para la reclamación de documentos.
- *
- * El idioma del cliente es un campo del expediente, no una preferencia de
- * interfaz: es en el que hay que escribirle aunque el despacho trabaje en
- * español. En el modelo real vive en la ficha del cliente.
- */
-const PENDIENTES: {
-  id: string;
-  referencia: string;
-  cliente: string;
-  tramite: string;
-  idioma: Locale;
-  documentos: { nombre: string; nota?: string; desdeDias: number }[];
-}[] = [
-  {
-    id: "c1",
-    referencia: "ES-2048",
-    cliente: "María G.",
-    tramite: "Arraigo sociolaboral",
-    idioma: "es",
-    documentos: [
-      {
-        nombre: "Certificado de antecedentes penales del país de origen",
-        nota: "Legalizado o apostillado y traducido",
-        desdeDias: 11,
-      },
-    ],
-  },
-  {
-    id: "c5",
-    referencia: "ES-2033",
-    cliente: "Wei L.",
-    tramite: "Renovación de residencia",
-    idioma: "zh",
-    documentos: [
-      { nombre: "Vida laboral actualizada", desdeDias: 6 },
-      { nombre: "Últimas tres nóminas", desdeDias: 6 },
-    ],
-  },
-  {
-    id: "c2",
-    referencia: "ES-2051",
-    cliente: "Ibrahim K.",
-    tramite: "Nacionalidad por residencia",
-    idioma: "ar",
-    documentos: [
-      {
-        nombre: "Certificado de nacimiento",
-        nota: "Apostillado y traducido por traductor jurado",
-        desdeDias: 19,
-      },
-      { nombre: "Certificado del examen CCSE", desdeDias: 4 },
-    ],
-  },
-  {
-    id: "c4",
-    referencia: "ES-2039",
-    cliente: "Carlos M.",
-    tramite: "Reagrupación familiar",
-    idioma: "pt",
-    documentos: [
-      { nombre: "Contrato de arrendamiento en vigor", desdeDias: 3 },
-      { nombre: "Informe de vivienda adecuada", nota: "Lo emite el ayuntamiento", desdeDias: 3 },
-    ],
-  },
-];
-
-async function RecordatoriosPageInterior() {
+async function RecordatoriosPageInterior({ inicial }: { inicial?: string }) {
   const mios = filtrarAsignados(expedientesDemo(), await rolDemo());
 
-  // El recorte va sobre la lista de pendientes, no solo sobre la búsqueda del
-  // plazo. La primera versión recorría `PENDIENTES` entero y solo miraba
-  // `mios` para localizar el vencimiento: el abogado veía la documentación
-  // pendiente de Carlos M., que es de su compañera, con el plazo en blanco. Lo
-  // encontró la barrida de las siete pantallas por los cinco roles, no la
-  // lectura del código —desde dentro parecía filtrado—.
-  const asignados = new Set(mios.map((e) => e.id));
-
-  // El plazo vivo del expediente se calcula, no se guarda: es el mismo motor
-  // que la torre de plazos, así que las dos pantallas no pueden discrepar.
-  const conPlazo = PENDIENTES.filter((p) => asignados.has(p.id)).map((p) => {
-    const exp = mios.find((e) => e.id === p.id);
-    const plazos = exp ? plazosDe(exp) : [];
-    const vivo = plazos.find((x) => x.cuenta.estado !== "vencido");
-    return { ...p, plazo: vivo };
-  });
+  /**
+   * Lo que se reclama sale del expediente, no de una lista aparte.
+   *
+   * Esta pantalla tenía su propia tabla escrita a mano y no coincidía con
+   * nada: a Wei L. le reclamaba «últimas tres nóminas», que su trámite ni
+   * pide, mientras la ficha decía que faltaba la vida laboral. Dos fuentes
+   * para el mismo dato son dos respuestas, y la que llega al cliente era la
+   * equivocada.
+   *
+   * El recorte por rol va sobre la propia lista —solo `mios`—, así que el
+   * abogado no ve lo que se le pide al cliente de una compañera.
+   */
+  const conPendientes = mios
+    // Solo expedientes con la fase documental abierta. A un lead que todavía
+    // no ha contratado no se le reclaman seis documentos: se le contesta, que
+    // es otra conversación y la lleva otra persona.
+    .filter((exp) => exp.documentos !== undefined)
+    .map((exp) => {
+      const plazos = plazosDe(exp);
+      // Del plazo se usa el que sigue abierto: al cliente no se le escribe
+      // «tienes 0 días», se le escribe cuándo es la próxima fecha que importa.
+      const vivo = plazos.find((x) => x.cuenta.estado !== "vencido");
+      return {
+        id: exp.id,
+        referencia: exp.referencia,
+        cliente: exp.cliente,
+        tramite: exp.tramite,
+        idioma: exp.idioma ?? "es",
+        documentos: pendientesDelCliente(exp),
+        plazo: vivo,
+      };
+    })
+    .filter((e) => e.documentos.length > 0)
+    // Primero quien más lleva esperando: es a quien más urge escribir.
+    .sort((a, b) => espera(b.documentos) - espera(a.documentos));
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-ink-950 font-display text-[26px] font-extrabold tracking-[-0.03em]">
-            Recordatorios
+            Avisos
           </h1>
           <p className="text-ink-600 mt-2 max-w-2xl text-[15px] leading-relaxed">
             Qué documento falta en cada expediente, desde cuándo, y el mensaje ya escrito en el
             idioma del cliente. El plazo que aparece es el mismo que calcula la torre de plazos.
           </p>
         </div>
-        <DemoTag />
       </header>
 
-      <Recordatorios expedientes={conPlazo} />
+      <Recordatorios key={inicial ?? ""} expedientes={conPendientes} inicial={inicial} />
     </div>
   );
 }
 
 /** La pantalla solo se renderiza si el rol activo tiene «documentos». */
-export default function RecordatoriosPage() {
+export default async function RecordatoriosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ exp?: string }>;
+}) {
+  const { exp } = await searchParams;
   return (
     <SoloCon permiso="documentos">
-      <RecordatoriosPageInterior />
+      <RecordatoriosPageInterior inicial={exp} />
     </SoloCon>
   );
+}
+
+function espera(docs: { desdeDias?: number }[]): number {
+  return Math.max(0, ...docs.map((d) => d.desdeDias ?? 0));
 }

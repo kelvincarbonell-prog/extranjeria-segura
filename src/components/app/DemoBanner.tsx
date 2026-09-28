@@ -2,29 +2,43 @@ import { Link } from "@/components/ui/Link";
 import { Glyph } from "@/components/brand/Glyph";
 
 /**
- * Standing notice across the whole client area.
+ * AVISO PERMANENTE DEL ÁREA DE CLIENTE.
  *
- * The area renders fabricated data so the interface can be evaluated before
- * Supabase auth is connected. That fact is stated on every screen, not hidden
- * in a footnote — a case file that looks real but is not is exactly the kind
- * of thing that erodes trust in a product like this.
+ * El área enseña un expediente inventado para poder evaluar la interfaz
+ * antes de conectar la autenticación. Eso se dice en cada pantalla, no en una
+ * nota al pie: un expediente que parece real y no lo es es justo lo que
+ * erosiona la confianza en un producto así.
+ *
+ * ─── LO QUE CAMBIÓ Y POR QUÉ ────────────────────────────────────────────
+ *
+ * 1. Era una tarjeta negra de cinco líneas encima de otra tarjeta negra —«Lo
+ *    que necesitamos de ti ahora»—. Dos bloques con el mismo peso visual
+ *    compiten, y el que perdía era el importante. Ahora es una franja clara
+ *    de una línea: se ve siempre, pero no manda.
+ *
+ * 2. Decía «la autenticación con Supabase está implementada pero no
+ *    activada». Eso es una nota para el equipo técnico; a una persona que
+ *    evalúa si confiar su residencia a este servicio no le dice nada.
+ *
+ * 3. Su botón, «Crear mi cuenta real», llevaba a un formulario que responde
+ *    «autenticación no activada»: una promesa rota a dos pasos. Ahora lleva
+ *    al diagnóstico, que es el primer paso real y funciona hoy.
  */
 export function DemoBanner() {
   return (
-    <div className="bg-ink-950 mb-5 flex flex-col gap-3 rounded-lg px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-      <p className="flex items-start gap-2.5 text-[13px] leading-snug text-white/70">
-        <Glyph name="alert" className="mt-px size-4 shrink-0 text-white/45" />
+    <div className="bg-surface ring-ink-900/[.08] mb-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-sm px-3.5 py-2.5 ring-1 ring-inset">
+      <p className="text-ink-600 flex min-w-0 flex-1 items-center gap-2 text-[12.5px] leading-snug">
+        <Glyph name="alert" className="text-ink-400 size-4 shrink-0" />
         <span>
-          <strong className="font-semibold text-white">Modo demostración.</strong> Los datos de este
-          expediente son ficticios y no corresponden a ninguna persona real. La autenticación con
-          Supabase está implementada pero no activada en este entorno.
+          <strong className="text-ink-900 font-semibold">Demostración.</strong> Este expediente es
+          inventado y no pertenece a nadie.
         </span>
       </p>
       <Link
-        href="/crear-cuenta"
-        className="text-ink-950 inline-flex shrink-0 items-center justify-center rounded-xs bg-white px-4 py-2 text-[13px] font-semibold"
+        href="/diagnostico"
+        className="text-brand-700 hover:text-brand-800 inline-flex shrink-0 items-center gap-1 py-1 pl-6 text-[12.5px] font-semibold sm:pl-0"
       >
-        Crear mi cuenta real
+        Empezar el mío <span aria-hidden="true">→</span>
       </Link>
     </div>
   );
