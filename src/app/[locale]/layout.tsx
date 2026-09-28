@@ -6,6 +6,7 @@ import { LOCALES, LOCALE_META, isLocale, href, alternatesFor } from "@/i18n/conf
 import { getDictionary } from "@/i18n/get";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import "../globals.css";
+import { BarraProgreso } from "@/components/ui/BarraProgreso";
 
 /**
  * LAYOUT RAÍZ.
@@ -145,6 +146,10 @@ export default async function RootLayout({
     >
       <body>
         <LocaleProvider locale={locale} dir={meta.dir} dictionary={dictionary}>
+          {/* Va en la raíz y no solo en el panel: la portada también navega, y
+              una señal de carga que existe en una mitad del producto y en la
+              otra no se nota como incoherencia, no como sutileza. */}
+          <BarraProgreso />
           <a
             href="#contenido"
             className="focus:bg-ink-950 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-sm focus:px-4 focus:py-2.5 focus:text-sm focus:font-medium focus:text-white"

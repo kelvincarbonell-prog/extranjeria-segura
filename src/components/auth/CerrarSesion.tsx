@@ -1,4 +1,5 @@
 import { Glyph } from "@/components/brand/Glyph";
+import { BotonEnvio } from "@/components/ui/BotonEnvio";
 import { accionSalir } from "@/lib/acciones-sesion";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,14 @@ import { cn } from "@/lib/utils";
  *
  * Aquí hay una sola forma de salir, con dos presentaciones, y las dos
  * cumplen el tamaño mínimo.
+ *
+ * ─── Y LO QUE SEGUÍA MAL ────────────────────────────────────────────────
+ *
+ * El botón era un `<button type="submit">` sin estado: al pulsarlo la
+ * pantalla se quedaba idéntica hasta que el servidor borraba las cookies y
+ * redirigía. Ahora es `BotonEnvio`, que lee `useFormStatus` y se desactiva
+ * mientras dura el envío. El formulario sigue siendo de servidor; solo el
+ * botón es de cliente.
  */
 export function CerrarSesion({
   variante = "boton",
@@ -32,30 +41,27 @@ export function CerrarSesion({
   if (variante === "icono") {
     return (
       <form action={accionSalir} className={className}>
-        <button
-          type="submit"
-          aria-label="Cerrar sesión"
-          title="Cerrar sesión"
-          className="text-ink-400 hover:text-ink-900 hover:bg-ink-50 flex size-9 items-center justify-center rounded-[10px] transition-colors"
-        >
-          <IconoSalida />
-        </button>
+        <BotonEnvio
+          etiqueta="Cerrar sesión"
+          titulo="Cerrar sesión"
+          icono={<IconoSalida />}
+          className="text-ink-400 hover:text-ink-900 hover:bg-ink-50 flex size-9 items-center justify-center rounded-[10px]"
+        />
       </form>
     );
   }
 
   return (
     <form action={accionSalir} className={className}>
-      <button
-        type="submit"
+      <BotonEnvio
+        icono={<IconoSalida />}
         className={cn(
-          "text-ink-700 hover:text-ink-950 hover:bg-ink-50 flex w-full items-center gap-2.5 rounded-sm px-4 py-3 text-[14px] font-semibold transition-colors",
+          "text-ink-700 hover:text-ink-950 hover:bg-ink-50 flex w-full items-center gap-2.5 rounded-sm px-4 py-3 text-[14px] font-semibold",
           "shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.1)]",
         )}
       >
-        <IconoSalida />
         Cerrar sesión
-      </button>
+      </BotonEnvio>
     </form>
   );
 }

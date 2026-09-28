@@ -494,3 +494,77 @@ html:lang(ar) .text-display-lg {
   .no-print { display: none !important; }
   body { background: #fff; }
 }
+
+/* ------------------------------------------------------------------ *
+ * CARGA
+ * ------------------------------------------------------------------ */
+
+/**
+ * Hueso de esqueleto.
+ *
+ * Un degradado que recorre la pieza, no un parpadeo de opacidad. El barrido
+ * sugiere que algo está llegando; el parpadeo sugiere que algo falla.
+ */
+@utility esqueleto {
+  background-color: var(--color-ink-100);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, white 55%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  animation: barrido 1.4s ease-in-out infinite;
+}
+
+@keyframes barrido {
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+
+/**
+ * Aparición diferida, sin JavaScript.
+ *
+ * El esqueleto nace invisible y entra a los 140 ms. Si la pantalla llega
+ * antes —que es lo normal— no se llega a ver nunca: un esqueleto que
+ * parpadea ochenta milisegundos se lee como un fallo, no como una carga.
+ *
+ * `animation-fill-mode: backwards` es lo que mantiene la opacidad a cero
+ * durante el retardo. Sin eso, se vería desde el primer fotograma y el
+ * retardo no serviría de nada.
+ */
+@utility esqueleto-entra {
+  animation: aparecer 0.22s ease-out 0.14s backwards;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * Con movimiento reducido se quedan las piezas quietas, no desaparecen.
+ *
+ * Una animación en bucle a pantalla completa es de las que provocan mareo, y
+ * el esqueleto aparece justo cuando alguien está esperando y mirando fijo.
+ * Pero quitarlo entero dejaría la pantalla en blanco: lo que se apaga es el
+ * movimiento, no la información.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .esqueleto {
+    animation: none;
+    background-image: none;
+  }
+  .esqueleto-entra {
+    animation: none;
+  }
+}
