@@ -14,7 +14,7 @@ export function CatalogPreview() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               eyebrow="Catálogo"
-              title="Doce familias de trámites. Un único expediente."
+              title="Trece familias de trámites. Un único expediente."
               lede="Cada trámite tiene su página con requisitos, documentación, proceso, plazos y honorarios. Sin letra pequeña."
             />
             <Button href="/tramites" variant="secondary" size="md" className="shrink-0" arrow>

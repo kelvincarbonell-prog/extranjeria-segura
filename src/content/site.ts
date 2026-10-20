@@ -94,6 +94,7 @@ export const footerNav = {
     { label: "Nómada digital", href: "/tramites/categoria/nomadas" },
     { label: "Reagrupación familiar", href: "/tramites/categoria/familia" },
     { label: "Renovaciones", href: "/tramites/categoria/renovaciones" },
+    { label: "Residencia fiscal", href: "/tramites/categoria/fiscal" },
     { label: "Ver todos los trámites", href: "/tramites" },
   ],
   Recursos: [
@@ -164,6 +165,7 @@ export const OFFICIAL_SOURCES = {
     url: "https://sede.administracion.gob.es",
   },
   mercurio: { label: "Sede electrónica Mercurio — Autorizaciones", url: "https://sede.administracionespublicas.gob.es" },
+  aeat: { label: "Agencia Tributaria — Sede electrónica", url: "https://sede.agenciatributaria.gob.es" },
 } as const;
 
 export type SourceKey = keyof typeof OFFICIAL_SOURCES;

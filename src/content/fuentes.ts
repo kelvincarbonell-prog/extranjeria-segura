@@ -72,27 +72,33 @@ export const FUENTES: Record<string, Fuente> = {
   },
 
   /**
-   * Las tres normas de extranjería recientes se citan sin enlace al
-   * consolidado a propósito: no disponemos del identificador BOE verificado.
-   * Publicar uno aproximado enlazaría a una norma distinta.
+   * Los identificadores del RD 1155/2024 y del RD 316/2026 vienen del anexo
+   * normativo del catálogo de trámites del despacho, y se han cotejado con el
+   * título que devuelve boe.es para cada uno. El RD 316/2026 es una norma
+   * modificativa: su enlace lleva al texto publicado, y el consolidado vigente
+   * es el del RD 1155/2024.
+   *
+   * El del SMI sigue sin enlace a propósito: no disponemos del identificador
+   * BOE verificado, y uno aproximado enlazaría a una norma distinta.
    */
   "rd-1155-2024": {
     id: "rd-1155-2024",
     norma:
       "Real Decreto 1155/2024, de 19 de noviembre, por el que se aprueba el Reglamento de la Ley Orgánica 4/2000",
-    boeId: null,
+    boeId: "BOE-A-2024-24099",
     respalda:
       "Régimen general de las figuras de arraigo vigentes: modalidades, periodos de permanencia exigidos, informe de arraigo y duración de las autorizaciones.",
-    pendienteVerificacion: true,
+    pendienteVerificacion: false,
   },
 
   "rd-316-2026": {
     id: "rd-316-2026",
-    norma: "Real Decreto 316/2026, de 14 de abril",
-    boeId: null,
+    norma:
+      "Real Decreto 316/2026, de 14 de abril, por el que se modifica el Real Decreto 1155/2024, de 19 de noviembre",
+    boeId: "BOE-A-2026-8284",
     respalda:
       "Disposiciones adicionales que habilitan el procedimiento extraordinario de 2026: plazo de solicitud, requisitos de acceso y plazo de resolución.",
-    pendienteVerificacion: true,
+    pendienteVerificacion: false,
   },
 
   "rd-126-2026": {

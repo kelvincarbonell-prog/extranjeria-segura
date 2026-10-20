@@ -44,10 +44,13 @@ export function loEsencialTramite(t: Tramite): string[] {
   const nuestros = t.documents.filter((d) => d.source === "nosotros").length;
 
   if (total > 0) {
-    const partes = [`${mios} los aportas tú`];
-    if (nuestros > 0) partes.push(`${nuestros} los preparamos nosotros`);
+    // «1 salen de la Administración» salió en la primera ficha con un solo
+    // documento de ese origen: cada parte concuerda con su propio número.
+    const partes = [`${mios} ${mios === 1 ? "lo aportas" : "los aportas"} tú`];
+    if (nuestros > 0) partes.push(`${nuestros} ${nuestros === 1 ? "lo preparamos" : "los preparamos"} nosotros`);
     const administracion = total - mios - nuestros;
-    if (administracion > 0) partes.push(`${administracion} salen de la Administración`);
+    if (administracion > 0)
+      partes.push(`${administracion} ${administracion === 1 ? "sale" : "salen"} de la Administración`);
     puntos.push(`Son ${total} documentos: ${partes.join(", ")}.`);
   }
 

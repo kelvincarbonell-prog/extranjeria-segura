@@ -9,18 +9,40 @@ import type { Tramite } from "./taxonomy";
  * el profesional responsable lo valide y firme (ver CONTENIDO-PENDIENTE-REVISION.md).
  *
  * Referencia normativa de base: LO 4/2000, RD 1155/2024 (Reglamento de
- * Extranjería), Ley 14/2013 y Código Civil para nacionalidad.
+ * Extranjería), Ley 14/2013, Ley 35/2006 del IRPF y Código Civil para
+ * nacionalidad.
+ *
+ * ─── EL CATÁLOGO DEL DESPACHO ───────────────────────────────────────────
+ *
+ * En octubre de 2026 el despacho entregó su catálogo de trámites recurrentes
+ * de residencia y residencia fiscal. De ahí salen las doce fichas que se
+ * sumaron a las 25 originales —familiares de españoles, tarjeta azul-UE,
+ * traslado intraempresarial, investigadores, búsqueda de empleo, hijos de
+ * residentes, prórroga de la regularización, renovación de inversores,
+ * razones humanitarias y las tres de residencia fiscal— y las cifras con
+ * artículo de las fichas de la Ley 14/2013. Llevan `updatedAt: CATALOGO`.
+ *
+ * Del catálogo quedan fuera, a propósito: los visados de corta duración y de
+ * tránsito, la residencia con excepción de autorización de trabajo, el
+ * retorno voluntario, temporada y gestión colectiva (que contrata el
+ * empleador), transfronterizos y menores no acompañados. El catálogo los
+ * enumera sin requisitos, y una ficha sin requisitos sería relleno.
+ *
+ * Siguen pendientes de firma igual que las demás: que el contenido venga del
+ * despacho no sustituye a la revisión de la ficha publicada.
  *
  * ─── QUÉ FICHA PUBLICA HONORARIOS Y CUÁL NO ─────────────────────────────
  *
- * Las 25 vías siguen aquí con su ficha completa: quien busca «tarjeta de
- * familiar de comunitario» encuentra requisitos, documentos y plazos igual
- * que antes. Lo que cambia es el precio.
+ * Todas las vías tienen su ficha completa: quien busca «tarjeta de familiar
+ * de comunitario» encuentra requisitos, documentos y plazos igual que antes.
+ * Lo que cambia es el precio.
  *
  * Solo llevan `feeFromCents` las fichas que caen dentro de una de las cuatro
  * líneas de servicio con precio cerrado —arraigo, nómadas, nacionalidad y
- * renovaciones, ver `pricing.ts`—. Son once. Las catorce restantes van con
- * `feeFromCents: null`, que la interfaz muestra como «Presupuesto a medida».
+ * renovaciones, ver `pricing.ts`—. Son once. Las demás van con
+ * `feeFromCents: null`, que la interfaz muestra como «Presupuesto a medida»,
+ * incluidas las doce del catálogo del despacho: ninguna tiene todavía un
+ * importe que el despacho haya fijado, y este archivo no se lo inventa.
  *
  * El motivo no es comercial sino de honestidad operativa: el despacho solo
  * puede comprometer un importe en las vías que tramita con volumen suficiente
@@ -34,6 +56,13 @@ import type { Tramite } from "./taxonomy";
  */
 
 const REVIEW = "2026-09-05";
+
+/**
+ * Fichas incorporadas o completadas con el catálogo de trámites recurrentes
+ * del despacho (RD 1155/2024 tras el RD 316/2026 y las sentencias del
+ * Tribunal Supremo de julio de 2026, Ley 14/2013 y LIRPF).
+ */
+const CATALOGO = "2026-10-20";
 
 export const TRAMITES: Tramite[] = [
   /* ================================ ARRAIGO ================================ */
@@ -307,20 +336,22 @@ export const TRAMITES: Tramite[] = [
     alsoIn: ["residencia", "trabajo"],
     tagline: "Trabaja en remoto desde España, con todo en regla.",
     metaDescription:
-      "Visado de nómada digital en España: requisitos de ingresos, documentación, plazos y coste. Solicitud desde el extranjero o desde España.",
+      "Visado de nómada digital en España: requisitos, documentos, resolución en 20 días con silencio positivo y hasta 3 años. Desde fuera o desde España.",
     whatItIs:
-      "Autorización prevista en la Ley 14/2013 para personas que trabajan en remoto para empresas o clientes situados fuera de España. Permite residir legalmente en España manteniendo tu actividad profesional a distancia.",
+      "Autorización de la Ley 14/2013 (arts. 74 bis a 74 quinquies) para personas que trabajan en remoto para empresas o clientes situados fuera de España. Se tramita de forma electrónica ante la Unidad de Grandes Empresas y Colectivos Estratégicos (UGE-CE) y permite residir legalmente en España manteniendo tu actividad profesional a distancia.",
     forWho: [
       "Personas empleadas por una empresa extranjera que autoriza el trabajo en remoto.",
       "Profesionales autónomos con clientes mayoritariamente fuera de España.",
       "Quien quiere traer a su familia bajo la misma unidad familiar.",
     ],
     requirements: [
-      "Relación laboral o profesional de al menos la antigüedad exigida con empresas de fuera de España.",
-      "Que la empresa tenga la antigüedad de actividad mínima requerida.",
-      "Ingresos suficientes según el umbral vinculado al SMI/IPREM aplicable.",
-      "Titulación o experiencia profesional acreditable.",
-      "Seguro médico y carencia de antecedentes penales.",
+      "Empresa con al menos un año de actividad.",
+      "Relación laboral o profesional con esa empresa de al menos tres meses.",
+      "Acreditar que el trabajo puede prestarse a distancia.",
+      "Titulación o tres años de experiencia profesional.",
+      "Si trabajas como profesional, hasta el 20 % de tu actividad puede ser para empresas españolas.",
+      "Requisitos generales del art. 62.3 de la Ley 14/2013: mayor de 18 años, no estar en situación irregular en España, seguro de enfermedad público o privado y recursos económicos suficientes.",
+      "Sin antecedentes penales en España ni en los países de residencia de los dos últimos años, más declaración responsable sobre los cinco últimos, y no figurar como rechazable.",
     ],
     needsVerification: [
       "Porcentaje de facturación que procede de clientes fuera de España, si eres autónomo.",
@@ -343,24 +374,26 @@ export const TRAMITES: Tramite[] = [
       { title: "Diagnóstico y estrategia", detail: "Decidimos si conviene visado consular o autorización desde España.", actor: "extranjeria-segura", duration: "24–48 h" },
       { title: "Dossier económico", detail: "Preparamos la acreditación de ingresos y actividad.", actor: "extranjeria-segura" },
       { title: "Documentación", detail: "Recopilamos, traducimos y apostillamos lo necesario.", actor: "cliente" },
-      { title: "Presentación", detail: "Presentación ante la unidad competente.", actor: "extranjeria-segura" },
-      { title: "Resolución y TIE", detail: "Resolución y cita para la tarjeta.", actor: "administracion" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la autorización, o de la solicitud de visado en el consulado.", actor: "extranjeria-segura" },
+      { title: "Resolución y TIE", detail: "Veinte días para la autorización, con silencio positivo; diez días hábiles para el visado. Después, cita para la tarjeta.", actor: "administracion", duration: "20 días" },
     ],
     feeFromCents: 89900,
     timeframe:
-      "Las solicitudes tramitadas por la unidad de grandes empresas suelen tener plazos más cortos que la vía general. Te damos la estimación en el diagnóstico.",
+      "La UGE-CE resuelve la autorización en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo. El visado se resuelve en diez días hábiles.",
     adminFeesNote:
-      "No incluye tasas, seguro médico, traducciones juradas, apostillas ni asesoramiento fiscal. Podemos coordinarlo con un fiscalista si lo necesitas.",
+      "No incluye tasas, seguro médico, traducciones juradas, apostillas ni los trámites fiscales, que se presupuestan aparte.",
     faqs: [
-      { q: "¿Puedo tener clientes españoles?", a: "La normativa limita el porcentaje de actividad que puede desarrollarse con empresas situadas en España. Lo revisamos con tus facturas reales." },
-      { q: "¿Cuántos años me dan?", a: "La duración depende de si se solicita como visado o como autorización, y de la vigencia de tu relación laboral." },
-      { q: "¿Puedo traer a mi pareja e hijos?", a: "Sí, la normativa contempla la unidad familiar. Se tramita de forma conjunta o sucesiva." },
-      { q: "¿Y los impuestos?", a: "Residir en España tiene consecuencias fiscales. No damos asesoramiento fiscal, pero te avisamos de qué debes revisar y con quién." },
+      { q: "¿Puedo tener clientes españoles?", a: "Si trabajas como profesional, hasta el 20 % de tu actividad puede ser para empresas situadas en España. Lo revisamos con tus facturas reales." },
+      { q: "¿Cuántos años me dan?", a: "El visado tiene una vigencia máxima de un año. La autorización de residencia, de hasta tres años, y se renueva por periodos de dos años." },
+      { q: "¿Puedo traer a mi pareja e hijos?", a: "Sí. Cónyuge o pareja, hijos dependientes y ascendientes a cargo pueden incluirse de forma conjunta y simultánea o sucesiva (art. 62.4 de la Ley 14/2013)." },
+      { q: "¿Y si la Administración no contesta?", a: "Si la UGE-CE no resuelve en veinte días, la autorización se entiende concedida por silencio administrativo. Frente a una denegación cabe recurso de alzada." },
+      { q: "¿Puedo seguir en España mientras se resuelve?", a: "Si la pides desde España, la solicitud prorroga tu situación de residencia o estancia anterior hasta la resolución." },
+      { q: "¿Y los impuestos?", a: "La residencia fiscal es un plano distinto de la TIE. El teletrabajo con visado de la Ley 14/2013 permite optar al régimen de impatriados («Ley Beckham»), y lo gestionamos en una ficha aparte." },
     ],
     sources: ["boe", "inclusion", "exteriores"],
-    updatedAt: REVIEW,
+    updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["profesional-altamente-cualificado", "residencia-no-lucrativa", "emprendedores"],
+    related: ["regimen-impatriados", "tarjeta-azul-ue", "profesional-altamente-cualificado", "residencia-no-lucrativa"],
     seoNationalities: ["brasilenos", "estadounidenses", "britanicos", "argentinos", "mexicanos", "colombianos", "rusos"],
     seoCities: ["madrid", "barcelona", "valencia", "malaga", "palma", "canarias"],
   },
@@ -379,10 +412,10 @@ export const TRAMITES: Tramite[] = [
       "Empresas que necesitan incorporar talento internacional con plazos cortos.",
     ],
     requirements: [
-      "Titulación superior o experiencia profesional equivalente acreditada.",
+      "Titulación equiparable a MECES 1 o tres años de experiencia equiparable (art. 71.2.b de la Ley 14/2013).",
       "Contrato con una retribución acorde al puesto y al mercado.",
       "Empresa con actividad real y al corriente de obligaciones.",
-      "Seguro o alta en Seguridad Social y carencia de antecedentes penales.",
+      "Requisitos generales del art. 62.3: mayor de 18 años, sin antecedentes penales, seguro de enfermedad y recursos económicos suficientes.",
     ],
     needsVerification: [
       "Encaje del puesto en la definición de altamente cualificado.",
@@ -399,18 +432,82 @@ export const TRAMITES: Tramite[] = [
     process: [
       { title: "Análisis del puesto", detail: "Comprobamos encaje del puesto y de la retribución.", actor: "extranjeria-segura" },
       { title: "Dossier de empresa", detail: "Preparamos la documentación corporativa.", actor: "extranjeria-segura" },
-      { title: "Presentación", detail: "Presentación ante la unidad competente.", actor: "extranjeria-segura" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la solicitud.", actor: "extranjeria-segura" },
     ],
     feeFromCents: 95900,
-    timeframe: "La vía de Ley 14/2013 suele tener plazos de resolución cortos.",
+    timeframe:
+      "La UGE-CE resuelve la autorización en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo. El visado se resuelve en diez días hábiles.",
     adminFeesNote: "No incluye tasas ni homologaciones de título.",
     faqs: [
-      { q: "¿Sirve para trabajadores ya en España?", a: "En determinados supuestos sí puede solicitarse desde España. Depende de tu situación actual." },
+      { q: "¿Sirve para trabajadores ya en España?", a: "En determinados supuestos sí puede solicitarse desde España, y la solicitud prorroga tu situación anterior hasta la resolución. Depende de tu situación actual." },
+      { q: "¿Cuánto dura?", a: "Tres años, y se renueva por periodos de dos años." },
+      { q: "¿Es lo mismo que la tarjeta azul-UE?", a: "No. Esta es la modalidad nacional (art. 71.2.b). La tarjeta azul-UE exige formación de nivel MECES 2 o cinco años de experiencia, un contrato de al menos seis meses y un umbral salarial propio." },
     ],
     sources: ["boe", "inclusion"],
-    updatedAt: REVIEW,
+    updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["teletrabajo-internacional", "residencia-trabajo-cuenta-ajena"],
+    related: ["tarjeta-azul-ue", "teletrabajo-internacional", "residencia-trabajo-cuenta-ajena"],
+  },
+
+  {
+    slug: "tarjeta-azul-ue",
+    name: "Tarjeta azul-UE",
+    category: "nomadas",
+    alsoIn: ["trabajo"],
+    tagline: "Para perfiles cualificados con un contrato de al menos seis meses.",
+    metaDescription:
+      "Tarjeta azul-UE en España (Ley 14/2013): formación o experiencia exigida, contrato de seis meses, umbral salarial, duración de 3 años y plazos de la UGE-CE.",
+    whatItIs:
+      "Autorización de residencia y trabajo de la Ley 14/2013 (arts. 71.2.a y 71 bis) para profesionales altamente cualificados contratados en España. Es la versión armonizada en la Unión Europea, y se tramita de forma electrónica ante la Unidad de Grandes Empresas y Colectivos Estratégicos (UGE-CE).",
+    forWho: [
+      "Profesionales con formación superior o experiencia equivalente y una oferta firme en España.",
+      "Perfiles TIC que acreditan la experiencia en lugar del título.",
+      "Empresas que quieren incorporar a un profesional extranjero con plazos cortos.",
+    ],
+    requirements: [
+      "Formación superior de al menos tres años (MECES 2 / EQF 6) o cinco años de experiencia profesional; en el sector TIC, tres años de experiencia dentro de los últimos siete.",
+      "Contrato u oferta firme de trabajo de al menos seis meses.",
+      "Salario no inferior al umbral reglamentario: entre 1,0 y 1,6 veces el salario bruto anual medio, reducido al 80 % en determinados casos.",
+      "Requisitos generales del art. 62.3 de la Ley 14/2013: mayor de 18 años, no estar en situación irregular en España, seguro de enfermedad y recursos económicos suficientes.",
+      "Sin antecedentes penales en España ni en los países de residencia de los dos últimos años, más declaración responsable sobre los cinco últimos, y no figurar como rechazable.",
+    ],
+    needsVerification: [
+      "Umbral salarial exacto que aplica a tu puesto y si entras en uno de los supuestos reducidos al 80 %.",
+      "Equivalencia de tu título con el nivel MECES 2 / EQF 6, o cómo acreditar la experiencia.",
+      "Que el contrato u oferta cumpla la duración mínima y esté firmado en los términos exigidos.",
+    ],
+    documents: [
+      { name: "Pasaporte en vigor", source: "cliente" },
+      { name: "Contrato u oferta firme de trabajo", source: "cliente", note: "De al menos seis meses, con el salario bruto anual." },
+      { name: "Título superior o acreditación de experiencia", source: "cliente", note: "Legalizado o apostillado y traducido cuando proceda." },
+      { name: "Seguro de enfermedad", source: "cliente" },
+      { name: "Certificado de antecedentes penales", source: "cliente", note: "De los países de residencia de los dos últimos años." },
+      { name: "Declaración responsable de antecedentes de los cinco últimos años", source: "nosotros" },
+      { name: "Documentación de la empresa", source: "cliente" },
+      { name: "Solicitud electrónica y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Análisis del perfil y del salario", detail: "Comprobamos la formación o experiencia y el umbral salarial que aplica a tu puesto.", actor: "extranjeria-segura", duration: "24–48 h" },
+      { title: "Documentación", detail: "Reúnes tu parte; preparamos con la empresa el dossier corporativo.", actor: "cliente" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la solicitud y de la tasa.", actor: "extranjeria-segura", duration: "24 h" },
+      { title: "Resolución", detail: "Veinte días de plazo, con silencio positivo. Si estás fuera, el visado se resuelve en diez días hábiles.", actor: "administracion", duration: "20 días" },
+      { title: "Entrada y TIE", detail: "Te acompañamos en la solicitud de la tarjeta.", actor: "extranjeria-segura" },
+    ],
+    feeFromCents: null,
+    timeframe:
+      "La UGE-CE resuelve la autorización en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo. El visado se resuelve en diez días hábiles.",
+    adminFeesNote:
+      "No incluye tasas, homologaciones de título, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "¿Cuánto dura?", a: "Tres años, o la duración del contrato más tres meses si es menor. Se renueva por periodos de dos años (art. 76.3 de la Ley 14/2013)." },
+      { q: "¿Puedo traer a mi familia?", a: "Sí. Cónyuge o pareja, hijos dependientes y ascendientes a cargo pueden solicitarla de forma conjunta y simultánea o sucesiva (art. 62.4)." },
+      { q: "¿Qué pasa si estoy en España mientras se resuelve?", a: "La solicitud prorroga tu situación de residencia o estancia anterior hasta que se resuelva." },
+      { q: "¿Y si me la deniegan?", a: "Cabe recurso de alzada. Revisamos la resolución antes de recomendarte presentarlo." },
+    ],
+    sources: ["boe", "inclusion", "exteriores"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["profesional-altamente-cualificado", "traslado-intraempresarial", "regimen-impatriados"],
   },
 
   /* ============================== RESIDENCIA =============================== */
@@ -626,9 +723,9 @@ export const TRAMITES: Tramite[] = [
       "Equipos que quieren establecer su sede en España.",
     ],
     requirements: [
-      "Proyecto innovador con informe favorable del organismo competente.",
-      "Medios económicos suficientes.",
-      "Seguro médico y carencia de antecedentes penales.",
+      "Actividad innovadora o de especial interés económico para España (arts. 69 y 70 de la Ley 14/2013).",
+      "Informe preceptivo de ENISA, que valora tu perfil, el plan de negocio y el valor añadido.",
+      "Requisitos generales del art. 62.3: mayor de 18 años, sin antecedentes penales, seguro de enfermedad y recursos económicos suficientes.",
     ],
     needsVerification: [
       "Encaje del proyecto en los criterios de innovación e interés económico.",
@@ -644,19 +741,177 @@ export const TRAMITES: Tramite[] = [
     ],
     process: [
       { title: "Preparación de la memoria", detail: "Estructuramos el proyecto según los criterios de valoración.", actor: "extranjeria-segura" },
-      { title: "Informe favorable", detail: "Solicitud del informe preceptivo.", actor: "extranjeria-segura" },
-      { title: "Presentación", detail: "Presentación de la solicitud de autorización o visado.", actor: "extranjeria-segura" },
+      { title: "Informe de ENISA", detail: "Solicitud del informe preceptivo, que se emite en diez días hábiles.", actor: "extranjeria-segura", duration: "10 días hábiles" },
+      { title: "Presentación", detail: "Desde el extranjero, autorización y visado se piden en una única instancia.", actor: "extranjeria-segura" },
     ],
     feeFromCents: null,
-    timeframe: "Depende del informe preceptivo y de la unidad competente.",
-    adminFeesNote: "Presupuesto a medida tras el diagnóstico. No incluye tasas.",
+    timeframe:
+      "ENISA emite su informe en diez días hábiles. La UGE-CE resuelve la autorización en veinte días, con silencio positivo.",
+    adminFeesNote: "No incluye tasas.",
     faqs: [
       { q: "¿Qué se considera innovador?", a: "Se valoran el perfil profesional, el plan de negocio y el valor añadido para la economía española. Trabajamos la memoria con ese marco." },
+      { q: "¿Cuánto dura?", a: "Tres años, y se renueva por periodos de dos años." },
     ],
     sources: ["boe", "inclusion"],
-    updatedAt: REVIEW,
+    updatedAt: CATALOGO,
     pendingLegalReview: true,
     related: ["residencia-trabajo-cuenta-propia", "profesional-altamente-cualificado"],
+  },
+
+  {
+    slug: "traslado-intraempresarial",
+    name: "Traslado intraempresarial",
+    category: "trabajo",
+    alsoIn: ["nomadas"],
+    tagline: "Para quien su propia empresa o grupo desplaza a España.",
+    metaDescription:
+      "Autorización de traslado intraempresarial en España (art. 73 Ley 14/2013): ICT-UE y nacional, tres meses previos en el grupo, duración y plazos de la UGE-CE.",
+    whatItIs:
+      "Autorización de la Ley 14/2013 (art. 73) para trabajadores que su empresa o grupo empresarial desplaza a un centro en España. Tiene dos modalidades: el traslado intraempresarial UE (ICT-UE) y el nacional.",
+    forWho: [
+      "Directivos, especialistas y trabajadores en formación desplazados dentro de un mismo grupo.",
+      "Empresas extranjeras que abren o refuerzan un centro de trabajo en España.",
+    ],
+    requirements: [
+      "Actividad empresarial real de la empresa o grupo.",
+      "Titulación equiparable a MECES 1 o tres años de experiencia profesional.",
+      "Relación laboral o profesional previa y continuada de al menos tres meses con el grupo.",
+      "Documentación del traslado emitida por la empresa.",
+      "Requisitos generales del art. 62.3 de la Ley 14/2013: mayor de 18 años, sin antecedentes penales, seguro de enfermedad y recursos económicos suficientes.",
+    ],
+    needsVerification: [
+      "Qué modalidad te conviene, ICT-UE o nacional, según la duración prevista del desplazamiento.",
+      "Cómo acreditar la relación previa de tres meses con el grupo.",
+      "Si el puesto encaja como directivo, especialista o trabajador en formación.",
+    ],
+    documents: [
+      { name: "Pasaporte en vigor", source: "cliente" },
+      { name: "Carta de desplazamiento de la empresa", source: "cliente", note: "Con duración, puesto y retribución durante el traslado." },
+      { name: "Acreditación de la relación previa con el grupo", source: "cliente" },
+      { name: "Título o acreditación de experiencia", source: "cliente" },
+      { name: "Documentación societaria de la empresa de origen y de destino", source: "cliente" },
+      { name: "Seguro de enfermedad", source: "cliente" },
+      { name: "Certificado de antecedentes penales", source: "cliente" },
+      { name: "Solicitud electrónica y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico", detail: "Elegimos modalidad y comprobamos la relación previa con el grupo.", actor: "extranjeria-segura", duration: "24–48 h" },
+      { title: "Dossier de empresa", detail: "Preparamos con el grupo la documentación del traslado.", actor: "extranjeria-segura" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la solicitud.", actor: "extranjeria-segura" },
+      { title: "Resolución", detail: "Veinte días de plazo, con silencio positivo.", actor: "administracion", duration: "20 días" },
+    ],
+    feeFromCents: null,
+    timeframe:
+      "La UGE-CE resuelve la autorización en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo. El visado se resuelve en diez días hábiles.",
+    adminFeesNote: "No incluye tasas, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "¿Cuánto dura?", a: "En el ICT-UE, un máximo de tres años, o de un año para trabajadores en formación. En la modalidad nacional, tres años." },
+      { q: "¿Puede venir mi familia?", a: "Sí, en los términos del art. 62.4 de la Ley 14/2013: cónyuge o pareja, hijos dependientes y ascendientes a cargo." },
+    ],
+    sources: ["boe", "inclusion"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["tarjeta-azul-ue", "profesional-altamente-cualificado", "regimen-impatriados"],
+  },
+  {
+    slug: "investigacion-innovacion",
+    name: "Formación, investigación, desarrollo e innovación",
+    shortName: "Investigadores",
+    category: "trabajo",
+    alsoIn: ["estudios", "nomadas"],
+    tagline: "Para investigadores, doctores y perfiles de I+D+i.",
+    metaDescription:
+      "Autorización para investigadores y personal de I+D+i en España (art. 72 Ley 14/2013): convenio de acogida, duración de 3 años y prórroga para buscar empleo.",
+    whatItIs:
+      "Autorización de la Ley 14/2013 (art. 72) para personal investigador, científico y técnico que desarrolla actividades de formación, investigación, desarrollo e innovación en España. Distingue la investigación UE, armonizada en la Unión, de los demás supuestos nacionales.",
+    forWho: [
+      "Doctores e investigadores con convenio de acogida o contrato con un organismo de investigación.",
+      "Personal técnico y científico vinculado a proyectos de I+D+i.",
+    ],
+    requirements: [
+      "Investigación UE: doctorado o titulación que dé acceso a programas de doctorado, y convenio de acogida o contrato con el organismo de investigación.",
+      "Investigación nacional: encaje en alguno de los demás supuestos del art. 72.1 de la Ley 14/2013.",
+      "Requisitos generales del art. 62.3: mayor de 18 años, sin antecedentes penales, seguro de enfermedad y recursos económicos suficientes.",
+    ],
+    needsVerification: [
+      "Si tu caso encaja como investigación UE o como supuesto nacional.",
+      "Que el convenio de acogida o el contrato recoja lo que exige la norma.",
+    ],
+    documents: [
+      { name: "Pasaporte en vigor", source: "cliente" },
+      { name: "Convenio de acogida o contrato", source: "cliente" },
+      { name: "Título de doctorado o de acceso al doctorado", source: "cliente" },
+      { name: "Seguro de enfermedad", source: "cliente" },
+      { name: "Certificado de antecedentes penales", source: "cliente" },
+      { name: "Solicitud electrónica y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico", detail: "Encajamos tu caso en la modalidad UE o nacional.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Coordinamos con el organismo de acogida el convenio y su documentación.", actor: "cliente" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la solicitud.", actor: "extranjeria-segura" },
+      { title: "Resolución", detail: "Veinte días de plazo, con silencio positivo.", actor: "administracion", duration: "20 días" },
+    ],
+    feeFromCents: null,
+    timeframe:
+      "La UGE-CE resuelve la autorización en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo.",
+    adminFeesNote: "No incluye tasas, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "¿Cuánto dura?", a: "Tres años, o la duración del convenio si es menor. Se renueva por periodos de dos años." },
+      { q: "¿Qué pasa cuando termina el proyecto?", a: "Al finalizar puedes pedir una prórroga de hasta doce meses para buscar empleo o emprender en España." },
+    ],
+    sources: ["boe", "inclusion"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["tarjeta-azul-ue", "residencia-estudios", "emprendedores"],
+  },
+  {
+    slug: "visado-busqueda-empleo",
+    name: "Visado para la búsqueda de empleo",
+    shortName: "Búsqueda de empleo",
+    category: "trabajo",
+    tagline: "Entrar en España para buscar trabajo, con un visado específico.",
+    metaDescription:
+      "Visado de búsqueda de empleo en España (arts. 43 a 45 RD 1155/2024): modalidad general, para hijos o nietos de español de origen y por ocupaciones.",
+    whatItIs:
+      "Visado previsto en los arts. 43 a 45 del Reglamento de Extranjería (RD 1155/2024) que permite entrar en España para buscar trabajo. Tiene tres modalidades: la general, la de hijos o nietos de español de origen, y la vinculada a determinadas ocupaciones y ámbitos territoriales.",
+    forWho: [
+      "Hijos y nietos de español de origen.",
+      "Perfiles incluidos en las ocupaciones y territorios que habilitan esta vía.",
+      "Quien quiere llegar a España con un visado que le permita buscar empleo.",
+    ],
+    requirements: [
+      "Encajar en una de las tres modalidades de los arts. 43 a 45 del RD 1155/2024.",
+      "Documentación general del visado (art. 38): pasaporte con vigencia mínima de un año, antecedentes penales de los últimos cinco años, certificado médico y tasa.",
+      "En la modalidad de descendientes, acreditar que tu padre, madre, abuelo o abuela es o fue español de origen.",
+    ],
+    needsVerification: [
+      "Qué modalidad te corresponde y si está abierta para tu ocupación o territorio.",
+      "Cómo acreditar la nacionalidad española de origen del ascendiente.",
+    ],
+    documents: [
+      { name: "Pasaporte con vigencia mínima de un año", source: "cliente" },
+      { name: "Certificado de antecedentes penales de los últimos cinco años", source: "cliente", note: "Legalizado o apostillado y traducido." },
+      { name: "Certificado médico", source: "cliente", note: "Conforme al Reglamento Sanitario Internacional de 2005." },
+      { name: "Partidas de nacimiento que acrediten el vínculo con el español de origen", source: "cliente", optional: true },
+      { name: "Impreso de solicitud y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico", detail: "Confirmamos la modalidad y lo que tienes que acreditar.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Reúnes partidas, antecedentes y certificado médico; te decimos cómo legalizarlos.", actor: "cliente" },
+      { title: "Solicitud consular", detail: "Preparamos la solicitud para el consulado de tu demarcación.", actor: "extranjeria-segura" },
+      { title: "Resolución", detail: "El consulado resuelve el visado.", actor: "administracion" },
+    ],
+    feeFromCents: null,
+    timeframe: "Los plazos consulares varían según el país. Te damos la referencia de tu consulado en el diagnóstico.",
+    adminFeesNote: "No incluye tasas consulares, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "Mi abuelo era español. ¿Me sirve?", a: "La modalidad para hijos y nietos de español de origen existe precisamente para eso. Lo que hay que acreditar es que era español de origen, y eso se comprueba con las partidas." },
+      { q: "¿Y si encuentro trabajo?", a: "El objetivo del visado es que puedas pasar a una autorización de residencia y trabajo. Te acompañamos en ese cambio." },
+    ],
+    sources: ["boe", "exteriores", "inclusion"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["residencia-trabajo-cuenta-ajena", "nacionalidad-por-opcion"],
   },
 
   /* ================================ ESTUDIOS ============================== */
@@ -826,7 +1081,6 @@ export const TRAMITES: Tramite[] = [
     forWho: [
       "Cónyuges y parejas registradas de ciudadanos de la UE.",
       "Hijos y ascendientes a cargo en los supuestos previstos.",
-      "Familiares de español en los casos asimilados.",
     ],
     requirements: [
       "Vínculo familiar acreditado y vigente.",
@@ -855,11 +1109,12 @@ export const TRAMITES: Tramite[] = [
     adminFeesNote: "No incluye tasas, traducciones ni apostillas.",
     faqs: [
       { q: "¿Puedo trabajar con esta tarjeta?", a: "Sí, la tarjeta de familiar de comunitario habilita para trabajar en los términos previstos." },
+      { q: "Mi familiar es español. ¿Es esta mi vía?", a: "No. Desde el Reglamento de 2024 (RD 1155/2024), los familiares de españoles tienen su propia autorización de residencia (arts. 93 a 99). Esta tarjeta queda para familiares de ciudadanos de otros países de la UE, el EEE o Suiza." },
     ],
     sources: ["boe", "inclusion", "policia"],
-    updatedAt: REVIEW,
+    updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["reagrupacion-familiar", "arraigo-familiar", "certificado-registro-ue"],
+    related: ["familiares-de-espanoles", "reagrupacion-familiar", "certificado-registro-ue"],
   },
   {
     slug: "certificado-registro-ue",
@@ -896,6 +1151,113 @@ export const TRAMITES: Tramite[] = [
     updatedAt: REVIEW,
     pendingLegalReview: true,
     related: ["tarjeta-familiar-comunitario", "nie-tie"],
+  },
+
+  {
+    slug: "familiares-de-espanoles",
+    name: "Residencia de familiar de ciudadano español",
+    shortName: "Familiar de español",
+    category: "familia",
+    alsoIn: ["residencia"],
+    tagline: "Si tu familiar es español, tu vía ya no es la de comunitario.",
+    metaDescription:
+      "Residencia de familiar de español (arts. 93 a 99 RD 1155/2024): quién puede pedirla, solicitud desde España, trabajo desde la admisión y la sentencia de 2026.",
+    whatItIs:
+      "Autorización de residencia temporal para familiares de personas con nacionalidad española, regulada en los arts. 93 a 99 del Reglamento de Extranjería (RD 1155/2024). Sustituye a la tarjeta de familiar de comunitario para este caso, y desde el RD 316/2026 puede pedirse desde España.",
+    forWho: [
+      "Cónyuge mayor de 18 años, o pareja registrada o estable con al menos doce meses de convivencia, salvo descendencia común.",
+      "Hijos menores de 26 años, o mayores a cargo o con discapacidad que precise apoyo.",
+      "Ascendientes de primer grado a cargo y sin apoyo familiar en origen, o por razones humanitarias.",
+      "Padre, madre o tutor de un menor español, y el familiar hasta segundo grado que cuide de un español con dependencia reconocida.",
+      "Hijos de padre o madre que sean o hayan sido españoles de origen, y otros familiares que acrediten estar a cargo.",
+    ],
+    requirements: [
+      "Convivir con el familiar español (art. 94.1).",
+      "Acreditar el vínculo familiar y, cuando se exija, la dependencia económica.",
+      "Solicitud desde España si tanto tú como tu familiar español estáis en territorio nacional (art. 97.1.c, redacción del RD 316/2026).",
+      "Desde la admisión a trámite quedas autorizado provisionalmente a residir y trabajar (art. 97.5).",
+    ],
+    needsVerification: [
+      "En qué supuesto del art. 94.1 encaja tu vínculo y cómo acreditarlo.",
+      "La prueba de convivencia, y de dependencia económica si eres ascendiente o familiar a cargo.",
+      "Cómo pondera la Administración tus antecedentes penales, si los tienes, tras la sentencia del Tribunal Supremo de 8 de julio de 2026.",
+    ],
+    documents: [
+      { name: "Pasaporte completo en vigor", source: "cliente" },
+      { name: "DNI del familiar español", source: "cliente" },
+      { name: "Certificado de matrimonio, de pareja o de nacimiento", source: "cliente", note: "Legalizado o apostillado y traducido si es extranjero." },
+      { name: "Empadronamiento conjunto", source: "cliente" },
+      { name: "Prueba de dependencia económica", source: "cliente", optional: true, note: "Solo para ascendientes y otros familiares a cargo." },
+      { name: "Certificado de antecedentes penales", source: "cliente" },
+      { name: "Impreso oficial y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico del vínculo", detail: "Confirmamos el supuesto del art. 94.1 y cómo acreditarlo.", actor: "extranjeria-segura", duration: "24–48 h" },
+      { title: "Documentación", detail: "Reúnes las partidas y la prueba de convivencia; te decimos cómo legalizarlas.", actor: "cliente" },
+      { title: "Presentación", detail: "Presentamos desde España o preparamos la solicitud consular, según dónde estéis.", actor: "extranjeria-segura" },
+      { title: "Admisión a trámite", detail: "Desde ese momento puedes residir y trabajar provisionalmente.", actor: "administracion" },
+      { title: "Resolución y TIE", detail: "Seguimiento hasta la resolución y la cita de huellas.", actor: "extranjeria-segura" },
+    ],
+    feeFromCents: null,
+    timeframe: "El plazo de resolución depende de la oficina. Te damos la estimación de tu provincia en el diagnóstico.",
+    adminFeesNote: "No incluye tasas, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "¿No era esto la tarjeta de familiar de comunitario?", a: "Lo era. Con el Reglamento de 2024, los familiares de españoles tienen su propia autorización (arts. 93 a 99). La tarjeta de comunitario queda para familiares de ciudadanos de otros países de la UE." },
+      { q: "¿Puedo pedirla sin salir de España?", a: "Sí. El art. 97.1.c, en la redacción del RD 316/2026, permite presentarla desde España cuando tanto tú como tu familiar español estáis aquí. Revisamos tu situación concreta antes de presentar." },
+      { q: "¿Qué cambió con la sentencia del Supremo de julio de 2026?", a: "Anuló tres exigencias: que la tutela se hubiera constituido conforme al derecho español, que la dependencia del ascendiente se produjera en el país de origen y la denegación automática por antecedentes penales sin valorar el caso concreto." },
+      { q: "¿Y si nos separamos?", a: "La norma prevé la residencia independiente cuando se rompe el vínculo familiar (art. 99). Conviene revisarlo antes de que se produzca la ruptura." },
+    ],
+    sources: ["boe", "inclusion", "extranjeria"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["reagrupacion-familiar", "arraigo-familiar", "nacionalidad-por-residencia"],
+  },
+  {
+    slug: "residencia-hijos-residentes",
+    name: "Residencia de hijos o tutelados de residentes",
+    shortName: "Hijos de residentes",
+    category: "familia",
+    tagline: "Para los hijos de quien ya reside legalmente en España.",
+    metaDescription:
+      "Residencia de hijos o tutelados de extranjeros residentes en España (arts. 159 y 160 RD 1155/2024) y lo que cambió con la sentencia del Supremo de 2026.",
+    whatItIs:
+      "Autorización de residencia para hijos o menores tutelados de extranjeros que residen legalmente en España, regulada en los arts. 159 y 160 del Reglamento de Extranjería (RD 1155/2024). La sentencia del Tribunal Supremo de 8 de julio de 2026 suavizó dos de sus exigencias.",
+    forWho: [
+      "Padres o tutores con residencia legal en España cuyos hijos o tutelados necesitan su propia autorización.",
+    ],
+    requirements: [
+      "Que el progenitor o tutor resida legalmente en España.",
+      "Acreditar el vínculo de filiación o la tutela.",
+      "Residencia efectiva habitual del menor en España, con ausencias temporales justificadas admitidas.",
+    ],
+    needsVerification: [
+      "Qué supuesto de los arts. 159 y 160 aplica según dónde nació y dónde vive el menor.",
+      "Cómo justificar las ausencias temporales del territorio, si las hay.",
+    ],
+    documents: [
+      { name: "Pasaporte del menor", source: "cliente" },
+      { name: "Partida de nacimiento o documento de tutela", source: "cliente", note: "Legalizado o apostillado y traducido si es extranjero." },
+      { name: "TIE en vigor del progenitor o tutor", source: "cliente" },
+      { name: "Empadronamiento", source: "cliente" },
+      { name: "Impreso oficial y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico", detail: "Confirmamos el supuesto y la documentación que aplica.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Reúnes las partidas y la documentación del progenitor.", actor: "cliente" },
+      { title: "Presentación", detail: "Presentamos la solicitud ante la Oficina de Extranjería.", actor: "extranjeria-segura" },
+      { title: "Resolución y TIE", detail: "Seguimiento hasta la resolución y la tarjeta.", actor: "administracion" },
+    ],
+    feeFromCents: null,
+    timeframe: "El plazo de resolución depende de la oficina. Te damos la estimación de tu provincia en el diagnóstico.",
+    adminFeesNote: "No incluye tasas, traducciones juradas ni apostillas.",
+    faqs: [
+      { q: "Mi hijo es mayor de edad y está casado. ¿Ya no puede?", a: "Tras la sentencia del Tribunal Supremo de 8 de julio de 2026 ya no se exige la condición de «soltero». Revisamos el resto de requisitos en tu caso." },
+      { q: "Ha pasado temporadas fuera de España. ¿Es un problema?", a: "La exigencia de no haberse ausentado se interpreta ahora como residencia efectiva habitual, que admite ausencias temporales justificadas. Hay que poder justificarlas." },
+    ],
+    sources: ["boe", "inclusion", "extranjeria"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["reagrupacion-familiar", "familiares-de-espanoles"],
   },
 
   /* ============================= NACIONALIDAD ============================= */
@@ -1107,6 +1469,107 @@ export const TRAMITES: Tramite[] = [
     seoCities: ["madrid", "barcelona", "valencia", "malaga", "murcia", "alicante", "sevilla", "bilbao"],
   },
 
+  {
+    slug: "prorroga-regularizacion-extraordinaria",
+    name: "Prórroga o modificación de la regularización extraordinaria",
+    shortName: "Prórroga de la regularización",
+    category: "renovaciones",
+    alsoIn: ["arraigo"],
+    tagline: "Tu autorización de la regularización dura un año. Esto es lo que viene después.",
+    metaDescription:
+      "Qué hacer cuando vence la autorización de la regularización extraordinaria 2026: modificación del art. 191, prórroga de un año y prórroga de cuatro años.",
+    whatItIs:
+      "Las autorizaciones concedidas en la regularización extraordinaria (disposiciones adicionales 20.ª y 21.ª, introducidas por el RD 316/2026) tienen una vigencia de un año. El plazo para pedirlas está cerrado, pero quien la obtuvo tiene tres caminos para no perderla al vencer.",
+    forWho: [
+      "Personas con una autorización concedida en la regularización extraordinaria de 2026.",
+    ],
+    requirements: [
+      "Modificación a otra autorización conforme al art. 191, en los dos meses previos al vencimiento.",
+      "Prórroga excepcional por un año, acreditando búsqueda activa de empleo o un informe de esfuerzo de integración.",
+      "Prórroga de cuatro años en casos de enfermedad grave, discapacidad o jubilación.",
+    ],
+    needsVerification: [
+      "Fecha exacta de vencimiento de tu autorización y ventana de presentación.",
+      "Cuál de los tres caminos encaja con tu situación laboral y personal.",
+      "Qué documentación acredita la búsqueda de empleo o el esfuerzo de integración.",
+    ],
+    documents: [
+      { name: "Resolución de concesión y TIE", source: "cliente" },
+      { name: "Pasaporte en vigor", source: "cliente" },
+      { name: "Contrato o documentación de la nueva autorización", source: "cliente", optional: true, note: "Si vas por la modificación del art. 191." },
+      { name: "Acreditación de búsqueda activa de empleo o informe de integración", source: "cliente", optional: true },
+      { name: "Informe médico, de discapacidad o de jubilación", source: "cliente", optional: true },
+      { name: "Impreso oficial y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Cálculo de la ventana", detail: "Fijamos la fecha de vencimiento y los dos meses previos.", actor: "extranjeria-segura", duration: "El mismo día" },
+      { title: "Elección del camino", detail: "Modificación, prórroga de un año o prórroga de cuatro años.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Reúnes la prueba que exige el camino elegido.", actor: "cliente" },
+      { title: "Presentación", detail: "Presentamos dentro de plazo y te damos el justificante.", actor: "extranjeria-segura" },
+    ],
+    feeFromCents: null,
+    timeframe: "La modificación se pide en los dos meses previos al vencimiento de la autorización, que tiene una vigencia de un año.",
+    adminFeesNote: "No incluye tasas.",
+    faqs: [
+      { q: "¿Todavía puedo pedir la regularización?", a: "No. Las solicitudes podían presentarse hasta el 30 de junio de 2026. Esta ficha es para quien ya la tiene concedida." },
+      { q: "¿Qué pasa si no hago nada?", a: "La autorización se extingue al cumplir el año. Por eso conviene empezar antes de que se abra la ventana de los dos meses." },
+    ],
+    sources: ["boe", "inclusion", "extranjeria"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["renovacion-residencia-trabajo", "arraigo-sociolaboral"],
+  },
+  {
+    slug: "renovacion-inversores",
+    name: "Renovación de la residencia de inversor (Golden Visa)",
+    shortName: "Renovación Golden Visa",
+    category: "renovaciones",
+    alsoIn: ["nomadas"],
+    tagline: "La Golden Visa ya no se concede, pero la tuya se puede renovar.",
+    metaDescription:
+      "Renovación de la Golden Visa tras su supresión el 3 de abril de 2025: quién puede renovar, con qué normativa y por cuánto tiempo (Ley 14/2013).",
+    whatItIs:
+      "La residencia para inversores de la Ley 14/2013 quedó suprimida el 3 de abril de 2025: la disposición final 21.ª de la Ley Orgánica 1/2025 dejó sin contenido sus arts. 63 a 67. Las autorizaciones ya concedidas conservan su validez, y sus renovaciones se tramitan con la normativa vigente cuando se concedió la autorización inicial. Solo gestionamos renovaciones.",
+    forWho: [
+      "Titulares de un visado o una autorización de inversor válidos a 3 de abril de 2025 que necesitan renovarla.",
+    ],
+    requirements: [
+      "Autorización de inversor concedida y válida a 3 de abril de 2025.",
+      "Mantener la inversión y los demás requisitos de la normativa vigente en la fecha de concesión inicial.",
+      "Requisitos generales del art. 62.3 de la Ley 14/2013: seguro de enfermedad, recursos económicos suficientes y sin antecedentes penales.",
+    ],
+    needsVerification: [
+      "Qué normativa aplica a tu renovación según la fecha de tu autorización inicial.",
+      "Que la inversión se mantiene en los términos en que se acreditó.",
+    ],
+    documents: [
+      { name: "Pasaporte y TIE en vigor", source: "cliente" },
+      { name: "Resolución de la autorización inicial", source: "cliente" },
+      { name: "Acreditación de mantenimiento de la inversión", source: "cliente" },
+      { name: "Seguro de enfermedad", source: "cliente" },
+      { name: "Certificado de antecedentes penales", source: "cliente" },
+      { name: "Solicitud electrónica y justificante de tasa", source: "nosotros" },
+    ],
+    process: [
+      { title: "Revisión de la autorización inicial", detail: "Fijamos qué normativa aplica y la fecha de vencimiento.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Reúnes la acreditación de la inversión.", actor: "cliente" },
+      { title: "Presentación ante la UGE-CE", detail: "Presentación electrónica de la renovación.", actor: "extranjeria-segura" },
+      { title: "Resolución", detail: "Veinte días de plazo, con silencio positivo.", actor: "administracion", duration: "20 días" },
+    ],
+    feeFromCents: null,
+    timeframe:
+      "La UGE-CE resuelve en veinte días; sin respuesta en ese plazo, se entiende concedida por silencio administrativo. La renovación es por periodos de dos años.",
+    adminFeesNote: "No incluye tasas, tasaciones ni certificaciones de la inversión.",
+    faqs: [
+      { q: "¿Podéis tramitarme una Golden Visa nueva?", a: "No. Desde el 3 de abril de 2025 no se puede solicitar. Si buscas residir en España con medios propios, mira la residencia no lucrativa." },
+      { q: "¿Por cuánto tiempo se renueva?", a: "Por periodos de dos años (art. 76.3 de la Ley 14/2013)." },
+    ],
+    sources: ["boe", "inclusion"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["residencia-no-lucrativa", "residencia-larga-duracion"],
+  },
+
   /* ======================= RECURSOS Y REQUERIMIENTOS ====================== */
   {
     slug: "requerimiento-subsanacion",
@@ -1232,7 +1695,7 @@ export const TRAMITES: Tramite[] = [
     ],
     feeFromCents: null,
     timeframe: "Los procedimientos judiciales tienen plazos propios, habitualmente más largos que la vía administrativa.",
-    adminFeesNote: "Presupuesto a medida. No incluye procurador, peritos ni eventuales costas.",
+    adminFeesNote: "No incluye procurador, peritos ni eventuales costas.",
     faqs: [
       { q: "¿Puedo ir directamente al juzgado?", a: "Depende de si la resolución agota la vía administrativa. Lo comprobamos antes." },
     ],
@@ -1287,6 +1750,210 @@ export const TRAMITES: Tramite[] = [
     updatedAt: REVIEW,
     pendingLegalReview: true,
     related: ["requerimiento-subsanacion"],
+  },
+  {
+    slug: "razones-humanitarias-victimas",
+    name: "Razones humanitarias y protección de víctimas",
+    shortName: "Razones humanitarias",
+    category: "proteccion",
+    tagline: "Autorizaciones por circunstancias excepcionales, cuando la situación lo exige.",
+    metaDescription:
+      "Residencia por razones humanitarias y para víctimas de violencia de género, violencia sexual o trata (arts. 128 a 155 RD 1155/2024). Qué vía aplica y cómo.",
+    whatItIs:
+      "El Título VII del Reglamento de Extranjería (RD 1155/2024) prevé autorizaciones por circunstancias excepcionales: razones humanitarias, colaboración con autoridades, seguridad nacional e interés público (arts. 128 y 129), y las específicas para víctimas de violencia de género (arts. 133 a 136), de violencia sexual (arts. 137 a 141), de redes organizadas (arts. 142 a 147) y de trata de seres humanos (arts. 148 a 155).",
+    forWho: [
+      "Mujeres víctimas de violencia de género y víctimas de violencia sexual.",
+      "Víctimas de trata de seres humanos o de redes organizadas que colaboran con las autoridades.",
+      "Personas en situaciones humanitarias previstas en el art. 128.",
+    ],
+    requirements: [
+      "Encajar en uno de los supuestos de los arts. 128 a 155 del RD 1155/2024.",
+      "Acreditar la situación con la documentación que exige cada supuesto: resolución judicial, orden de protección, informe del Ministerio Fiscal u otro.",
+      "Las de las letras b) y c) del art. 128.1 y las de víctimas (capítulos II a V del Título VII) no admiten modificación por la vía general (art. 191.7).",
+    ],
+    needsVerification: [
+      "Qué supuesto se ajusta a tu situación y qué documento lo acredita.",
+      "Si tienes derecho a asistencia jurídica gratuita.",
+    ],
+    documents: [
+      { name: "Pasaporte o documento de identidad disponible", source: "cliente" },
+      { name: "Documento que acredita la situación", source: "cliente", note: "Orden de protección, resolución judicial, informe o denuncia, según el supuesto." },
+      { name: "Impreso oficial", source: "nosotros" },
+    ],
+    process: [
+      { title: "Escucha y diagnóstico", detail: "Identificamos el supuesto con discreción y te informamos de la asistencia gratuita disponible.", actor: "extranjeria-segura" },
+      { title: "Documentación", detail: "Te indicamos qué documento acredita tu situación y cómo obtenerlo.", actor: "cliente" },
+      { title: "Presentación", detail: "Presentamos la solicitud ante la autoridad competente.", actor: "extranjeria-segura" },
+      { title: "Resolución", detail: "Seguimiento del expediente hasta la resolución.", actor: "administracion" },
+    ],
+    feeFromCents: null,
+    timeframe: "Cada supuesto tiene su propio procedimiento. Te damos el plazo del tuyo en el diagnóstico.",
+    adminFeesNote:
+      "Las víctimas de violencia de género y de trata pueden tener derecho a asistencia jurídica gratuita. Te informamos de ello con transparencia antes de contratar nada.",
+    faqs: [
+      { q: "¿Mi situación irregular me perjudica si denuncio?", a: "La normativa protege a las víctimas en estos supuestos. Antes de dar ningún paso, revisamos contigo cuál es el tuyo y qué garantías te da." },
+      { q: "¿Puedo cambiar luego a otra autorización?", a: "Depende del supuesto: varias de estas autorizaciones no admiten la modificación general (art. 191.7). Cada una tiene su propio camino de continuidad, y lo planificamos desde el principio." },
+    ],
+    sources: ["boe", "inclusion"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["proteccion-internacional", "arraigo-social"],
+  },
+
+  /* ============================ RESIDENCIA FISCAL ============================ */
+  {
+    slug: "certificado-residencia-fiscal",
+    name: "Certificado de residencia fiscal y alta censal",
+    shortName: "Residencia fiscal",
+    category: "fiscal",
+    tagline: "Tener la TIE no te hace residente fiscal. Y al revés tampoco.",
+    metaDescription:
+      "Residencia fiscal en España: criterios del art. 9.1 LIRPF, alta censal con los modelos 030 y 036 y certificado de la AEAT, genérico o a efectos de convenio.",
+    whatItIs:
+      "La residencia administrativa (tu TIE) y la residencia fiscal son planos independientes. Eres residente fiscal en España si cumples alguno de los criterios del art. 9.1 de la Ley del IRPF, y lo acreditas con el certificado de residencia fiscal que expide la Agencia Tributaria, previa alta en el censo.",
+    forWho: [
+      "Quien acaba de trasladarse a España y necesita darse de alta como contribuyente.",
+      "Quien necesita acreditar su residencia fiscal en España ante otro país para aplicar un convenio de doble imposición.",
+      "Quien ha cambiado de domicilio o de datos personales ante la Agencia Tributaria.",
+    ],
+    requirements: [
+      "Permanecer más de 183 días en España en el año natural; las ausencias esporádicas computan salvo que acredites la residencia fiscal en otro país (art. 9.1.a LIRPF).",
+      "O tener en España el núcleo principal o la base de tus actividades o intereses económicos (art. 9.1.b LIRPF).",
+      "Se presume residente, salvo prueba en contrario, quien tiene en España a su cónyuge no separado y a sus hijos menores dependientes.",
+      "Alta censal: modelo 030 si no tienes actividad económica, o modelo 036 si la ejerces. El modelo 037 se suprimió por la Orden HAC/1526/2024.",
+    ],
+    needsVerification: [
+      "Si cumples el criterio de los 183 días o el de intereses económicos, y cómo probarlo.",
+      "Qué modalidad de certificado necesitas: genérico o a efectos de un convenio con un país concreto.",
+      "Si el otro país también te considera residente, y cómo resuelve el convenio ese conflicto.",
+    ],
+    documents: [
+      { name: "NIE o TIE", source: "cliente" },
+      { name: "Certificado de empadronamiento", source: "cliente" },
+      { name: "Prueba de permanencia en España", source: "cliente", note: "Contrato de alquiler, suministros, billetes, vida laboral." },
+      { name: "Modelo 030 o 036 de alta censal", source: "nosotros" },
+      { name: "Solicitud del certificado de residencia fiscal", source: "nosotros" },
+    ],
+    process: [
+      { title: "Diagnóstico de residencia", detail: "Comprobamos qué criterio del art. 9.1 cumples y con qué pruebas.", actor: "extranjeria-segura" },
+      { title: "Alta censal", detail: "Presentamos el modelo 030 o el 036 según tengas o no actividad económica.", actor: "extranjeria-segura" },
+      { title: "Solicitud del certificado", detail: "En la sede electrónica de la AEAT o, en persona, con el Modelo 01.", actor: "extranjeria-segura" },
+      { title: "Expedición", detail: "La AEAT expide el certificado o pide más documentación.", actor: "administracion" },
+    ],
+    feeFromCents: null,
+    timeframe:
+      "La AEAT puede expedirlo de forma inmediata por la sede electrónica. Si no lo hace, el expediente se reabre aportando prueba de residencia.",
+    adminFeesNote: "No incluye traducciones juradas de la documentación extranjera que acredite tu residencia.",
+    faqs: [
+      { q: "Tengo TIE. ¿Ya soy residente fiscal?", a: "No necesariamente. La residencia administrativa y la fiscal son planos independientes. Puedes tener TIE y no ser residente fiscal, o al revés." },
+      { q: "La AEAT me lo ha denegado. ¿Qué hago?", a: "Puede reabrirse el expediente aportando documentación que justifique tu residencia. Preparamos esa prueba." },
+      { q: "¿Y si vengo de un paraíso fiscal?", a: "La Administración puede exigirte que pruebes que permaneciste allí 183 días en el año natural para aceptar que no eras residente en España." },
+    ],
+    sources: ["boe", "aeat"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["regimen-impatriados", "no-residentes-irnr", "teletrabajo-internacional"],
+  },
+  {
+    slug: "regimen-impatriados",
+    name: "Régimen de impatriados («Ley Beckham»)",
+    shortName: "Ley Beckham",
+    category: "fiscal",
+    alsoIn: ["nomadas"],
+    tagline: "Tributar al 24 % durante seis años si te trasladas a España a trabajar.",
+    metaDescription:
+      "Ley Beckham (art. 93 LIRPF): quién puede optar, retención del 24 %, plazo de seis meses para el modelo 149 y declaración anual con el modelo 151.",
+    whatItIs:
+      "Régimen especial para trabajadores desplazados a España (art. 93 de la Ley del IRPF y arts. 116 y 119 de su Reglamento). Quien opta tributa con las normas del Impuesto sobre la Renta de no Residentes durante el año del desplazamiento y los cinco siguientes, aunque sea residente fiscal en España.",
+    forWho: [
+      "Personas que se desplazan a España por un contrato de trabajo, incluido el teletrabajo con visado de la Ley 14/2013.",
+      "Administradores de empresas y emprendedores con informe de ENISA.",
+      "Profesionales altamente cualificados que prestan servicios a empresas emergentes o realizan actividades de I+D+i.",
+      "Cónyuge e hijos menores de 25 años, que pueden extender el régimen (art. 93.3).",
+    ],
+    requirements: [
+      "No haber sido residente fiscal en España en los cinco periodos impositivos anteriores.",
+      "Desplazarse a España por alguno de los motivos previstos: contrato de trabajo, nombramiento como administrador, actividad emprendedora o profesional altamente cualificado.",
+      "No obtener rentas mediante establecimiento permanente en España, salvo emprendedores y profesionales altamente cualificados.",
+      "Comunicar la opción con el modelo 149 en el plazo máximo de seis meses desde el inicio de la actividad que conste en el alta en la Seguridad Social (art. 116.1.a RIRPF).",
+      "No haberse acogido al procedimiento especial de retenciones del art. 89.B del RIRPF (art. 116.3).",
+    ],
+    needsVerification: [
+      "Fecha exacta de inicio de actividad en tu alta en la Seguridad Social: de ella cuenta el plazo de seis meses.",
+      "Si has sido residente fiscal en España en alguno de los cinco años anteriores.",
+      "Si te conviene optar: el régimen implica tributar por obligación real en el Impuesto sobre el Patrimonio.",
+    ],
+    documents: [
+      { name: "NIE o TIE", source: "cliente" },
+      { name: "Alta en la Seguridad Social o certificado de cobertura", source: "cliente" },
+      { name: "Contrato, nombramiento o informe de ENISA", source: "cliente" },
+      { name: "Documentación del art. 119.2 RIRPF", source: "nosotros" },
+      { name: "Modelo 149", source: "nosotros" },
+      { name: "Documento acreditativo de la AEAT", source: "administracion" },
+    ],
+    process: [
+      { title: "Diagnóstico de elegibilidad", detail: "Comprobamos los cinco años previos, el motivo del desplazamiento y la fecha de alta.", actor: "extranjeria-segura", duration: "24–48 h" },
+      { title: "Modelo 149", detail: "Comunicamos la opción dentro de los seis meses, con la documentación del art. 119.2.", actor: "extranjeria-segura" },
+      { title: "Documento acreditativo", detail: "La AEAT lo expide en diez días hábiles. Se lo entregas a tu pagador.", actor: "administracion", duration: "10 días hábiles" },
+      { title: "Declaración anual", detail: "Cada año, la declaración con el modelo 151.", actor: "extranjeria-segura" },
+    ],
+    feeFromCents: null,
+    timeframe: "La AEAT expide el documento acreditativo en diez días hábiles desde la comunicación (art. 119.4 RIRPF).",
+    adminFeesNote: "La declaración anual con el modelo 151 se presupuesta aparte.",
+    faqs: [
+      { q: "¿Cuánto se paga?", a: "Una retención del 24 % sobre los rendimientos del trabajo, y del 47 % sobre el exceso de 600.000 euros." },
+      { q: "¿Sirve si soy nómada digital?", a: "Sí: el teletrabajo con visado de la Ley 14/2013 es uno de los supuestos de desplazamiento que permiten optar." },
+      { q: "¿Qué pasa si se me pasan los seis meses?", a: "El plazo es máximo y cuenta desde el inicio de actividad que figura en tu alta en la Seguridad Social. Fuera de plazo ya no se puede optar, por eso lo calculamos el primer día." },
+    ],
+    sources: ["boe", "aeat"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["teletrabajo-internacional", "certificado-residencia-fiscal", "tarjeta-azul-ue"],
+  },
+  {
+    slug: "no-residentes-irnr",
+    name: "Impuesto sobre la Renta de no Residentes (modelo 210)",
+    shortName: "No residentes",
+    category: "fiscal",
+    tagline: "Si tienes rentas en España pero no vives aquí.",
+    metaDescription:
+      "Impuesto sobre la Renta de no Residentes: declaración con el modelo 210 y certificado de residencia fiscal del país de origen para aplicar el convenio.",
+    whatItIs:
+      "Quien obtiene rentas en España sin ser residente fiscal tributa por el Impuesto sobre la Renta de no Residentes, con el modelo 210. Para aplicar el convenio de doble imposición con su país necesita el certificado de residencia fiscal que expide la autoridad de ese país.",
+    forWho: [
+      "Propietarios de un inmueble en España que no residen aquí.",
+      "Quien cobra en España rentas, intereses o rendimientos sin ser residente fiscal.",
+    ],
+    requirements: [
+      "Declarar las rentas obtenidas en España con el modelo 210.",
+      "Certificado de residencia fiscal del país de origen para aplicar el convenio.",
+      "Los españoles que trasladan su residencia a un paraíso fiscal siguen siendo contribuyentes por IRPF en el periodo del cambio y en los cuatro siguientes (art. 8.2 LIRPF).",
+    ],
+    needsVerification: [
+      "Si existe convenio con tu país y qué tipo aplica a cada renta.",
+      "Qué rentas tienes que declarar y con qué periodicidad.",
+    ],
+    documents: [
+      { name: "NIE", source: "cliente" },
+      { name: "Certificado de residencia fiscal del país de origen", source: "cliente" },
+      { name: "Justificantes de las rentas obtenidas en España", source: "cliente" },
+      { name: "Modelo 210", source: "nosotros" },
+    ],
+    process: [
+      { title: "Revisión de rentas", detail: "Identificamos qué rentas tributan y si aplica convenio.", actor: "extranjeria-segura" },
+      { title: "Certificado de origen", detail: "Obtienes el certificado de residencia fiscal en tu país.", actor: "cliente" },
+      { title: "Modelo 210", detail: "Preparamos y presentamos la declaración.", actor: "extranjeria-segura" },
+    ],
+    feeFromCents: null,
+    timeframe: "Depende del tipo de renta. Te damos el calendario de declaraciones en el diagnóstico.",
+    adminFeesNote: "No incluye el certificado de residencia fiscal de tu país, que expide su propia administración tributaria.",
+    faqs: [
+      { q: "Me mudo a España. ¿Sigo con el modelo 210?", a: "No, si pasas a ser residente fiscal: entonces declaras por IRPF. Revisamos en qué año cambias de régimen." },
+    ],
+    sources: ["boe", "aeat"],
+    updatedAt: CATALOGO,
+    pendingLegalReview: true,
+    related: ["certificado-residencia-fiscal", "regimen-impatriados"],
   },
 ];
 

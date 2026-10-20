@@ -12,7 +12,8 @@ export type CategoryId =
   | "recursos"
   | "requerimientos"
   | "proteccion"
-  | "comunitarios";
+  | "comunitarios"
+  | "fiscal";
 
 export interface Category {
   id: CategoryId;
@@ -35,7 +36,8 @@ export type GlyphKey =
   | "scales"
   | "alert"
   | "shelter"
-  | "stars";
+  | "stars"
+  | "stamp";
 
 export const CATEGORIES: Category[] = [
   { id: "residencia", label: "Residencia", short: "Residencia", glyph: "door", blurb: "Autorizaciones para vivir en España de forma estable." },
@@ -44,12 +46,13 @@ export const CATEGORIES: Category[] = [
   { id: "estudios", label: "Estudios", short: "Estudios", glyph: "cap", blurb: "Estancia por estudios, prácticas y búsqueda de empleo." },
   { id: "familia", label: "Familia", short: "Familia", glyph: "family", blurb: "Reagrupación y residencia de familiares." },
   { id: "nacionalidad", label: "Nacionalidad", short: "Nacionalidad", glyph: "passport", blurb: "Nacionalidad española por residencia y por opción." },
-  { id: "nomadas", label: "Nómadas digitales", short: "Nómadas", glyph: "signal", blurb: "Teletrabajo internacional y perfiles altamente cualificados." },
+  { id: "nomadas", label: "Nómadas digitales", short: "Nómadas", glyph: "signal", blurb: "Teletrabajo internacional, tarjeta azul y perfiles altamente cualificados." },
   { id: "renovaciones", label: "Renovaciones", short: "Renovaciones", glyph: "cycle", blurb: "Renovar, modificar o prorrogar tu autorización." },
   { id: "recursos", label: "Recursos", short: "Recursos", glyph: "scales", blurb: "Recursos administrativos y vía contencioso-administrativa." },
   { id: "requerimientos", label: "Requerimientos", short: "Requerimientos", glyph: "alert", blurb: "Subsanación de expedientes y respuesta a la Administración." },
   { id: "proteccion", label: "Protección internacional", short: "Protección", glyph: "shelter", blurb: "Asilo, protección subsidiaria y razones humanitarias." },
   { id: "comunitarios", label: "Comunitarios", short: "Comunitarios", glyph: "stars", blurb: "Régimen de la Unión Europea y familiares de comunitario." },
+  { id: "fiscal", label: "Residencia fiscal", short: "Fiscal", glyph: "stamp", blurb: "Certificado de residencia fiscal, Ley Beckham y no residentes." },
 ];
 
 export const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map((c) => [c.id, c])) as Record<
