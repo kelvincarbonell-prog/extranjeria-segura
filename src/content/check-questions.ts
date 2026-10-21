@@ -6,6 +6,8 @@
  * legal team can extend it without touching React.
  */
 
+import { bloqueado } from "./bloqueos";
+
 export type AnswerValue = string | string[];
 export type Answers = Record<string, AnswerValue | undefined>;
 
@@ -62,7 +64,7 @@ export const QUESTIONS: Question[] = [
       { value: "renovar", label: "Renovar mi permiso", hint: "Mi tarjeta caduca o ha caducado", glyph: "cycle" },
       { value: "nacionalidad", label: "Obtener la nacionalidad española", glyph: "passport" },
       { value: "no_se", label: "No sé qué necesito", hint: "Ayúdame a averiguarlo", glyph: "help" },
-    ],
+    ].filter((o) => !bloqueado("objetivos", o.value)),
   },
   {
     id: "nacionalidad_region",

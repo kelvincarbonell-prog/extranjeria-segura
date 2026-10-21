@@ -33,7 +33,7 @@ const RUTAS = [
   "/regularizacion-2026/denegacion",
   "/tramites/arraigo-social",
   "/tramites/arraigo-sociolaboral",
-  "/tramites/nacionalidad-por-residencia",
+  "/tramites/renovacion-residencia-trabajo",
   "/tramites/teletrabajo-internacional",
 ];
 

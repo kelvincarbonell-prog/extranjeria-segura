@@ -7,7 +7,8 @@ import { Glyph } from "@/components/brand/Glyph";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading, Badge } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
-import { TRAMITES } from "@/content/tramites";
+import { TRAMITES, getTramite } from "@/content/tramites";
+import { bloqueado } from "@/content/bloqueos";
 import { eur, cn } from "@/lib/utils";
 
 /**
@@ -60,7 +61,7 @@ const INTENTS: Intent[] = [
     id: "familia",
     label: "Quiero traer a mi familia",
     glyph: "family",
-    slugs: ["reagrupacion-familiar", "tarjeta-familiar-comunitario", "arraigo-familiar"],
+    slugs: ["reagrupacion-familiar", "familiares-de-espanoles", "arraigo-familiar"],
     note: "El régimen que te aplica cambia mucho según la nacionalidad de tu familiar.",
   },
   {
@@ -100,9 +101,18 @@ const INTENTS: Intent[] = [
   },
 ];
 
+/**
+ * Las intenciones que se muestran. Se cae la que el diagnóstico tiene bloqueada
+ * y la que se queda sin ninguna ficha publicada (requerimientos, con los
+ * recursos bajo candado): un chip que se abre en blanco es peor que no tenerlo.
+ */
+const VISIBLES: Intent[] = INTENTS.filter((i) => !bloqueado("objetivos", i.id))
+  .map((i) => ({ ...i, slugs: i.slugs.filter((s) => getTramite(s)) }))
+  .filter((i) => i.id === "no_se" || i.slugs.length > 0);
+
 export function NeedsFinder() {
   const [active, setActive] = React.useState<string | null>(null);
-  const intent = INTENTS.find((i) => i.id === active) ?? null;
+  const intent = VISIBLES.find((i) => i.id === active) ?? null;
 
   return (
     <section id="que-necesitas" className="relative py-20 md:py-28">
@@ -131,7 +141,7 @@ export function NeedsFinder() {
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3"
                 >
-                  {INTENTS.map((it, i) => (
+                  {VISIBLES.map((it, i) => (
                     <motion.li key={it.id} layoutId={`intent-${it.id}`}>
                       <Reveal delay={i * 0.035}>
                         <button

@@ -6,6 +6,19 @@ import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion/primitives";
 import { Button } from "@/components/ui/Button";
 
+/**
+ * El número va con letra, como en el resto de la portada, pero sale de las
+ * categorías publicadas: con cuatro bajo candado, «Trece familias» encima de
+ * nueve tarjetas habría sido la primera mentira de la página.
+ */
+function enLetra(n: number) {
+  const PALABRAS = [
+    "Cero", "Una", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete",
+    "Ocho", "Nueve", "Diez", "Once", "Doce", "Trece", "Catorce", "Quince",
+  ];
+  return PALABRAS[n] ?? String(n);
+}
+
 export function CatalogPreview() {
   return (
     <section id="tramites" className="relative py-20 md:py-28">
@@ -14,7 +27,7 @@ export function CatalogPreview() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               eyebrow="Catálogo"
-              title="Trece familias de trámites. Un único expediente."
+              title={`${enLetra(CATEGORIES.length)} familias de trámites. Un único expediente.`}
               lede="Cada trámite tiene su página con requisitos, documentación, proceso, plazos y honorarios. Sin letra pequeña."
             />
             <Button href="/tramites" variant="secondary" size="md" className="shrink-0" arrow>

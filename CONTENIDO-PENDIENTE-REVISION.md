@@ -13,7 +13,10 @@ Nada de lo que sigue es un descuido. Es una decisión.
 
 ### 1.1 Contenido de los trámites
 
-Los 25 trámites de `src/content/tramites.ts` llevan `pendingLegalReview: true`.
+Los trámites de `src/content/tramites.ts` llevan `pendingLegalReview: true`.
+Ocho de ellos (nacionalidad, régimen comunitario, protección internacional y
+recursos) están bloqueados en `src/content/bloqueos.ts` y no se publican; si se
+reactivan, su revisión pasa a ser tan obligatoria como la de las demás.
 La interfaz muestra el aviso **«Pendiente de firma jurídica»** en cada ficha
 mientras esa marca siga activa.
 

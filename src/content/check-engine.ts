@@ -1,5 +1,5 @@
 import type { Answers } from "./check-questions";
-import { TRAMITE_MAP } from "./tramites";
+import { getTramite } from "./tramites";
 
 /**
  * ORIENTATION ENGINE.
@@ -422,7 +422,8 @@ export function evaluate(answers: Answers): CheckResult {
 
     if (score < 25) continue;
 
-    const t = TRAMITE_MAP[rule.slug];
+    // Una ficha bloqueada no se recomienda: `getTramite` no la resuelve.
+    const t = getTramite(rule.slug);
     if (!t) continue;
 
     pathways.push({

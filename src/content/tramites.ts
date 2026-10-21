@@ -1,4 +1,5 @@
 import type { Tramite } from "./taxonomy";
+import { bloqueado } from "./bloqueos";
 
 /**
  * CATÁLOGO DE TRÁMITES.
@@ -30,6 +31,10 @@ import type { Tramite } from "./taxonomy";
  *
  * Siguen pendientes de firma igual que las demás: que el contenido venga del
  * despacho no sustituye a la revisión de la ficha publicada.
+ *
+ * A la inversa, lo que el catálogo no recoge —nacionalidad, régimen
+ * comunitario, protección internacional y recursos— sigue aquí completo pero
+ * bajo candado: no se publica. La lista está en `bloqueos.ts`.
  *
  * ─── QUÉ FICHA PUBLICA HONORARIOS Y CUÁL NO ─────────────────────────────
  *
@@ -64,7 +69,8 @@ const REVIEW = "2026-09-05";
  */
 const CATALOGO = "2026-10-20";
 
-export const TRAMITES: Tramite[] = [
+/** Todas las fichas, incluidas las bloqueadas. Solo para el panel interno. */
+export const TODAS_LAS_FICHAS: Tramite[] = [
   /* ================================ ARRAIGO ================================ */
   {
     slug: "arraigo-sociolaboral",
@@ -279,7 +285,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion"],
     updatedAt: REVIEW,
     pendingLegalReview: true,
-    related: ["arraigo-social", "tarjeta-familiar-comunitario", "reagrupacion-familiar"],
+    related: ["arraigo-social", "familiares-de-espanoles", "reagrupacion-familiar"],
   },
   {
     slug: "arraigo-segunda-oportunidad",
@@ -324,7 +330,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion"],
     updatedAt: REVIEW,
     pendingLegalReview: true,
-    related: ["arraigo-sociolaboral", "recurso-alzada"],
+    related: ["arraigo-sociolaboral", "arraigo-social"],
   },
 
   /* =============================== NÓMADAS ================================ */
@@ -607,7 +613,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion"],
     updatedAt: REVIEW,
     pendingLegalReview: true,
-    related: ["nacionalidad-por-residencia", "renovacion-residencia-trabajo"],
+    related: ["renovacion-residencia-trabajo", "nie-tie"],
   },
 
   /* ================================ TRABAJO =============================== */
@@ -911,7 +917,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "exteriores", "inclusion"],
     updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["residencia-trabajo-cuenta-ajena", "nacionalidad-por-opcion"],
+    related: ["residencia-trabajo-cuenta-ajena", "familiares-de-espanoles"],
   },
 
   /* ================================ ESTUDIOS ============================== */
@@ -1063,7 +1069,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion", "exteriores"],
     updatedAt: REVIEW,
     pendingLegalReview: true,
-    related: ["tarjeta-familiar-comunitario", "arraigo-familiar"],
+    related: ["familiares-de-espanoles", "arraigo-familiar"],
     seoNationalities: ["venezolanos", "colombianos", "marroquies", "peruanos", "dominicanos", "chinos"],
     seoCities: ["madrid", "barcelona", "valencia", "murcia", "sevilla"],
   },
@@ -1210,7 +1216,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion", "extranjeria"],
     updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["reagrupacion-familiar", "arraigo-familiar", "nacionalidad-por-residencia"],
+    related: ["reagrupacion-familiar", "arraigo-familiar", "residencia-hijos-residentes"],
   },
   {
     slug: "residencia-hijos-residentes",
@@ -1465,7 +1471,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["policia", "inclusion"],
     updatedAt: REVIEW,
     pendingLegalReview: true,
-    related: ["renovacion-residencia-trabajo", "certificado-registro-ue"],
+    related: ["renovacion-residencia-trabajo", "residencia-larga-duracion"],
     seoCities: ["madrid", "barcelona", "valencia", "malaga", "murcia", "alicante", "sevilla", "bilbao"],
   },
 
@@ -1797,7 +1803,7 @@ export const TRAMITES: Tramite[] = [
     sources: ["boe", "inclusion"],
     updatedAt: CATALOGO,
     pendingLegalReview: true,
-    related: ["proteccion-internacional", "arraigo-social"],
+    related: ["arraigo-social", "arraigo-familiar"],
   },
 
   /* ============================ RESIDENCIA FISCAL ============================ */
@@ -1959,10 +1965,30 @@ export const TRAMITES: Tramite[] = [
 
 /* ------------------------------------------------------------------ */
 
-export const TRAMITE_MAP = Object.fromEntries(TRAMITES.map((t) => [t.slug, t]));
+/**
+ * Las fichas que se publican. Todo lo público —listados, rutas, sitemap,
+ * diagnóstico, SEO programático— parte de aquí. Las bloqueadas están en
+ * `bloqueos.ts`.
+ */
+export const TRAMITES: Tramite[] = TODAS_LAS_FICHAS.filter((t) => !bloqueado("tramites", t.slug));
 
-export function getTramite(slug: string) {
-  return TRAMITE_MAP[slug];
+/** Fichas bajo candado: existen, el panel interno las ve, la web no. */
+export const TRAMITES_BLOQUEADOS: Tramite[] = TODAS_LAS_FICHAS.filter((t) =>
+  bloqueado("tramites", t.slug),
+);
+
+/**
+ * Mapa de TODAS las fichas, bloqueadas incluidas. Lo usa el panel interno:
+ * un expediente de nacionalidad abierto antes del bloqueo sigue necesitando
+ * su plan documental. Lo público resuelve con `getTramite`.
+ */
+export const TRAMITE_MAP = Object.fromEntries(TODAS_LAS_FICHAS.map((t) => [t.slug, t]));
+
+const PUBLICAS = Object.fromEntries(TRAMITES.map((t) => [t.slug, t]));
+
+/** Resuelve una ficha publicada. Una bloqueada devuelve `undefined`, como si no existiera. */
+export function getTramite(slug: string): Tramite | undefined {
+  return PUBLICAS[slug];
 }
 
 export function tramitesByCategory(category: string) {

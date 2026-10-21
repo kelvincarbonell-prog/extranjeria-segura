@@ -8,7 +8,7 @@ import { Glyph } from "@/components/brand/Glyph";
 import { Card, Badge } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/Button";
 import { DEMO_PIPELINE, DOC_STATE_META, PIPELINE_STAGES, expedientesDemo } from "@/content/demo";
-import { TRAMITE_MAP } from "@/content/tramites";
+import { TRAMITE_MAP, getTramite } from "@/content/tramites";
 import { rolDemo } from "@/lib/rol-demo";
 import { filtrarAsignados } from "@/lib/mis-expedientes";
 import { prepararExpediente } from "@/lib/preparacion";
@@ -269,14 +269,24 @@ async function FichaInterior({ id }: { id: string }) {
               )}
               {tramite && (
                 <Dato etiqueta="Trámite">
-                  <Link
-                    href={`/tramites/${tramite.slug}`}
-                    target="_blank"
-                    className="text-brand-700 hover:text-brand-800 font-medium"
-                  >
-                    Ver requisitos
-                    <span className="sr-only"> (se abre en una pestaña nueva)</span>
-                  </Link>
+                  {getTramite(tramite.slug) ? (
+                    <Link
+                      href={`/tramites/${tramite.slug}`}
+                      target="_blank"
+                      className="text-brand-700 hover:text-brand-800 font-medium"
+                    >
+                      Ver requisitos
+                      <span className="sr-only"> (se abre en una pestaña nueva)</span>
+                    </Link>
+                  ) : (
+                    // Ficha bajo candado (bloqueos.ts): el expediente sigue
+                    // vivo, pero su página pública no existe y el enlace
+                    // llevaría a un 404.
+                    <span className="text-ink-500 inline-flex items-center gap-1.5">
+                      <Glyph name="lock" className="size-3.5" />
+                      Ficha bloqueada en la web
+                    </span>
+                  )}
                 </Dato>
               )}
             </dl>

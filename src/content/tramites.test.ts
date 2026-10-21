@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { TRAMITES, TRAMITE_MAP } from "./tramites";
-import { CATEGORY_MAP } from "./taxonomy";
+import { TODAS_LAS_FICHAS as TRAMITES, TRAMITES as PUBLICADAS, TRAMITE_MAP } from "./tramites";
+import { CATEGORY_MAP, CATEGORIES } from "./taxonomy";
 import { OFFICIAL_SOURCES } from "./site";
 
 /**
@@ -12,6 +12,9 @@ import { OFFICIAL_SOURCES } from "./site";
  * escrito en `related` no rompe nada: la página filtra el `undefined` y la
  * ficha relacionada simplemente no aparece. Nadie lo nota hasta que alguien
  * echa en falta el enlace. Aquí falla en el acto.
+ *
+ * Recorre todas las fichas, también las bloqueadas: el día que se reactiven
+ * tienen que estar sanas. Lo que se publica lo vigila `bloqueos.test.ts`.
  */
 
 test("no hay dos fichas con el mismo slug", () => {
@@ -42,11 +45,11 @@ test("categorías y fuentes citadas existen", () => {
   }
 });
 
-test("ninguna categoría se queda vacía", () => {
+test("ninguna categoría publicada se queda vacía", () => {
   // Una categoría sin fichas es una página de listado en blanco enlazada desde
   // la portada, el menú y el pie.
-  for (const id of Object.keys(CATEGORY_MAP)) {
-    const n = TRAMITES.filter((t) => t.category === id || t.alsoIn?.includes(id as never)).length;
+  for (const { id } of CATEGORIES) {
+    const n = PUBLICADAS.filter((t) => t.category === id || t.alsoIn?.includes(id)).length;
     assert.ok(n > 0, `la categoría «${id}» no tiene fichas`);
   }
 });

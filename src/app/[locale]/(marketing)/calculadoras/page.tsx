@@ -17,7 +17,7 @@ export async function generateMetadata({
     locale,
     path: "/calculadoras",
     title: "Calculadoras de extranjería",
-    description: "Herramientas gratuitas: calculadora Schengen 90/180, tiempo para la nacionalidad española, medios económicos exigibles y ventana de renovación. Sin registro.",
+    description: "Herramientas gratuitas: calculadora Schengen 90/180, plazos de la regularización, medios económicos exigibles y ventana de renovación. Sin registro.",
   });
 }
 

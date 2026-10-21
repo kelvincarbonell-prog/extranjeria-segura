@@ -66,7 +66,6 @@ export default function CitasPage() {
                   <select className="bg-surface text-ink-900 h-11 w-full min-w-0 rounded-sm px-3.5 text-[14px] shadow-[inset_0_0_0_1px_rgb(10_13_22_/_0.08)] outline-none">
                     <option>Primera consulta sobre mi situación</option>
                     <option>Tengo un requerimiento o una denegación</option>
-                    <option>Nacionalidad española</option>
                     <option>Nómada digital / teletrabajo</option>
                     <option>Reagrupación familiar</option>
                   </select>

@@ -25,7 +25,17 @@
  *
  * Lo mismo vale para las fichas de trámite: solo llevan honorarios las que
  * caen dentro de estas cuatro líneas. Ver la nota en `tramites.ts`.
+ *
+ * ─── NACIONALIDAD Y RECURSOS, BAJO CANDADO ──────────────────────────────
+ *
+ * Desde octubre de 2026 nacionalidad y recursos no se ofrecen en la web (ver
+ * `bloqueos.ts`). Sus tarifas siguen aquí, con su importe y sus exclusiones,
+ * para que reactivarlas sea quitar dos líneas de la lista y no reescribirlas.
+ * Lo público lee `MANAGED_PLANS`, que ya viene sin ellas: hoy publican precio
+ * tres líneas, no cuatro.
  */
+
+import { bloqueado } from "./bloqueos";
 
 export interface Plan {
   id: string;
@@ -124,7 +134,8 @@ export const ENTRY_PLANS: Plan[] = [
   },
 ];
 
-export const MANAGED_PLANS: Plan[] = [
+/** Todas las tarifas de gestión, también las bloqueadas. */
+export const TODOS_LOS_PLANES: Plan[] = [
   {
     id: "arraigo",
     name: "Arraigo",
@@ -263,8 +274,15 @@ export const MANAGED_PLANS: Plan[] = [
   },
 ];
 
-/** Third-party costs we never absorb and always name up front. */
-export const THIRD_PARTY_COSTS = [
+/** Las tarifas de gestión que se publican. */
+export const MANAGED_PLANS: Plan[] = TODOS_LOS_PLANES.filter((p) => !bloqueado("planes", p.id));
+
+/**
+ * Third-party costs we never absorb and always name up front.
+ * `soloPara` liga un coste a una tarifa: si la tarifa está bloqueada, el coste
+ * tampoco se anuncia.
+ */
+const TODOS_LOS_COSTES: { label: string; detail: string; soloPara?: string }[] = [
   {
     label: "Tasas administrativas",
     detail:
@@ -283,6 +301,7 @@ export const THIRD_PARTY_COSTS = [
   {
     label: "Exámenes CCSE y DELE",
     detail: "Solo para nacionalidad. Los abona el solicitante al Instituto Cervantes.",
+    soloPara: "nacionalidad",
   },
   {
     label: "Informes de la Administración",
@@ -296,9 +315,13 @@ export const THIRD_PARTY_COSTS = [
   },
 ];
 
+export const THIRD_PARTY_COSTS = TODOS_LOS_COSTES.filter(
+  (c) => !c.soloPara || !bloqueado("planes", c.soloPara),
+);
+
 export const PAYMENT_TERMS = [
   "Presupuesto cerrado por escrito antes de empezar. Si el alcance cambia, se acuerda contigo antes.",
-  "Publicamos precio en las cuatro vías que tramitamos con volumen suficiente para comprometerlo. En el resto damos presupuesto tras el diagnóstico, en lugar de un «desde» que habría que corregir al alza.",
+  "Publicamos precio en las vías que tramitamos con volumen suficiente para comprometerlo. En el resto damos presupuesto tras el diagnóstico, en lugar de un «desde» que habría que corregir al alza.",
   "Puedes pagar en una sola vez o fraccionado en dos plazos, sin coste adicional.",
   "El importe de la consulta inicial se descuenta si contratas la gestión.",
   "Si tras el análisis de viabilidad tu caso no tiene recorrido, te lo decimos antes de cobrarte el trámite.",

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { QUESTIONS } from "@/content/check-questions";
+import { BLOQUEOS } from "@/content/bloqueos";
 import { LOCALES, type Locale } from "@/i18n/config";
 import { traduccionPreguntas, resolverPregunta } from "./index";
 
@@ -58,6 +59,9 @@ test("ninguna traducción inventa opciones que el grafo no tiene", () => {
 
     for (const q of QUESTIONS) {
       const validas = new Set(q.options.map((o) => o.value));
+      // Un objetivo bajo candado conserva su traducción para cuando se
+      // reactive: no es una errata, es una opción guardada.
+      if (q.id === "objetivo") for (const b of BLOQUEOS.objetivos) validas.add(b);
       for (const clave of Object.keys(trad[q.id].options)) {
         assert.ok(
           validas.has(clave),

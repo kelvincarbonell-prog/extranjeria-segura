@@ -17,7 +17,7 @@ export async function generateMetadata({
     locale,
     path: "/tramites",
     title: "Todos los trámites de extranjería",
-    description: "Catálogo completo de trámites de extranjería en España: arraigo, nacionalidad, nómada digital, reagrupación familiar, renovaciones, recursos y más. Requisitos, documentación, plazos y honorarios.",
+    description: "Catálogo completo de trámites de extranjería en España: arraigo, nómada digital, tarjeta azul, reagrupación familiar, renovaciones, residencia fiscal y más. Requisitos, documentación, plazos y honorarios.",
   });
 }
 

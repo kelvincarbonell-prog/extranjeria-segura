@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { ENTRY_PLANS, MANAGED_PLANS } from "./pricing";
-import { TRAMITES } from "./tramites";
+import { ENTRY_PLANS, TODOS_LOS_PLANES as MANAGED_PLANS } from "./pricing";
+import { TODAS_LAS_FICHAS as TRAMITES } from "./tramites";
 import type { CategoryId } from "./taxonomy";
 
 /**
@@ -22,6 +22,10 @@ import type { CategoryId } from "./taxonomy";
  * ejecución: importar las 25 fichas desde `pricing.ts` las metería en el
  * paquete de la portada, que solo necesita seis importes. La prueba cuesta
  * cero bytes en producción y falla igual de fuerte.
+ *
+ * Mira todas las tarifas y todas las fichas, también las que están bajo
+ * candado (`bloqueos.ts`): nacionalidad no se publica hoy, pero el día que se
+ * reactive su «desde» tiene que seguir cuadrando con sus fichas.
  */
 
 /** Qué categorías del catálogo cubre cada línea de servicio con precio. */

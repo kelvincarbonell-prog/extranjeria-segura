@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "¿Tengo que ir a alguna oficina?",
-    a: "La gestión del expediente es íntegramente online. Hay dos momentos que la Administración exige de forma presencial: la toma de huellas para la TIE y, en su caso, la jura de nacionalidad. Te preparamos para ambos.",
+    a: "La gestión del expediente es íntegramente online. Hay un momento que la Administración exige de forma presencial: la toma de huellas para la TIE. Te preparamos para él.",
   },
   {
     q: "¿Qué pasa con mis documentos cuando termina el expediente?",

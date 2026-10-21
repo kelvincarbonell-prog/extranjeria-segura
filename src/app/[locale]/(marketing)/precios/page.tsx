@@ -19,8 +19,20 @@ export async function generateMetadata({
     locale,
     path: "/precios",
     title: "Precios",
-    description: "Precios de Extranjería Segura: diagnóstico gratuito, consulta 39 €, revisión documental 79 €, arraigo desde 479 € y nacionalidad desde 419 €. El resto de trámites, presupuesto a medida. Con lo que no está incluido, junto al precio.",
+    description: `Precios de Extranjería Segura: diagnóstico gratuito, consulta 39 €, revisión documental 79 €, ${desdes()}. El resto de trámites, presupuesto a medida. Con lo que no está incluido, junto al precio.`,
   });
+}
+
+/**
+ * «Arraigo desde 479 €, nómada digital desde 899 €…», leído de las tarifas
+ * publicadas. Escrito a mano, esta frase seguía anunciando «nacionalidad desde
+ * 419 €» después de que nacionalidad dejara de ofrecerse.
+ */
+function desdes() {
+  const partes = MANAGED_PLANS.filter((p) => p.priceCents !== null).map(
+    (p) => `${p.name.charAt(0).toLowerCase()}${p.name.slice(1)} desde ${eur(p.priceCents!)}`,
+  );
+  return new Intl.ListFormat("es", { type: "conjunction" }).format(partes);
 }
 
 export default async function PreciosPage({
@@ -190,7 +202,10 @@ export default async function PreciosPage({
             lede="Desde el diagnóstico hasta la resolución, con tu especialista revisando cada documento y respondiendo a la Administración."
           />
 
-          <div className="mt-12 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {/* Dos columnas y no tres: con nacionalidad y recursos bajo candado
+              quedan cuatro tarifas, y en tres columnas la cuarta se quedaba
+              sola en una fila. */}
+          <div className="mt-12 grid gap-3 md:grid-cols-2">
             {MANAGED_PLANS.map((p, i) => (
               <Reveal key={p.id} delay={i * 0.05}>
                 <Card padding="lg" className="flex h-full flex-col">

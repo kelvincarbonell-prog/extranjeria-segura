@@ -8,6 +8,9 @@ import {
   type Pendiente,
 } from "@/content/verificacion";
 import { boeUrl } from "@/content/fuentes";
+import { TRAMITES_BLOQUEADOS } from "@/content/tramites";
+import { CATEGORY_MAP } from "@/content/taxonomy";
+import { Glyph } from "@/components/brand/Glyph";
 import { Card, Badge } from "@/components/ui/primitives";
 import { formatDateES } from "@/lib/utils";
 
@@ -110,6 +113,43 @@ function VerificacionPageInterior() {
             </ul>
           </section>
         ),
+      )}
+
+      {TRAMITES_BLOQUEADOS.length > 0 && (
+        <section className="mb-10">
+          <div className="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 className="text-ink-900 text-[17px] font-bold tracking-[-0.02em]">
+              Bloqueadas en la web
+            </h2>
+            <span className="text-ink-400 text-[13px] tabular-nums">
+              {TRAMITES_BLOQUEADOS.length}
+            </span>
+          </div>
+          <p className="text-ink-500 mb-4 max-w-2xl text-[13.5px] leading-relaxed">
+            Fichas que existen pero no se publican, por decisión del despacho. No salen en ningún
+            listado ni en el diagnóstico, y su URL es un 404. Se reactivan quitándolas de{" "}
+            <code className="data text-ink-600">src/content/bloqueos.ts</code>.
+          </p>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {TRAMITES_BLOQUEADOS.map((t) => (
+              <li key={t.slug}>
+                <Card className="flex items-center gap-3 p-3.5">
+                  <span className="bg-ink-50 text-ink-500 flex size-8 shrink-0 items-center justify-center rounded-[9px]">
+                    <Glyph name="lock" className="size-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="text-ink-800 block truncate text-[14px] font-medium">
+                      {t.shortName ?? t.name}
+                    </span>
+                    <span className="text-ink-400 block text-[12px]">
+                      {CATEGORY_MAP[t.category].label}
+                    </span>
+                  </span>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <section className="border-ink-900/10 mt-12 border-t pt-6">

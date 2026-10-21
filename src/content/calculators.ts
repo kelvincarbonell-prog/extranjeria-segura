@@ -11,6 +11,8 @@
  * not legal advice.
  */
 
+import { bloqueado } from "./bloqueos";
+
 export interface CalculatorMeta {
   slug: string;
   name: string;
@@ -22,7 +24,8 @@ export interface CalculatorMeta {
   ready: boolean;
 }
 
-export const CALCULATORS: CalculatorMeta[] = [
+/** Todas, también las bloqueadas (ver `bloqueos.ts`). */
+export const TODAS_LAS_CALCULADORAS: CalculatorMeta[] = [
   {
     // Va primera a propósito: es la única de las cinco con una fecha de
     // caducidad real encima, y la que más gente necesita ahora mismo.
@@ -74,6 +77,11 @@ export const CALCULATORS: CalculatorMeta[] = [
     ready: true,
   },
 ];
+
+/** Las que se publican. La ruta solo genera estas. */
+export const CALCULATORS: CalculatorMeta[] = TODAS_LAS_CALCULADORAS.filter(
+  (c) => !bloqueado("calculadoras", c.slug),
+);
 
 export const CALCULATOR_MAP = Object.fromEntries(CALCULATORS.map((c) => [c.slug, c]));
 

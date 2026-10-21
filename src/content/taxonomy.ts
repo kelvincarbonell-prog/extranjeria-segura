@@ -1,4 +1,5 @@
 import type { SourceKey } from "./site";
+import { bloqueado } from "./bloqueos";
 
 export type CategoryId =
   | "residencia"
@@ -39,7 +40,8 @@ export type GlyphKey =
   | "stars"
   | "stamp";
 
-export const CATEGORIES: Category[] = [
+/** Todas las categorías, también las bloqueadas (ver `bloqueos.ts`). */
+export const TODAS_LAS_CATEGORIAS: Category[] = [
   { id: "residencia", label: "Residencia", short: "Residencia", glyph: "door", blurb: "Autorizaciones para vivir en España de forma estable." },
   { id: "trabajo", label: "Trabajo", short: "Trabajo", glyph: "briefcase", blurb: "Permisos por cuenta ajena, propia y traslados." },
   { id: "arraigo", label: "Arraigo", short: "Arraigo", glyph: "roots", blurb: "Vías para regularizar una situación ya existente en España." },
@@ -50,12 +52,19 @@ export const CATEGORIES: Category[] = [
   { id: "renovaciones", label: "Renovaciones", short: "Renovaciones", glyph: "cycle", blurb: "Renovar, modificar o prorrogar tu autorización." },
   { id: "recursos", label: "Recursos", short: "Recursos", glyph: "scales", blurb: "Recursos administrativos y vía contencioso-administrativa." },
   { id: "requerimientos", label: "Requerimientos", short: "Requerimientos", glyph: "alert", blurb: "Subsanación de expedientes y respuesta a la Administración." },
-  { id: "proteccion", label: "Protección internacional", short: "Protección", glyph: "shelter", blurb: "Asilo, protección subsidiaria y razones humanitarias." },
+  // Con el asilo bajo candado (bloqueos.ts) solo queda la ficha de razones
+  // humanitarias y víctimas: la categoría se llama por lo que contiene. Si se
+  // reactiva protección internacional, vuelve a ser «Protección internacional».
+  { id: "proteccion", label: "Razones humanitarias", short: "Humanitarias", glyph: "shelter", blurb: "Circunstancias excepcionales y protección de víctimas." },
   { id: "comunitarios", label: "Comunitarios", short: "Comunitarios", glyph: "stars", blurb: "Régimen de la Unión Europea y familiares de comunitario." },
   { id: "fiscal", label: "Residencia fiscal", short: "Fiscal", glyph: "stamp", blurb: "Certificado de residencia fiscal, Ley Beckham y no residentes." },
 ];
 
-export const CATEGORY_MAP = Object.fromEntries(CATEGORIES.map((c) => [c.id, c])) as Record<
+/** Las categorías que se publican: portada, menú, listados y rutas. */
+export const CATEGORIES: Category[] = TODAS_LAS_CATEGORIAS.filter((c) => !bloqueado("categorias", c.id));
+
+/** Todas, para poder poner nombre a una categoría aunque esté bloqueada. */
+export const CATEGORY_MAP = Object.fromEntries(TODAS_LAS_CATEGORIAS.map((c) => [c.id, c])) as Record<
   CategoryId,
   Category
 >;

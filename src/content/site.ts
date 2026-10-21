@@ -85,12 +85,10 @@ export const footerNav = {
     { label: "Diagnóstico de Extranjería", href: "/diagnostico" },
     { label: "Revisión documental", href: "/precios#revision" },
     { label: "Gestión integral de expediente", href: "/como-funciona" },
-    { label: "Recursos y requerimientos", href: "/tramites/categoria/recursos" },
     { label: "Consulta con especialista", href: "/precios#consulta" },
   ],
   Trámites: [
     { label: "Arraigo", href: "/tramites/categoria/arraigo" },
-    { label: "Nacionalidad española", href: "/tramites/categoria/nacionalidad" },
     { label: "Nómada digital", href: "/tramites/categoria/nomadas" },
     { label: "Reagrupación familiar", href: "/tramites/categoria/familia" },
     { label: "Renovaciones", href: "/tramites/categoria/renovaciones" },
@@ -101,7 +99,6 @@ export const footerNav = {
     { label: "Centro de conocimiento", href: "/recursos" },
     { label: "Calculadoras", href: "/calculadoras" },
     { label: "Calculadora Schengen 90/180", href: "/calculadoras/schengen-90-180" },
-    { label: "Tiempo para la nacionalidad", href: "/calculadoras/tiempo-nacionalidad" },
     { label: "Actualizaciones normativas", href: "/recursos#actualizaciones" },
   ],
   Empresa: [
